@@ -860,6 +860,74 @@ definitions:
     type: string
     enum:
       - OTHER_FILTER_HDR
+  v4ReleaseInfo:
+    type: object
+    properties:
+      title:
+        type: string
+      year:
+        type: integer
+        format: int32
+      season:
+        type: integer
+        format: int32
+      episode:
+        type: integer
+        format: int32
+      episodeEnd:
+        type: integer
+        format: int32
+      part:
+        type: integer
+        format: int32
+      resolution:
+        type: string
+      quality:
+        type: string
+      source:
+        type: string
+      codec:
+        type: string
+      hdr:
+        type: string
+      audio:
+        type: string
+      group:
+        type: string
+      container:
+        type: string
+      language:
+        type: string
+      region:
+        type: string
+      size:
+        type: string
+      bitDepth:
+        type: string
+      edition:
+        type: string
+      extended:
+        type: boolean
+      hardcoded:
+        type: boolean
+      proper:
+        type: boolean
+      repack:
+        type: boolean
+      remastered:
+        type: boolean
+      complete:
+        type: boolean
+      threeD:
+        type: boolean
+      imax:
+        type: boolean
+      unrated:
+        type: boolean
+      widescreen:
+        type: boolean
+      excess:
+        type: string
   v4ResolutionFilter:
     type: string
     enum:
@@ -907,6 +975,8 @@ definitions:
         type: string
       uploadedAt:
         type: string
+      releaseInfo:
+        $ref: '#/definitions/v4ReleaseInfo'
   v4SearchResultDisplayBehavior:
     type: string
     enum:

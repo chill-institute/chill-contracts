@@ -178,6 +178,167 @@ export declare type CoreSearchRequest = Message<"chill.v4.CoreSearchRequest"> & 
 export declare const CoreSearchRequestSchema: GenMessage<CoreSearchRequest>;
 
 /**
+ * @generated from message chill.v4.ReleaseInfo
+ */
+export declare type ReleaseInfo = Message<"chill.v4.ReleaseInfo"> & {
+  /**
+   * @generated from field: string title = 1;
+   */
+  title: string;
+
+  /**
+   * @generated from field: optional int32 year = 2;
+   */
+  year?: number | undefined;
+
+  /**
+   * @generated from field: optional int32 season = 3;
+   */
+  season?: number | undefined;
+
+  /**
+   * @generated from field: optional int32 episode = 4;
+   */
+  episode?: number | undefined;
+
+  /**
+   * @generated from field: optional int32 episode_end = 5;
+   */
+  episodeEnd?: number | undefined;
+
+  /**
+   * @generated from field: optional int32 part = 6;
+   */
+  part?: number | undefined;
+
+  /**
+   * @generated from field: string resolution = 10;
+   */
+  resolution: string;
+
+  /**
+   * @generated from field: string quality = 11;
+   */
+  quality: string;
+
+  /**
+   * @generated from field: string source = 12;
+   */
+  source: string;
+
+  /**
+   * @generated from field: string codec = 13;
+   */
+  codec: string;
+
+  /**
+   * @generated from field: string hdr = 14;
+   */
+  hdr: string;
+
+  /**
+   * @generated from field: string audio = 15;
+   */
+  audio: string;
+
+  /**
+   * @generated from field: string group = 16;
+   */
+  group: string;
+
+  /**
+   * @generated from field: string container = 17;
+   */
+  container: string;
+
+  /**
+   * @generated from field: string language = 18;
+   */
+  language: string;
+
+  /**
+   * @generated from field: string region = 19;
+   */
+  region: string;
+
+  /**
+   * @generated from field: string size = 20;
+   */
+  size: string;
+
+  /**
+   * @generated from field: string bit_depth = 21;
+   */
+  bitDepth: string;
+
+  /**
+   * @generated from field: string edition = 22;
+   */
+  edition: string;
+
+  /**
+   * @generated from field: bool extended = 30;
+   */
+  extended: boolean;
+
+  /**
+   * @generated from field: bool hardcoded = 31;
+   */
+  hardcoded: boolean;
+
+  /**
+   * @generated from field: bool proper = 32;
+   */
+  proper: boolean;
+
+  /**
+   * @generated from field: bool repack = 33;
+   */
+  repack: boolean;
+
+  /**
+   * @generated from field: bool remastered = 34;
+   */
+  remastered: boolean;
+
+  /**
+   * @generated from field: bool complete = 35;
+   */
+  complete: boolean;
+
+  /**
+   * @generated from field: bool three_d = 36;
+   */
+  threeD: boolean;
+
+  /**
+   * @generated from field: bool imax = 37;
+   */
+  imax: boolean;
+
+  /**
+   * @generated from field: bool unrated = 38;
+   */
+  unrated: boolean;
+
+  /**
+   * @generated from field: bool widescreen = 39;
+   */
+  widescreen: boolean;
+
+  /**
+   * @generated from field: string excess = 50;
+   */
+  excess: string;
+};
+
+/**
+ * Describes the message chill.v4.ReleaseInfo.
+ * Use `create(ReleaseInfoSchema)` to create a new message.
+ */
+export declare const ReleaseInfoSchema: GenMessage<ReleaseInfo>;
+
+/**
  * @generated from message chill.v4.SearchResult
  */
 export declare type SearchResult = Message<"chill.v4.SearchResult"> & {
@@ -230,6 +391,11 @@ export declare type SearchResult = Message<"chill.v4.SearchResult"> & {
    * @generated from field: string uploaded_at = 10;
    */
   uploadedAt: string;
+
+  /**
+   * @generated from field: optional chill.v4.ReleaseInfo release_info = 11;
+   */
+  releaseInfo?: ReleaseInfo | undefined;
 };
 
 /**

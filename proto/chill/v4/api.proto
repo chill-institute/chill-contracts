@@ -446,6 +446,42 @@ message CoreSearchRequest {
   string query = 1;
 }
 
+message ReleaseInfo {
+  string title = 1;
+  optional int32 year = 2;
+  optional int32 season = 3;
+  optional int32 episode = 4;
+  optional int32 episode_end = 5;
+  optional int32 part = 6;
+
+  string resolution = 10;
+  string quality = 11;
+  string source = 12;
+  string codec = 13;
+  string hdr = 14;
+  string audio = 15;
+  string group = 16;
+  string container = 17;
+  string language = 18;
+  string region = 19;
+  string size = 20;
+  string bit_depth = 21;
+  string edition = 22;
+
+  bool extended = 30;
+  bool hardcoded = 31;
+  bool proper = 32;
+  bool repack = 33;
+  bool remastered = 34;
+  bool complete = 35;
+  bool three_d = 36;
+  bool imax = 37;
+  bool unrated = 38;
+  bool widescreen = 39;
+
+  string excess = 50;
+}
+
 message SearchResult {
   string id = 1;
   string title = 2;
@@ -457,6 +493,7 @@ message SearchResult {
   int64 size = 8;
   string source = 9;
   string uploaded_at = 10;
+  optional ReleaseInfo release_info = 11;
 }
 
 message SearchResponse {
