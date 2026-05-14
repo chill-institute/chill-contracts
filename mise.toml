@@ -45,3 +45,30 @@ run = [
   "go test ./...",
   "mise run verify-consumers"
 ]
+
+[tasks."hooks:pre-commit"]
+description = "Hook entrypoint for fast protobuf checks on commit"
+run = "buf lint"
+
+[tasks."hooks:pre-push"]
+description = "Hook entrypoint for read-only repo verification before push"
+run = [
+  "mise run smoke",
+  "buf lint",
+  "go test ./...",
+]
+
+[tasks.hooks]
+description = "Install repo git hooks"
+run = """
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+git config core.hooksPath .githooks
+printf 'git hooks configured: %s/.githooks\n' "$repo_root"
+"""
+
+[settings]
+experimental = true
+
+[hooks]
+postinstall = "mise run hooks"
