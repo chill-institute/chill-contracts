@@ -4689,7 +4689,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\bdownload\x18\x02 \x01(\v2\x18.chill.v4.TVShowDownloadH\x00R\bdownload\x88\x01\x01\x12!\n" +
 	"\fsearch_query\x18\x03 \x01(\tR\vsearchQueryB\v\n" +
 	"\t_download\"\x18\n" +
-	"\x16GetUserSettingsRequest\"\xa9\n" +
+	"\x16GetUserSettingsRequest\"\xce\n" +
 	"\n" +
 	"\fUserSettings\x12>\n" +
 	"\rcodec_filters\x18\x01 \x03(\x0e2\x15.chill.v4.CodecFilterB\x02\x18\x01R\fcodecFilters\x124\n" +
@@ -4713,7 +4713,8 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\x0ftv_shows_source\x18\x12 \x01(\x0e2\x17.chill.v4.TVShowsSourceB\x02\x18\x01R\rtvShowsSource\x120\n" +
 	"\x06search\x18\x13 \x01(\v2\x18.chill.v4.SearchSettingsR\x06search\x123\n" +
 	"\acatalog\x18\x14 \x01(\v2\x19.chill.v4.CatalogSettingsR\acatalog\x126\n" +
-	"\bdownload\x18\x15 \x01(\v2\x1a.chill.v4.DownloadSettingsR\bdownloadB\x15\n" +
+	"\bdownload\x18\x15 \x01(\v2\x1a.chill.v4.DownloadSettingsR\bdownload:#\x92A \n" +
+	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadB\x15\n" +
 	"\x13_download_folder_idJ\x04\b\v\x10\f\"\xee\x05\n" +
 	"\x0eSearchSettings\x12:\n" +
 	"\rcodec_filters\x18\x01 \x03(\x0e2\x15.chill.v4.CodecFilterR\fcodecFilters\x120\n" +

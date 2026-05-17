@@ -761,6 +761,12 @@ enum CardDisplayType {
 }
 
 message UserSettings {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      required: ["search", "catalog", "download"]
+    }
+  };
+
   reserved 11;
   repeated CodecFilter codec_filters = 1 [deprecated = true];
   repeated string disabled_indexer_ids = 2 [deprecated = true];

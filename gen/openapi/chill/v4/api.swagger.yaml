@@ -1373,6 +1373,10 @@ definitions:
         $ref: '#/definitions/v4CatalogSettings'
       download:
         $ref: '#/definitions/v4DownloadSettings'
+    required:
+      - search
+      - catalog
+      - download
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
