@@ -588,6 +588,13 @@ definitions:
     enum:
       - CARD_DISPLAY_TYPE_COMPACT
       - CARD_DISPLAY_TYPE_EXPANDED
+  v4CatalogSettings:
+    type: object
+    properties:
+      moviesSource:
+        $ref: '#/definitions/v4MoviesSource'
+      tvShowsSource:
+        $ref: '#/definitions/v4TVShowsSource'
   v4CodecFilter:
     type: string
     enum:
@@ -608,6 +615,12 @@ definitions:
     properties:
       query:
         type: string
+  v4DownloadSettings:
+    type: object
+    properties:
+      folderId:
+        type: string
+        format: int64
   v4GetDownloadFolderRequest:
     type: object
   v4GetDownloadFolderResponse:
@@ -987,6 +1000,39 @@ definitions:
     enum:
       - SEARCH_RESULT_TITLE_BEHAVIOR_LINK
       - SEARCH_RESULT_TITLE_BEHAVIOR_TEXT
+  v4SearchSettings:
+    type: object
+    properties:
+      codecFilters:
+        type: array
+        items:
+          $ref: '#/definitions/v4CodecFilter'
+      disabledIndexerIds:
+        type: array
+        items:
+          type: string
+      filterNastyResults:
+        type: boolean
+      filterResultsWithNoSeeders:
+        type: boolean
+      otherFilters:
+        type: array
+        items:
+          $ref: '#/definitions/v4OtherFilter'
+      rememberQuickFilters:
+        type: boolean
+      resolutionFilters:
+        type: array
+        items:
+          $ref: '#/definitions/v4ResolutionFilter'
+      searchResultDisplayBehavior:
+        $ref: '#/definitions/v4SearchResultDisplayBehavior'
+      searchResultTitleBehavior:
+        $ref: '#/definitions/v4SearchResultTitleBehavior'
+      sortBy:
+        $ref: '#/definitions/v4SortBy'
+      sortDirection:
+        $ref: '#/definitions/v4SortDirection'
   v4SortBy:
     type: string
     enum:
@@ -1321,6 +1367,12 @@ definitions:
         type: boolean
       tvShowsSource:
         $ref: '#/definitions/v4TVShowsSource'
+      search:
+        $ref: '#/definitions/v4SearchSettings'
+      catalog:
+        $ref: '#/definitions/v4CatalogSettings'
+      download:
+        $ref: '#/definitions/v4DownloadSettings'
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey

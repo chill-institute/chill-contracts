@@ -14,6 +14,26 @@ func TestGeneratedContractsCompileForConsumer(t *testing.T) {
 		t.Fatal("expected generated request type")
 	}
 
+	folderID := int64(123)
+	settings := &chillv4.UserSettings{
+		Search: &chillv4.SearchSettings{
+			FilterNastyResults:          true,
+			SearchResultDisplayBehavior: chillv4.SearchResultDisplayBehavior_SEARCH_RESULT_DISPLAY_BEHAVIOR_FASTEST,
+			SortBy:                      chillv4.SortBy_SORT_BY_SEEDERS,
+			SortDirection:               chillv4.SortDirection_SORT_DIRECTION_DESC,
+		},
+		Catalog: &chillv4.CatalogSettings{
+			MoviesSource:  chillv4.MoviesSource_MOVIES_SOURCE_IMDB_MOVIEMETER,
+			TvShowsSource: chillv4.TVShowsSource_TV_SHOWS_SOURCE_NETFLIX,
+		},
+		Download: &chillv4.DownloadSettings{
+			FolderId: &folderID,
+		},
+	}
+	if settings.GetDownload().GetFolderId() != folderID {
+		t.Fatal("expected nested settings type to expose download folder")
+	}
+
 	client := chillv4connect.NewUserServiceClient(http.DefaultClient, "https://example.com")
 	if client == nil {
 		t.Fatal("expected generated connect client")

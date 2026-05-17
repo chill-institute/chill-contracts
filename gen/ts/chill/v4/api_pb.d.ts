@@ -1193,6 +1193,134 @@ export declare const GetUserSettingsRequestSchema: GenMessage<GetUserSettingsReq
  */
 export declare type UserSettings = Message<"chill.v4.UserSettings"> & {
   /**
+   * @generated from field: repeated chill.v4.CodecFilter codec_filters = 1 [deprecated = true];
+   * @deprecated
+   */
+  codecFilters: CodecFilter[];
+
+  /**
+   * @generated from field: repeated string disabled_indexer_ids = 2 [deprecated = true];
+   * @deprecated
+   */
+  disabledIndexerIds: string[];
+
+  /**
+   * @generated from field: optional int64 download_folder_id = 3 [deprecated = true];
+   * @deprecated
+   */
+  downloadFolderId?: bigint | undefined;
+
+  /**
+   * @generated from field: bool filter_nasty_results = 4 [deprecated = true];
+   * @deprecated
+   */
+  filterNastyResults: boolean;
+
+  /**
+   * @generated from field: bool filter_results_with_no_seeders = 5 [deprecated = true];
+   * @deprecated
+   */
+  filterResultsWithNoSeeders: boolean;
+
+  /**
+   * @generated from field: repeated chill.v4.OtherFilter other_filters = 6 [deprecated = true];
+   * @deprecated
+   */
+  otherFilters: OtherFilter[];
+
+  /**
+   * @generated from field: bool remember_quick_filters = 7 [deprecated = true];
+   * @deprecated
+   */
+  rememberQuickFilters: boolean;
+
+  /**
+   * @generated from field: repeated chill.v4.ResolutionFilter resolution_filters = 8 [deprecated = true];
+   * @deprecated
+   */
+  resolutionFilters: ResolutionFilter[];
+
+  /**
+   * @generated from field: chill.v4.SearchResultDisplayBehavior search_result_display_behavior = 9 [deprecated = true];
+   * @deprecated
+   */
+  searchResultDisplayBehavior: SearchResultDisplayBehavior;
+
+  /**
+   * @generated from field: chill.v4.SearchResultTitleBehavior search_result_title_behavior = 10 [deprecated = true];
+   * @deprecated
+   */
+  searchResultTitleBehavior: SearchResultTitleBehavior;
+
+  /**
+   * @generated from field: bool show_movies = 12 [deprecated = true];
+   * @deprecated
+   */
+  showMovies: boolean;
+
+  /**
+   * @generated from field: chill.v4.SortBy sort_by = 13 [deprecated = true];
+   * @deprecated
+   */
+  sortBy: SortBy;
+
+  /**
+   * @generated from field: chill.v4.SortDirection sort_direction = 14 [deprecated = true];
+   * @deprecated
+   */
+  sortDirection: SortDirection;
+
+  /**
+   * @generated from field: chill.v4.CardDisplayType card_display_type = 15 [deprecated = true];
+   * @deprecated
+   */
+  cardDisplayType: CardDisplayType;
+
+  /**
+   * @generated from field: chill.v4.MoviesSource movies_source = 16 [deprecated = true];
+   * @deprecated
+   */
+  moviesSource: MoviesSource;
+
+  /**
+   * @generated from field: bool show_tv_shows = 17 [deprecated = true];
+   * @deprecated
+   */
+  showTvShows: boolean;
+
+  /**
+   * @generated from field: chill.v4.TVShowsSource tv_shows_source = 18 [deprecated = true];
+   * @deprecated
+   */
+  tvShowsSource: TVShowsSource;
+
+  /**
+   * @generated from field: chill.v4.SearchSettings search = 19;
+   */
+  search?: SearchSettings | undefined;
+
+  /**
+   * @generated from field: chill.v4.CatalogSettings catalog = 20;
+   */
+  catalog?: CatalogSettings | undefined;
+
+  /**
+   * @generated from field: chill.v4.DownloadSettings download = 21;
+   */
+  download?: DownloadSettings | undefined;
+};
+
+/**
+ * Describes the message chill.v4.UserSettings.
+ * Use `create(UserSettingsSchema)` to create a new message.
+ */
+export declare const UserSettingsSchema: GenMessage<UserSettings>;
+
+/**
+ * @generated from message chill.v4.SearchSettings
+ */
+export declare type SearchSettings = Message<"chill.v4.SearchSettings"> & {
+  /**
    * @generated from field: repeated chill.v4.CodecFilter codec_filters = 1;
    */
   codecFilters: CodecFilter[];
@@ -1203,86 +1331,93 @@ export declare type UserSettings = Message<"chill.v4.UserSettings"> & {
   disabledIndexerIds: string[];
 
   /**
-   * @generated from field: optional int64 download_folder_id = 3;
-   */
-  downloadFolderId?: bigint | undefined;
-
-  /**
-   * @generated from field: bool filter_nasty_results = 4;
+   * @generated from field: bool filter_nasty_results = 3;
    */
   filterNastyResults: boolean;
 
   /**
-   * @generated from field: bool filter_results_with_no_seeders = 5;
+   * @generated from field: bool filter_results_with_no_seeders = 4;
    */
   filterResultsWithNoSeeders: boolean;
 
   /**
-   * @generated from field: repeated chill.v4.OtherFilter other_filters = 6;
+   * @generated from field: repeated chill.v4.OtherFilter other_filters = 5;
    */
   otherFilters: OtherFilter[];
 
   /**
-   * @generated from field: bool remember_quick_filters = 7;
+   * @generated from field: bool remember_quick_filters = 6;
    */
   rememberQuickFilters: boolean;
 
   /**
-   * @generated from field: repeated chill.v4.ResolutionFilter resolution_filters = 8;
+   * @generated from field: repeated chill.v4.ResolutionFilter resolution_filters = 7;
    */
   resolutionFilters: ResolutionFilter[];
 
   /**
-   * @generated from field: chill.v4.SearchResultDisplayBehavior search_result_display_behavior = 9;
+   * @generated from field: chill.v4.SearchResultDisplayBehavior search_result_display_behavior = 8;
    */
   searchResultDisplayBehavior: SearchResultDisplayBehavior;
 
   /**
-   * @generated from field: chill.v4.SearchResultTitleBehavior search_result_title_behavior = 10;
+   * @generated from field: chill.v4.SearchResultTitleBehavior search_result_title_behavior = 9;
    */
   searchResultTitleBehavior: SearchResultTitleBehavior;
 
   /**
-   * @generated from field: bool show_movies = 12;
-   */
-  showMovies: boolean;
-
-  /**
-   * @generated from field: chill.v4.SortBy sort_by = 13;
+   * @generated from field: chill.v4.SortBy sort_by = 10;
    */
   sortBy: SortBy;
 
   /**
-   * @generated from field: chill.v4.SortDirection sort_direction = 14;
+   * @generated from field: chill.v4.SortDirection sort_direction = 11;
    */
   sortDirection: SortDirection;
+};
 
-  /**
-   * @generated from field: chill.v4.CardDisplayType card_display_type = 15;
-   */
-  cardDisplayType: CardDisplayType;
+/**
+ * Describes the message chill.v4.SearchSettings.
+ * Use `create(SearchSettingsSchema)` to create a new message.
+ */
+export declare const SearchSettingsSchema: GenMessage<SearchSettings>;
 
+/**
+ * @generated from message chill.v4.CatalogSettings
+ */
+export declare type CatalogSettings = Message<"chill.v4.CatalogSettings"> & {
   /**
-   * @generated from field: chill.v4.MoviesSource movies_source = 16;
+   * @generated from field: chill.v4.MoviesSource movies_source = 1;
    */
   moviesSource: MoviesSource;
 
   /**
-   * @generated from field: bool show_tv_shows = 17;
-   */
-  showTvShows: boolean;
-
-  /**
-   * @generated from field: chill.v4.TVShowsSource tv_shows_source = 18;
+   * @generated from field: chill.v4.TVShowsSource tv_shows_source = 2;
    */
   tvShowsSource: TVShowsSource;
 };
 
 /**
- * Describes the message chill.v4.UserSettings.
- * Use `create(UserSettingsSchema)` to create a new message.
+ * Describes the message chill.v4.CatalogSettings.
+ * Use `create(CatalogSettingsSchema)` to create a new message.
  */
-export declare const UserSettingsSchema: GenMessage<UserSettings>;
+export declare const CatalogSettingsSchema: GenMessage<CatalogSettings>;
+
+/**
+ * @generated from message chill.v4.DownloadSettings
+ */
+export declare type DownloadSettings = Message<"chill.v4.DownloadSettings"> & {
+  /**
+   * @generated from field: optional int64 folder_id = 1;
+   */
+  folderId?: bigint | undefined;
+};
+
+/**
+ * Describes the message chill.v4.DownloadSettings.
+ * Use `create(DownloadSettingsSchema)` to create a new message.
+ */
+export declare const DownloadSettingsSchema: GenMessage<DownloadSettings>;
 
 /**
  * @generated from message chill.v4.SaveUserSettingsRequest
