@@ -25,8 +25,8 @@ run = "cd testdata/consumers/go && go test ./..."
 [tasks.verify-consumers-ts]
 description = "Import the published TypeScript surface from a downstream package"
 run = [
-  "cd testdata/consumers/ts && corepack pnpm install --frozen-lockfile",
-  "cd testdata/consumers/ts && corepack pnpm run smoke"
+  "cd testdata/consumers/ts && corepack pnpm install --ignore-workspace --frozen-lockfile",
+  "cd testdata/consumers/ts && corepack pnpm --ignore-workspace run smoke"
 ]
 
 [tasks.verify-consumers]
