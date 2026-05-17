@@ -762,23 +762,50 @@ enum CardDisplayType {
 
 message UserSettings {
   reserved 11;
+  repeated CodecFilter codec_filters = 1 [deprecated = true];
+  repeated string disabled_indexer_ids = 2 [deprecated = true];
+  optional int64 download_folder_id = 3 [deprecated = true];
+  bool filter_nasty_results = 4 [deprecated = true];
+  bool filter_results_with_no_seeders = 5 [deprecated = true];
+  repeated OtherFilter other_filters = 6 [deprecated = true];
+  bool remember_quick_filters = 7 [deprecated = true];
+  repeated ResolutionFilter resolution_filters = 8 [deprecated = true];
+  SearchResultDisplayBehavior search_result_display_behavior = 9 [deprecated = true];
+  SearchResultTitleBehavior search_result_title_behavior = 10 [deprecated = true];
+  bool show_movies = 12 [deprecated = true];
+  SortBy sort_by = 13 [deprecated = true];
+  SortDirection sort_direction = 14 [deprecated = true];
+  CardDisplayType card_display_type = 15 [deprecated = true];
+  MoviesSource movies_source = 16 [deprecated = true];
+  bool show_tv_shows = 17 [deprecated = true];
+  TVShowsSource tv_shows_source = 18 [deprecated = true];
+
+  SearchSettings search = 19;
+  CatalogSettings catalog = 20;
+  DownloadSettings download = 21;
+}
+
+message SearchSettings {
   repeated CodecFilter codec_filters = 1;
   repeated string disabled_indexer_ids = 2;
-  optional int64 download_folder_id = 3;
-  bool filter_nasty_results = 4;
-  bool filter_results_with_no_seeders = 5;
-  repeated OtherFilter other_filters = 6;
-  bool remember_quick_filters = 7;
-  repeated ResolutionFilter resolution_filters = 8;
-  SearchResultDisplayBehavior search_result_display_behavior = 9;
-  SearchResultTitleBehavior search_result_title_behavior = 10;
-  bool show_movies = 12;
-  SortBy sort_by = 13;
-  SortDirection sort_direction = 14;
-  CardDisplayType card_display_type = 15;
-  MoviesSource movies_source = 16;
-  bool show_tv_shows = 17;
-  TVShowsSource tv_shows_source = 18;
+  bool filter_nasty_results = 3;
+  bool filter_results_with_no_seeders = 4;
+  repeated OtherFilter other_filters = 5;
+  bool remember_quick_filters = 6;
+  repeated ResolutionFilter resolution_filters = 7;
+  SearchResultDisplayBehavior search_result_display_behavior = 8;
+  SearchResultTitleBehavior search_result_title_behavior = 9;
+  SortBy sort_by = 10;
+  SortDirection sort_direction = 11;
+}
+
+message CatalogSettings {
+  MoviesSource movies_source = 1;
+  TVShowsSource tv_shows_source = 2;
+}
+
+message DownloadSettings {
+  optional int64 folder_id = 1;
 }
 
 message SaveUserSettingsRequest {
