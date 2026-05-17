@@ -49,4 +49,6 @@ graph TD
 - `Main` runs on pushes to `main`.
 - verification includes tiny downstream consumer checks for Go and TypeScript fixtures under `testdata/consumers/`
 - `Main` re-verifies the repo and then publishes the npm package and GitHub release from `main`
-- `Publish Package` remains available as a manual fallback for the publish path
+- npm publishing uses trusted publishing from the `Main` workflow with the `release` environment
+- release jobs opt into only the GitHub token scopes they need, run only from `main`, and use pinned workflow actions
+- `Main` remains available as a manual fallback for the trusted publish path from `main`
