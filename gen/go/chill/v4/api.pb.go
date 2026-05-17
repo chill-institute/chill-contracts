@@ -600,55 +600,6 @@ func (SortDirection) EnumDescriptor() ([]byte, []int) {
 	return file_chill_v4_api_proto_rawDescGZIP(), []int{10}
 }
 
-type CardDisplayType int32
-
-const (
-	CardDisplayType_CARD_DISPLAY_TYPE_UNSPECIFIED CardDisplayType = 0
-	CardDisplayType_CARD_DISPLAY_TYPE_COMPACT     CardDisplayType = 1
-	CardDisplayType_CARD_DISPLAY_TYPE_EXPANDED    CardDisplayType = 2
-)
-
-// Enum value maps for CardDisplayType.
-var (
-	CardDisplayType_name = map[int32]string{
-		0: "CARD_DISPLAY_TYPE_UNSPECIFIED",
-		1: "CARD_DISPLAY_TYPE_COMPACT",
-		2: "CARD_DISPLAY_TYPE_EXPANDED",
-	}
-	CardDisplayType_value = map[string]int32{
-		"CARD_DISPLAY_TYPE_UNSPECIFIED": 0,
-		"CARD_DISPLAY_TYPE_COMPACT":     1,
-		"CARD_DISPLAY_TYPE_EXPANDED":    2,
-	}
-)
-
-func (x CardDisplayType) Enum() *CardDisplayType {
-	p := new(CardDisplayType)
-	*p = x
-	return p
-}
-
-func (x CardDisplayType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (CardDisplayType) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[11].Descriptor()
-}
-
-func (CardDisplayType) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[11]
-}
-
-func (x CardDisplayType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use CardDisplayType.Descriptor instead.
-func (CardDisplayType) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{11}
-}
-
 type HealthCheckRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -3206,44 +3157,10 @@ func (*GetUserSettingsRequest) Descriptor() ([]byte, []int) {
 }
 
 type UserSettings struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	CodecFilters []CodecFilter `protobuf:"varint,1,rep,packed,name=codec_filters,json=codecFilters,proto3,enum=chill.v4.CodecFilter" json:"codec_filters,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	DisabledIndexerIds []string `protobuf:"bytes,2,rep,name=disabled_indexer_ids,json=disabledIndexerIds,proto3" json:"disabled_indexer_ids,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	DownloadFolderId *int64 `protobuf:"varint,3,opt,name=download_folder_id,json=downloadFolderId,proto3,oneof" json:"download_folder_id,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	FilterNastyResults bool `protobuf:"varint,4,opt,name=filter_nasty_results,json=filterNastyResults,proto3" json:"filter_nasty_results,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	FilterResultsWithNoSeeders bool `protobuf:"varint,5,opt,name=filter_results_with_no_seeders,json=filterResultsWithNoSeeders,proto3" json:"filter_results_with_no_seeders,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	OtherFilters []OtherFilter `protobuf:"varint,6,rep,packed,name=other_filters,json=otherFilters,proto3,enum=chill.v4.OtherFilter" json:"other_filters,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	RememberQuickFilters bool `protobuf:"varint,7,opt,name=remember_quick_filters,json=rememberQuickFilters,proto3" json:"remember_quick_filters,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	ResolutionFilters []ResolutionFilter `protobuf:"varint,8,rep,packed,name=resolution_filters,json=resolutionFilters,proto3,enum=chill.v4.ResolutionFilter" json:"resolution_filters,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	SearchResultDisplayBehavior SearchResultDisplayBehavior `protobuf:"varint,9,opt,name=search_result_display_behavior,json=searchResultDisplayBehavior,proto3,enum=chill.v4.SearchResultDisplayBehavior" json:"search_result_display_behavior,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	SearchResultTitleBehavior SearchResultTitleBehavior `protobuf:"varint,10,opt,name=search_result_title_behavior,json=searchResultTitleBehavior,proto3,enum=chill.v4.SearchResultTitleBehavior" json:"search_result_title_behavior,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	ShowMovies bool `protobuf:"varint,12,opt,name=show_movies,json=showMovies,proto3" json:"show_movies,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	SortBy SortBy `protobuf:"varint,13,opt,name=sort_by,json=sortBy,proto3,enum=chill.v4.SortBy" json:"sort_by,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	SortDirection SortDirection `protobuf:"varint,14,opt,name=sort_direction,json=sortDirection,proto3,enum=chill.v4.SortDirection" json:"sort_direction,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	CardDisplayType CardDisplayType `protobuf:"varint,15,opt,name=card_display_type,json=cardDisplayType,proto3,enum=chill.v4.CardDisplayType" json:"card_display_type,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	MoviesSource MoviesSource `protobuf:"varint,16,opt,name=movies_source,json=moviesSource,proto3,enum=chill.v4.MoviesSource" json:"movies_source,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	ShowTvShows bool `protobuf:"varint,17,opt,name=show_tv_shows,json=showTvShows,proto3" json:"show_tv_shows,omitempty"`
-	// Deprecated: Marked as deprecated in chill/v4/api.proto.
-	TvShowsSource TVShowsSource     `protobuf:"varint,18,opt,name=tv_shows_source,json=tvShowsSource,proto3,enum=chill.v4.TVShowsSource" json:"tv_shows_source,omitempty"`
-	Search        *SearchSettings   `protobuf:"bytes,19,opt,name=search,proto3" json:"search,omitempty"`
-	Catalog       *CatalogSettings  `protobuf:"bytes,20,opt,name=catalog,proto3" json:"catalog,omitempty"`
-	Download      *DownloadSettings `protobuf:"bytes,21,opt,name=download,proto3" json:"download,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Search        *SearchSettings        `protobuf:"bytes,19,opt,name=search,proto3" json:"search,omitempty"`
+	Catalog       *CatalogSettings       `protobuf:"bytes,20,opt,name=catalog,proto3" json:"catalog,omitempty"`
+	Download      *DownloadSettings      `protobuf:"bytes,21,opt,name=download,proto3" json:"download,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3276,142 +3193,6 @@ func (x *UserSettings) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UserSettings.ProtoReflect.Descriptor instead.
 func (*UserSettings) Descriptor() ([]byte, []int) {
 	return file_chill_v4_api_proto_rawDescGZIP(), []int{37}
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetCodecFilters() []CodecFilter {
-	if x != nil {
-		return x.CodecFilters
-	}
-	return nil
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetDisabledIndexerIds() []string {
-	if x != nil {
-		return x.DisabledIndexerIds
-	}
-	return nil
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetDownloadFolderId() int64 {
-	if x != nil && x.DownloadFolderId != nil {
-		return *x.DownloadFolderId
-	}
-	return 0
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetFilterNastyResults() bool {
-	if x != nil {
-		return x.FilterNastyResults
-	}
-	return false
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetFilterResultsWithNoSeeders() bool {
-	if x != nil {
-		return x.FilterResultsWithNoSeeders
-	}
-	return false
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetOtherFilters() []OtherFilter {
-	if x != nil {
-		return x.OtherFilters
-	}
-	return nil
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetRememberQuickFilters() bool {
-	if x != nil {
-		return x.RememberQuickFilters
-	}
-	return false
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetResolutionFilters() []ResolutionFilter {
-	if x != nil {
-		return x.ResolutionFilters
-	}
-	return nil
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetSearchResultDisplayBehavior() SearchResultDisplayBehavior {
-	if x != nil {
-		return x.SearchResultDisplayBehavior
-	}
-	return SearchResultDisplayBehavior_SEARCH_RESULT_DISPLAY_BEHAVIOR_UNSPECIFIED
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetSearchResultTitleBehavior() SearchResultTitleBehavior {
-	if x != nil {
-		return x.SearchResultTitleBehavior
-	}
-	return SearchResultTitleBehavior_SEARCH_RESULT_TITLE_BEHAVIOR_UNSPECIFIED
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetShowMovies() bool {
-	if x != nil {
-		return x.ShowMovies
-	}
-	return false
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetSortBy() SortBy {
-	if x != nil {
-		return x.SortBy
-	}
-	return SortBy_SORT_BY_UNSPECIFIED
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetSortDirection() SortDirection {
-	if x != nil {
-		return x.SortDirection
-	}
-	return SortDirection_SORT_DIRECTION_UNSPECIFIED
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetCardDisplayType() CardDisplayType {
-	if x != nil {
-		return x.CardDisplayType
-	}
-	return CardDisplayType_CARD_DISPLAY_TYPE_UNSPECIFIED
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetMoviesSource() MoviesSource {
-	if x != nil {
-		return x.MoviesSource
-	}
-	return MoviesSource_MOVIES_SOURCE_UNSPECIFIED
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetShowTvShows() bool {
-	if x != nil {
-		return x.ShowTvShows
-	}
-	return false
-}
-
-// Deprecated: Marked as deprecated in chill/v4/api.proto.
-func (x *UserSettings) GetTvShowsSource() TVShowsSource {
-	if x != nil {
-		return x.TvShowsSource
-	}
-	return TVShowsSource_TV_SHOWS_SOURCE_UNSPECIFIED
 }
 
 func (x *UserSettings) GetSearch() *SearchSettings {
@@ -4689,33 +4470,12 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\bdownload\x18\x02 \x01(\v2\x18.chill.v4.TVShowDownloadH\x00R\bdownload\x88\x01\x01\x12!\n" +
 	"\fsearch_query\x18\x03 \x01(\tR\vsearchQueryB\v\n" +
 	"\t_download\"\x18\n" +
-	"\x16GetUserSettingsRequest\"\xce\n" +
-	"\n" +
-	"\fUserSettings\x12>\n" +
-	"\rcodec_filters\x18\x01 \x03(\x0e2\x15.chill.v4.CodecFilterB\x02\x18\x01R\fcodecFilters\x124\n" +
-	"\x14disabled_indexer_ids\x18\x02 \x03(\tB\x02\x18\x01R\x12disabledIndexerIds\x125\n" +
-	"\x12download_folder_id\x18\x03 \x01(\x03B\x02\x18\x01H\x00R\x10downloadFolderId\x88\x01\x01\x124\n" +
-	"\x14filter_nasty_results\x18\x04 \x01(\bB\x02\x18\x01R\x12filterNastyResults\x12F\n" +
-	"\x1efilter_results_with_no_seeders\x18\x05 \x01(\bB\x02\x18\x01R\x1afilterResultsWithNoSeeders\x12>\n" +
-	"\rother_filters\x18\x06 \x03(\x0e2\x15.chill.v4.OtherFilterB\x02\x18\x01R\fotherFilters\x128\n" +
-	"\x16remember_quick_filters\x18\a \x01(\bB\x02\x18\x01R\x14rememberQuickFilters\x12M\n" +
-	"\x12resolution_filters\x18\b \x03(\x0e2\x1a.chill.v4.ResolutionFilterB\x02\x18\x01R\x11resolutionFilters\x12n\n" +
-	"\x1esearch_result_display_behavior\x18\t \x01(\x0e2%.chill.v4.SearchResultDisplayBehaviorB\x02\x18\x01R\x1bsearchResultDisplayBehavior\x12h\n" +
-	"\x1csearch_result_title_behavior\x18\n" +
-	" \x01(\x0e2#.chill.v4.SearchResultTitleBehaviorB\x02\x18\x01R\x19searchResultTitleBehavior\x12#\n" +
-	"\vshow_movies\x18\f \x01(\bB\x02\x18\x01R\n" +
-	"showMovies\x12-\n" +
-	"\asort_by\x18\r \x01(\x0e2\x10.chill.v4.SortByB\x02\x18\x01R\x06sortBy\x12B\n" +
-	"\x0esort_direction\x18\x0e \x01(\x0e2\x17.chill.v4.SortDirectionB\x02\x18\x01R\rsortDirection\x12I\n" +
-	"\x11card_display_type\x18\x0f \x01(\x0e2\x19.chill.v4.CardDisplayTypeB\x02\x18\x01R\x0fcardDisplayType\x12?\n" +
-	"\rmovies_source\x18\x10 \x01(\x0e2\x16.chill.v4.MoviesSourceB\x02\x18\x01R\fmoviesSource\x12&\n" +
-	"\rshow_tv_shows\x18\x11 \x01(\bB\x02\x18\x01R\vshowTvShows\x12C\n" +
-	"\x0ftv_shows_source\x18\x12 \x01(\x0e2\x17.chill.v4.TVShowsSourceB\x02\x18\x01R\rtvShowsSource\x120\n" +
+	"\x16GetUserSettingsRequest\"\xa8\x04\n" +
+	"\fUserSettings\x120\n" +
 	"\x06search\x18\x13 \x01(\v2\x18.chill.v4.SearchSettingsR\x06search\x123\n" +
 	"\acatalog\x18\x14 \x01(\v2\x19.chill.v4.CatalogSettingsR\acatalog\x126\n" +
 	"\bdownload\x18\x15 \x01(\v2\x1a.chill.v4.DownloadSettingsR\bdownload:#\x92A \n" +
-	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadB\x15\n" +
-	"\x13_download_folder_idJ\x04\b\v\x10\f\"\xee\x05\n" +
+	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadJ\x04\b\x01\x10\x13R\rcodec_filtersR\x14disabled_indexer_idsR\x12download_folder_idR\x14filter_nasty_resultsR\x1efilter_results_with_no_seedersR\rother_filtersR\x16remember_quick_filtersR\x12resolution_filtersR\x1esearch_result_display_behaviorR\x1csearch_result_title_behaviorR\vshow_moviesR\asort_byR\x0esort_directionR\x11card_display_typeR\rmovies_sourceR\rshow_tv_showsR\x0ftv_shows_source\"\xee\x05\n" +
 	"\x0eSearchSettings\x12:\n" +
 	"\rcodec_filters\x18\x01 \x03(\x0e2\x15.chill.v4.CodecFilterR\fcodecFilters\x120\n" +
 	"\x14disabled_indexer_ids\x18\x02 \x03(\tR\x12disabledIndexerIds\x120\n" +
@@ -4860,11 +4620,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\rSortDirection\x12\x1e\n" +
 	"\x1aSORT_DIRECTION_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12SORT_DIRECTION_ASC\x10\x01\x12\x17\n" +
-	"\x13SORT_DIRECTION_DESC\x10\x02*s\n" +
-	"\x0fCardDisplayType\x12!\n" +
-	"\x1dCARD_DISPLAY_TYPE_UNSPECIFIED\x10\x00\x12\x1d\n" +
-	"\x19CARD_DISPLAY_TYPE_COMPACT\x10\x01\x12\x1e\n" +
-	"\x1aCARD_DISPLAY_TYPE_EXPANDED\x10\x022\xc3\x05\n" +
+	"\x13SORT_DIRECTION_DESC\x10\x022\xc3\x05\n" +
 	"\vCoreService\x12}\n" +
 	"\vHealthCheck\x12\x1c.chill.v4.HealthCheckRequest\x1a\x18.chill.v4.HealthResponse\"6\x92A3b\x10\n" +
 	"\x0e\n" +
@@ -5009,7 +4765,7 @@ func file_chill_v4_api_proto_rawDescGZIP() []byte {
 	return file_chill_v4_api_proto_rawDescData
 }
 
-var file_chill_v4_api_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
+var file_chill_v4_api_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 54)
 var file_chill_v4_api_proto_goTypes = []any{
 	(IndexerStatus)(0),                       // 0: chill.v4.IndexerStatus
@@ -5023,164 +4779,153 @@ var file_chill_v4_api_proto_goTypes = []any{
 	(SearchResultTitleBehavior)(0),           // 8: chill.v4.SearchResultTitleBehavior
 	(SortBy)(0),                              // 9: chill.v4.SortBy
 	(SortDirection)(0),                       // 10: chill.v4.SortDirection
-	(CardDisplayType)(0),                     // 11: chill.v4.CardDisplayType
-	(*HealthCheckRequest)(nil),               // 12: chill.v4.HealthCheckRequest
-	(*HealthResponse)(nil),                   // 13: chill.v4.HealthResponse
-	(*CoreGetIndexersRequest)(nil),           // 14: chill.v4.CoreGetIndexersRequest
-	(*Indexer)(nil),                          // 15: chill.v4.Indexer
-	(*CoreGetIndexersResponse)(nil),          // 16: chill.v4.CoreGetIndexersResponse
-	(*UserGetIndexersRequest)(nil),           // 17: chill.v4.UserGetIndexersRequest
-	(*UserGetIndexersResponse)(nil),          // 18: chill.v4.UserGetIndexersResponse
-	(*UserIndexer)(nil),                      // 19: chill.v4.UserIndexer
-	(*CoreSearchRequest)(nil),                // 20: chill.v4.CoreSearchRequest
-	(*ReleaseInfo)(nil),                      // 21: chill.v4.ReleaseInfo
-	(*SearchResult)(nil),                     // 22: chill.v4.SearchResult
-	(*SearchResponse)(nil),                   // 23: chill.v4.SearchResponse
-	(*UserSearchRequest)(nil),                // 24: chill.v4.UserSearchRequest
-	(*GetMoviesBySourceRequest)(nil),         // 25: chill.v4.GetMoviesBySourceRequest
-	(*Movie)(nil),                            // 26: chill.v4.Movie
-	(*GetMoviesBySourceResponse)(nil),        // 27: chill.v4.GetMoviesBySourceResponse
-	(*GetMoviesRequest)(nil),                 // 28: chill.v4.GetMoviesRequest
-	(*GetMoviesResponse)(nil),                // 29: chill.v4.GetMoviesResponse
-	(*TVShow)(nil),                           // 30: chill.v4.TVShow
-	(*GetTVShowsBySourceRequest)(nil),        // 31: chill.v4.GetTVShowsBySourceRequest
-	(*GetTVShowsBySourceResponse)(nil),       // 32: chill.v4.GetTVShowsBySourceResponse
-	(*GetTVShowsRequest)(nil),                // 33: chill.v4.GetTVShowsRequest
-	(*GetTVShowsResponse)(nil),               // 34: chill.v4.GetTVShowsResponse
-	(*TVShowDetail)(nil),                     // 35: chill.v4.TVShowDetail
-	(*TVShowSeason)(nil),                     // 36: chill.v4.TVShowSeason
-	(*TVShowEpisode)(nil),                    // 37: chill.v4.TVShowEpisode
-	(*GetTVShowDetailRequest)(nil),           // 38: chill.v4.GetTVShowDetailRequest
-	(*GetTVShowDetailResponse)(nil),          // 39: chill.v4.GetTVShowDetailResponse
-	(*GetTVShowSeasonRequest)(nil),           // 40: chill.v4.GetTVShowSeasonRequest
-	(*GetTVShowSeasonResponse)(nil),          // 41: chill.v4.GetTVShowSeasonResponse
-	(*TVShowDownload)(nil),                   // 42: chill.v4.TVShowDownload
-	(*GetTVShowEpisodeDownloadRequest)(nil),  // 43: chill.v4.GetTVShowEpisodeDownloadRequest
-	(*GetTVShowEpisodeDownloadResponse)(nil), // 44: chill.v4.GetTVShowEpisodeDownloadResponse
-	(*GetTVShowSeasonDownloadsRequest)(nil),  // 45: chill.v4.GetTVShowSeasonDownloadsRequest
-	(*GetTVShowSeasonDownloadsResponse)(nil), // 46: chill.v4.GetTVShowSeasonDownloadsResponse
-	(*TVShowEpisodeDownloadResult)(nil),      // 47: chill.v4.TVShowEpisodeDownloadResult
-	(*GetUserSettingsRequest)(nil),           // 48: chill.v4.GetUserSettingsRequest
-	(*UserSettings)(nil),                     // 49: chill.v4.UserSettings
-	(*SearchSettings)(nil),                   // 50: chill.v4.SearchSettings
-	(*CatalogSettings)(nil),                  // 51: chill.v4.CatalogSettings
-	(*DownloadSettings)(nil),                 // 52: chill.v4.DownloadSettings
-	(*SaveUserSettingsRequest)(nil),          // 53: chill.v4.SaveUserSettingsRequest
-	(*AddTransferRequest)(nil),               // 54: chill.v4.AddTransferRequest
-	(*AddTransferResponse)(nil),              // 55: chill.v4.AddTransferResponse
-	(*GetTransferRequest)(nil),               // 56: chill.v4.GetTransferRequest
-	(*GetTransferResponse)(nil),              // 57: chill.v4.GetTransferResponse
-	(*Transfer)(nil),                         // 58: chill.v4.Transfer
-	(*GetDownloadFolderRequest)(nil),         // 59: chill.v4.GetDownloadFolderRequest
-	(*GetDownloadFolderResponse)(nil),        // 60: chill.v4.GetDownloadFolderResponse
-	(*GetFolderRequest)(nil),                 // 61: chill.v4.GetFolderRequest
-	(*UserFile)(nil),                         // 62: chill.v4.UserFile
-	(*GetFolderResponse)(nil),                // 63: chill.v4.GetFolderResponse
-	(*GetUserProfileRequest)(nil),            // 64: chill.v4.GetUserProfileRequest
-	(*UserProfile)(nil),                      // 65: chill.v4.UserProfile
+	(*HealthCheckRequest)(nil),               // 11: chill.v4.HealthCheckRequest
+	(*HealthResponse)(nil),                   // 12: chill.v4.HealthResponse
+	(*CoreGetIndexersRequest)(nil),           // 13: chill.v4.CoreGetIndexersRequest
+	(*Indexer)(nil),                          // 14: chill.v4.Indexer
+	(*CoreGetIndexersResponse)(nil),          // 15: chill.v4.CoreGetIndexersResponse
+	(*UserGetIndexersRequest)(nil),           // 16: chill.v4.UserGetIndexersRequest
+	(*UserGetIndexersResponse)(nil),          // 17: chill.v4.UserGetIndexersResponse
+	(*UserIndexer)(nil),                      // 18: chill.v4.UserIndexer
+	(*CoreSearchRequest)(nil),                // 19: chill.v4.CoreSearchRequest
+	(*ReleaseInfo)(nil),                      // 20: chill.v4.ReleaseInfo
+	(*SearchResult)(nil),                     // 21: chill.v4.SearchResult
+	(*SearchResponse)(nil),                   // 22: chill.v4.SearchResponse
+	(*UserSearchRequest)(nil),                // 23: chill.v4.UserSearchRequest
+	(*GetMoviesBySourceRequest)(nil),         // 24: chill.v4.GetMoviesBySourceRequest
+	(*Movie)(nil),                            // 25: chill.v4.Movie
+	(*GetMoviesBySourceResponse)(nil),        // 26: chill.v4.GetMoviesBySourceResponse
+	(*GetMoviesRequest)(nil),                 // 27: chill.v4.GetMoviesRequest
+	(*GetMoviesResponse)(nil),                // 28: chill.v4.GetMoviesResponse
+	(*TVShow)(nil),                           // 29: chill.v4.TVShow
+	(*GetTVShowsBySourceRequest)(nil),        // 30: chill.v4.GetTVShowsBySourceRequest
+	(*GetTVShowsBySourceResponse)(nil),       // 31: chill.v4.GetTVShowsBySourceResponse
+	(*GetTVShowsRequest)(nil),                // 32: chill.v4.GetTVShowsRequest
+	(*GetTVShowsResponse)(nil),               // 33: chill.v4.GetTVShowsResponse
+	(*TVShowDetail)(nil),                     // 34: chill.v4.TVShowDetail
+	(*TVShowSeason)(nil),                     // 35: chill.v4.TVShowSeason
+	(*TVShowEpisode)(nil),                    // 36: chill.v4.TVShowEpisode
+	(*GetTVShowDetailRequest)(nil),           // 37: chill.v4.GetTVShowDetailRequest
+	(*GetTVShowDetailResponse)(nil),          // 38: chill.v4.GetTVShowDetailResponse
+	(*GetTVShowSeasonRequest)(nil),           // 39: chill.v4.GetTVShowSeasonRequest
+	(*GetTVShowSeasonResponse)(nil),          // 40: chill.v4.GetTVShowSeasonResponse
+	(*TVShowDownload)(nil),                   // 41: chill.v4.TVShowDownload
+	(*GetTVShowEpisodeDownloadRequest)(nil),  // 42: chill.v4.GetTVShowEpisodeDownloadRequest
+	(*GetTVShowEpisodeDownloadResponse)(nil), // 43: chill.v4.GetTVShowEpisodeDownloadResponse
+	(*GetTVShowSeasonDownloadsRequest)(nil),  // 44: chill.v4.GetTVShowSeasonDownloadsRequest
+	(*GetTVShowSeasonDownloadsResponse)(nil), // 45: chill.v4.GetTVShowSeasonDownloadsResponse
+	(*TVShowEpisodeDownloadResult)(nil),      // 46: chill.v4.TVShowEpisodeDownloadResult
+	(*GetUserSettingsRequest)(nil),           // 47: chill.v4.GetUserSettingsRequest
+	(*UserSettings)(nil),                     // 48: chill.v4.UserSettings
+	(*SearchSettings)(nil),                   // 49: chill.v4.SearchSettings
+	(*CatalogSettings)(nil),                  // 50: chill.v4.CatalogSettings
+	(*DownloadSettings)(nil),                 // 51: chill.v4.DownloadSettings
+	(*SaveUserSettingsRequest)(nil),          // 52: chill.v4.SaveUserSettingsRequest
+	(*AddTransferRequest)(nil),               // 53: chill.v4.AddTransferRequest
+	(*AddTransferResponse)(nil),              // 54: chill.v4.AddTransferResponse
+	(*GetTransferRequest)(nil),               // 55: chill.v4.GetTransferRequest
+	(*GetTransferResponse)(nil),              // 56: chill.v4.GetTransferResponse
+	(*Transfer)(nil),                         // 57: chill.v4.Transfer
+	(*GetDownloadFolderRequest)(nil),         // 58: chill.v4.GetDownloadFolderRequest
+	(*GetDownloadFolderResponse)(nil),        // 59: chill.v4.GetDownloadFolderResponse
+	(*GetFolderRequest)(nil),                 // 60: chill.v4.GetFolderRequest
+	(*UserFile)(nil),                         // 61: chill.v4.UserFile
+	(*GetFolderResponse)(nil),                // 62: chill.v4.GetFolderResponse
+	(*GetUserProfileRequest)(nil),            // 63: chill.v4.GetUserProfileRequest
+	(*UserProfile)(nil),                      // 64: chill.v4.UserProfile
 }
 var file_chill_v4_api_proto_depIdxs = []int32{
 	0,  // 0: chill.v4.Indexer.status:type_name -> chill.v4.IndexerStatus
-	15, // 1: chill.v4.CoreGetIndexersResponse.indexers:type_name -> chill.v4.Indexer
-	19, // 2: chill.v4.UserGetIndexersResponse.indexers:type_name -> chill.v4.UserIndexer
+	14, // 1: chill.v4.CoreGetIndexersResponse.indexers:type_name -> chill.v4.Indexer
+	18, // 2: chill.v4.UserGetIndexersResponse.indexers:type_name -> chill.v4.UserIndexer
 	0,  // 3: chill.v4.UserIndexer.status:type_name -> chill.v4.IndexerStatus
-	21, // 4: chill.v4.SearchResult.release_info:type_name -> chill.v4.ReleaseInfo
-	22, // 5: chill.v4.SearchResponse.results:type_name -> chill.v4.SearchResult
+	20, // 4: chill.v4.SearchResult.release_info:type_name -> chill.v4.ReleaseInfo
+	21, // 5: chill.v4.SearchResponse.results:type_name -> chill.v4.SearchResult
 	1,  // 6: chill.v4.GetMoviesBySourceRequest.source:type_name -> chill.v4.MoviesSource
 	1,  // 7: chill.v4.Movie.source:type_name -> chill.v4.MoviesSource
 	1,  // 8: chill.v4.GetMoviesBySourceResponse.source:type_name -> chill.v4.MoviesSource
-	26, // 9: chill.v4.GetMoviesBySourceResponse.movies:type_name -> chill.v4.Movie
+	25, // 9: chill.v4.GetMoviesBySourceResponse.movies:type_name -> chill.v4.Movie
 	1,  // 10: chill.v4.GetMoviesResponse.source:type_name -> chill.v4.MoviesSource
-	26, // 11: chill.v4.GetMoviesResponse.movies:type_name -> chill.v4.Movie
+	25, // 11: chill.v4.GetMoviesResponse.movies:type_name -> chill.v4.Movie
 	2,  // 12: chill.v4.TVShow.source:type_name -> chill.v4.TVShowsSource
 	3,  // 13: chill.v4.TVShow.status:type_name -> chill.v4.TVShowStatus
 	2,  // 14: chill.v4.GetTVShowsBySourceRequest.source:type_name -> chill.v4.TVShowsSource
 	2,  // 15: chill.v4.GetTVShowsBySourceResponse.source:type_name -> chill.v4.TVShowsSource
-	30, // 16: chill.v4.GetTVShowsBySourceResponse.shows:type_name -> chill.v4.TVShow
+	29, // 16: chill.v4.GetTVShowsBySourceResponse.shows:type_name -> chill.v4.TVShow
 	2,  // 17: chill.v4.GetTVShowsResponse.source:type_name -> chill.v4.TVShowsSource
-	30, // 18: chill.v4.GetTVShowsResponse.shows:type_name -> chill.v4.TVShow
+	29, // 18: chill.v4.GetTVShowsResponse.shows:type_name -> chill.v4.TVShow
 	3,  // 19: chill.v4.TVShowDetail.status:type_name -> chill.v4.TVShowStatus
-	35, // 20: chill.v4.GetTVShowDetailResponse.show:type_name -> chill.v4.TVShowDetail
-	36, // 21: chill.v4.GetTVShowDetailResponse.seasons:type_name -> chill.v4.TVShowSeason
-	36, // 22: chill.v4.GetTVShowSeasonResponse.season:type_name -> chill.v4.TVShowSeason
-	37, // 23: chill.v4.GetTVShowSeasonResponse.episodes:type_name -> chill.v4.TVShowEpisode
-	42, // 24: chill.v4.GetTVShowEpisodeDownloadResponse.download:type_name -> chill.v4.TVShowDownload
-	42, // 25: chill.v4.GetTVShowSeasonDownloadsResponse.season_pack:type_name -> chill.v4.TVShowDownload
-	47, // 26: chill.v4.GetTVShowSeasonDownloadsResponse.episodes:type_name -> chill.v4.TVShowEpisodeDownloadResult
-	42, // 27: chill.v4.TVShowEpisodeDownloadResult.download:type_name -> chill.v4.TVShowDownload
-	5,  // 28: chill.v4.UserSettings.codec_filters:type_name -> chill.v4.CodecFilter
-	6,  // 29: chill.v4.UserSettings.other_filters:type_name -> chill.v4.OtherFilter
-	4,  // 30: chill.v4.UserSettings.resolution_filters:type_name -> chill.v4.ResolutionFilter
-	7,  // 31: chill.v4.UserSettings.search_result_display_behavior:type_name -> chill.v4.SearchResultDisplayBehavior
-	8,  // 32: chill.v4.UserSettings.search_result_title_behavior:type_name -> chill.v4.SearchResultTitleBehavior
-	9,  // 33: chill.v4.UserSettings.sort_by:type_name -> chill.v4.SortBy
-	10, // 34: chill.v4.UserSettings.sort_direction:type_name -> chill.v4.SortDirection
-	11, // 35: chill.v4.UserSettings.card_display_type:type_name -> chill.v4.CardDisplayType
-	1,  // 36: chill.v4.UserSettings.movies_source:type_name -> chill.v4.MoviesSource
-	2,  // 37: chill.v4.UserSettings.tv_shows_source:type_name -> chill.v4.TVShowsSource
-	50, // 38: chill.v4.UserSettings.search:type_name -> chill.v4.SearchSettings
-	51, // 39: chill.v4.UserSettings.catalog:type_name -> chill.v4.CatalogSettings
-	52, // 40: chill.v4.UserSettings.download:type_name -> chill.v4.DownloadSettings
-	5,  // 41: chill.v4.SearchSettings.codec_filters:type_name -> chill.v4.CodecFilter
-	6,  // 42: chill.v4.SearchSettings.other_filters:type_name -> chill.v4.OtherFilter
-	4,  // 43: chill.v4.SearchSettings.resolution_filters:type_name -> chill.v4.ResolutionFilter
-	7,  // 44: chill.v4.SearchSettings.search_result_display_behavior:type_name -> chill.v4.SearchResultDisplayBehavior
-	8,  // 45: chill.v4.SearchSettings.search_result_title_behavior:type_name -> chill.v4.SearchResultTitleBehavior
-	9,  // 46: chill.v4.SearchSettings.sort_by:type_name -> chill.v4.SortBy
-	10, // 47: chill.v4.SearchSettings.sort_direction:type_name -> chill.v4.SortDirection
-	1,  // 48: chill.v4.CatalogSettings.movies_source:type_name -> chill.v4.MoviesSource
-	2,  // 49: chill.v4.CatalogSettings.tv_shows_source:type_name -> chill.v4.TVShowsSource
-	49, // 50: chill.v4.SaveUserSettingsRequest.settings:type_name -> chill.v4.UserSettings
-	58, // 51: chill.v4.AddTransferResponse.transfer:type_name -> chill.v4.Transfer
-	58, // 52: chill.v4.GetTransferResponse.transfer:type_name -> chill.v4.Transfer
-	62, // 53: chill.v4.GetDownloadFolderResponse.folder:type_name -> chill.v4.UserFile
-	62, // 54: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
-	62, // 55: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
-	12, // 56: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
-	14, // 57: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
-	20, // 58: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
-	25, // 59: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
-	31, // 60: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
-	17, // 61: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
-	24, // 62: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
-	28, // 63: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
-	33, // 64: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
-	38, // 65: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
-	40, // 66: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
-	43, // 67: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
-	45, // 68: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
-	48, // 69: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
-	53, // 70: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
-	54, // 71: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
-	56, // 72: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
-	59, // 73: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
-	61, // 74: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
-	64, // 75: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
-	13, // 76: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
-	16, // 77: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
-	23, // 78: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
-	27, // 79: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
-	32, // 80: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
-	18, // 81: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
-	23, // 82: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
-	29, // 83: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
-	34, // 84: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
-	39, // 85: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
-	41, // 86: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
-	44, // 87: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
-	46, // 88: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
-	49, // 89: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
-	49, // 90: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
-	55, // 91: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
-	57, // 92: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
-	60, // 93: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
-	63, // 94: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
-	65, // 95: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
-	76, // [76:96] is the sub-list for method output_type
-	56, // [56:76] is the sub-list for method input_type
-	56, // [56:56] is the sub-list for extension type_name
-	56, // [56:56] is the sub-list for extension extendee
-	0,  // [0:56] is the sub-list for field type_name
+	34, // 20: chill.v4.GetTVShowDetailResponse.show:type_name -> chill.v4.TVShowDetail
+	35, // 21: chill.v4.GetTVShowDetailResponse.seasons:type_name -> chill.v4.TVShowSeason
+	35, // 22: chill.v4.GetTVShowSeasonResponse.season:type_name -> chill.v4.TVShowSeason
+	36, // 23: chill.v4.GetTVShowSeasonResponse.episodes:type_name -> chill.v4.TVShowEpisode
+	41, // 24: chill.v4.GetTVShowEpisodeDownloadResponse.download:type_name -> chill.v4.TVShowDownload
+	41, // 25: chill.v4.GetTVShowSeasonDownloadsResponse.season_pack:type_name -> chill.v4.TVShowDownload
+	46, // 26: chill.v4.GetTVShowSeasonDownloadsResponse.episodes:type_name -> chill.v4.TVShowEpisodeDownloadResult
+	41, // 27: chill.v4.TVShowEpisodeDownloadResult.download:type_name -> chill.v4.TVShowDownload
+	49, // 28: chill.v4.UserSettings.search:type_name -> chill.v4.SearchSettings
+	50, // 29: chill.v4.UserSettings.catalog:type_name -> chill.v4.CatalogSettings
+	51, // 30: chill.v4.UserSettings.download:type_name -> chill.v4.DownloadSettings
+	5,  // 31: chill.v4.SearchSettings.codec_filters:type_name -> chill.v4.CodecFilter
+	6,  // 32: chill.v4.SearchSettings.other_filters:type_name -> chill.v4.OtherFilter
+	4,  // 33: chill.v4.SearchSettings.resolution_filters:type_name -> chill.v4.ResolutionFilter
+	7,  // 34: chill.v4.SearchSettings.search_result_display_behavior:type_name -> chill.v4.SearchResultDisplayBehavior
+	8,  // 35: chill.v4.SearchSettings.search_result_title_behavior:type_name -> chill.v4.SearchResultTitleBehavior
+	9,  // 36: chill.v4.SearchSettings.sort_by:type_name -> chill.v4.SortBy
+	10, // 37: chill.v4.SearchSettings.sort_direction:type_name -> chill.v4.SortDirection
+	1,  // 38: chill.v4.CatalogSettings.movies_source:type_name -> chill.v4.MoviesSource
+	2,  // 39: chill.v4.CatalogSettings.tv_shows_source:type_name -> chill.v4.TVShowsSource
+	48, // 40: chill.v4.SaveUserSettingsRequest.settings:type_name -> chill.v4.UserSettings
+	57, // 41: chill.v4.AddTransferResponse.transfer:type_name -> chill.v4.Transfer
+	57, // 42: chill.v4.GetTransferResponse.transfer:type_name -> chill.v4.Transfer
+	61, // 43: chill.v4.GetDownloadFolderResponse.folder:type_name -> chill.v4.UserFile
+	61, // 44: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
+	61, // 45: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
+	11, // 46: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
+	13, // 47: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
+	19, // 48: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
+	24, // 49: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
+	30, // 50: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
+	16, // 51: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
+	23, // 52: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
+	27, // 53: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
+	32, // 54: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
+	37, // 55: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
+	39, // 56: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
+	42, // 57: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
+	44, // 58: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
+	47, // 59: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
+	52, // 60: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
+	53, // 61: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
+	55, // 62: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
+	58, // 63: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
+	60, // 64: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
+	63, // 65: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
+	12, // 66: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
+	15, // 67: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
+	22, // 68: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
+	26, // 69: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
+	31, // 70: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
+	17, // 71: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
+	22, // 72: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
+	28, // 73: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
+	33, // 74: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
+	38, // 75: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
+	40, // 76: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
+	43, // 77: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
+	45, // 78: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
+	48, // 79: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
+	48, // 80: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
+	54, // 81: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
+	56, // 82: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
+	59, // 83: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
+	62, // 84: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
+	64, // 85: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
+	66, // [66:86] is the sub-list for method output_type
+	46, // [46:66] is the sub-list for method input_type
+	46, // [46:46] is the sub-list for extension type_name
+	46, // [46:46] is the sub-list for extension extendee
+	0,  // [0:46] is the sub-list for field type_name
 }
 
 func init() { file_chill_v4_api_proto_init() }
@@ -5197,7 +4942,6 @@ func file_chill_v4_api_proto_init() {
 	file_chill_v4_api_proto_msgTypes[32].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[34].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[35].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[37].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[40].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[46].OneofWrappers = []any{}
 	type x struct{}
@@ -5205,7 +4949,7 @@ func file_chill_v4_api_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chill_v4_api_proto_rawDesc), len(file_chill_v4_api_proto_rawDesc)),
-			NumEnums:      12,
+			NumEnums:      11,
 			NumMessages:   54,
 			NumExtensions: 0,
 			NumServices:   2,

@@ -754,12 +754,6 @@ enum SortDirection {
   SORT_DIRECTION_DESC = 2;
 }
 
-enum CardDisplayType {
-  CARD_DISPLAY_TYPE_UNSPECIFIED = 0;
-  CARD_DISPLAY_TYPE_COMPACT = 1;
-  CARD_DISPLAY_TYPE_EXPANDED = 2;
-}
-
 message UserSettings {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
@@ -767,24 +761,25 @@ message UserSettings {
     }
   };
 
-  reserved 11;
-  repeated CodecFilter codec_filters = 1 [deprecated = true];
-  repeated string disabled_indexer_ids = 2 [deprecated = true];
-  optional int64 download_folder_id = 3 [deprecated = true];
-  bool filter_nasty_results = 4 [deprecated = true];
-  bool filter_results_with_no_seeders = 5 [deprecated = true];
-  repeated OtherFilter other_filters = 6 [deprecated = true];
-  bool remember_quick_filters = 7 [deprecated = true];
-  repeated ResolutionFilter resolution_filters = 8 [deprecated = true];
-  SearchResultDisplayBehavior search_result_display_behavior = 9 [deprecated = true];
-  SearchResultTitleBehavior search_result_title_behavior = 10 [deprecated = true];
-  bool show_movies = 12 [deprecated = true];
-  SortBy sort_by = 13 [deprecated = true];
-  SortDirection sort_direction = 14 [deprecated = true];
-  CardDisplayType card_display_type = 15 [deprecated = true];
-  MoviesSource movies_source = 16 [deprecated = true];
-  bool show_tv_shows = 17 [deprecated = true];
-  TVShowsSource tv_shows_source = 18 [deprecated = true];
+  reserved 1 to 18;
+  reserved
+    "codec_filters",
+    "disabled_indexer_ids",
+    "download_folder_id",
+    "filter_nasty_results",
+    "filter_results_with_no_seeders",
+    "other_filters",
+    "remember_quick_filters",
+    "resolution_filters",
+    "search_result_display_behavior",
+    "search_result_title_behavior",
+    "show_movies",
+    "sort_by",
+    "sort_direction",
+    "card_display_type",
+    "movies_source",
+    "show_tv_shows",
+    "tv_shows_source";
 
   SearchSettings search = 19;
   CatalogSettings catalog = 20;

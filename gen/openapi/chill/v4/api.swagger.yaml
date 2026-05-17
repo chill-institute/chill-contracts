@@ -583,11 +583,6 @@ definitions:
         type: string
       transfer:
         $ref: '#/definitions/v4Transfer'
-  v4CardDisplayType:
-    type: string
-    enum:
-      - CARD_DISPLAY_TYPE_COMPACT
-      - CARD_DISPLAY_TYPE_EXPANDED
   v4CatalogSettings:
     type: object
     properties:
@@ -1324,49 +1319,6 @@ definitions:
   v4UserSettings:
     type: object
     properties:
-      codecFilters:
-        type: array
-        items:
-          $ref: '#/definitions/v4CodecFilter'
-      disabledIndexerIds:
-        type: array
-        items:
-          type: string
-      downloadFolderId:
-        type: string
-        format: int64
-      filterNastyResults:
-        type: boolean
-      filterResultsWithNoSeeders:
-        type: boolean
-      otherFilters:
-        type: array
-        items:
-          $ref: '#/definitions/v4OtherFilter'
-      rememberQuickFilters:
-        type: boolean
-      resolutionFilters:
-        type: array
-        items:
-          $ref: '#/definitions/v4ResolutionFilter'
-      searchResultDisplayBehavior:
-        $ref: '#/definitions/v4SearchResultDisplayBehavior'
-      searchResultTitleBehavior:
-        $ref: '#/definitions/v4SearchResultTitleBehavior'
-      showMovies:
-        type: boolean
-      sortBy:
-        $ref: '#/definitions/v4SortBy'
-      sortDirection:
-        $ref: '#/definitions/v4SortDirection'
-      cardDisplayType:
-        $ref: '#/definitions/v4CardDisplayType'
-      moviesSource:
-        $ref: '#/definitions/v4MoviesSource'
-      showTvShows:
-        type: boolean
-      tvShowsSource:
-        $ref: '#/definitions/v4TVShowsSource'
       search:
         $ref: '#/definitions/v4SearchSettings'
       catalog:
