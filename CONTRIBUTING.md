@@ -4,15 +4,10 @@ Thanks for contributing to `chill-contracts`
 
 ## Setup
 
-Install the toolchain:
+Install the toolchain and generate artifacts:
 
 ```bash
 mise install
-```
-
-Regenerate artifacts after changing protobuf definitions:
-
-```bash
 mise run generate
 ```
 
@@ -28,12 +23,6 @@ mise run verify
 
 ## Development Notes
 
-- This repo is the public contract boundary for `chill.institute`.
-- Schema changes should be deliberate and consumer-aware.
-- Keep generated artifacts in sync with schema changes.
-- Consumers should depend on releases, not `main`
-- `testdata/consumers/` holds tiny downstream Go and TypeScript fixtures used by `mise run verify-consumers`
-
 This repo owns:
 
 - protobuf source files in `proto/`
@@ -46,6 +35,10 @@ This repo does not own:
 - backend implementation
 - web, mobile, or CLI application logic
 - deploy/runtime configuration
+
+Schema changes should be deliberate and consumer-aware. Keep generated artifacts in sync with schema changes, and expect consumers to depend on releases rather than `main`
+
+`testdata/consumers/` holds tiny downstream Go and TypeScript fixtures used by `mise run verify-consumers`
 
 ## Consumer Usage
 
@@ -78,7 +71,7 @@ Normal contract change flow:
 4. Run `mise run verify`
 5. Commit schema and generated output together.
 6. Open or update a pull request. GitHub Actions runs `Verify` on pull requests.
-7. Merge to `main`. GitHub Actions runs `Main`, which re-verifies the repo and then runs `semantic-release` to bump the version, tag `vX.Y.Z`, publish the package to npm through npm trusted publishing, create the GitHub release, and commit the updated `package.json` back to `main`
+7. Merge to `main`, where GitHub Actions runs `Main`, re-verifies the repo, runs `semantic-release`, tags `vX.Y.Z`, publishes the npm package through trusted publishing, creates the GitHub release, and commits the updated `package.json` back to `main`
 
 Example:
 
