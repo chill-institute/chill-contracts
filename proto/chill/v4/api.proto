@@ -522,6 +522,11 @@ enum TVShowsSource {
   TV_SHOWS_SOURCE_APPLE_TV_PLUS = 3;
   TV_SHOWS_SOURCE_PRIME_VIDEO = 4;
   TV_SHOWS_SOURCE_DISNEY_PLUS = 5;
+  TV_SHOWS_SOURCE_ALL_PROVIDERS = 6;
+  TV_SHOWS_SOURCE_HULU = 7;
+  TV_SHOWS_SOURCE_PARAMOUNT_PLUS = 8;
+  TV_SHOWS_SOURCE_AMC_PLUS = 9;
+  TV_SHOWS_SOURCE_PEACOCK = 10;
 }
 
 enum TVShowStatus {
@@ -604,7 +609,13 @@ message GetTVShowsBySourceResponse {
   repeated TVShow shows = 2;
 }
 
-message GetTVShowsRequest {}
+message GetTVShowsRequest {
+  // Optional per-request source override. When absent or UNSPECIFIED the engine
+  // serves the aggregated TV_SHOWS_SOURCE_ALL_PROVIDERS list; otherwise it
+  // returns the catalog for the requested source. The source is never
+  // persisted: callers send it on every request.
+  TVShowsSource source = 1;
+}
 
 message GetTVShowsResponse {
   TVShowsSource source = 1;
