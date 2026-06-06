@@ -761,6 +761,14 @@ definitions:
           $ref: '#/definitions/v4TVShow'
   v4GetTVShowsRequest:
     type: object
+    properties:
+      source:
+        $ref: '#/definitions/v4TVShowsSource'
+        description: |-
+          Optional per-request source override. When absent or UNSPECIFIED the engine
+          serves the aggregated TV_SHOWS_SOURCE_ALL_PROVIDERS list; otherwise it
+          returns the catalog for the requested source. The source is never
+          persisted: callers send it on every request.
   v4GetTVShowsResponse:
     type: object
     properties:
@@ -1199,6 +1207,11 @@ definitions:
       - TV_SHOWS_SOURCE_APPLE_TV_PLUS
       - TV_SHOWS_SOURCE_PRIME_VIDEO
       - TV_SHOWS_SOURCE_DISNEY_PLUS
+      - TV_SHOWS_SOURCE_ALL_PROVIDERS
+      - TV_SHOWS_SOURCE_HULU
+      - TV_SHOWS_SOURCE_PARAMOUNT_PLUS
+      - TV_SHOWS_SOURCE_AMC_PLUS
+      - TV_SHOWS_SOURCE_PEACOCK
   v4Transfer:
     type: object
     properties:

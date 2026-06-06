@@ -719,6 +719,15 @@ export declare const GetTVShowsBySourceResponseSchema: GenMessage<GetTVShowsBySo
  * @generated from message chill.v4.GetTVShowsRequest
  */
 export declare type GetTVShowsRequest = Message<"chill.v4.GetTVShowsRequest"> & {
+  /**
+   * Optional per-request source override. When absent or UNSPECIFIED the engine
+   * serves the aggregated TV_SHOWS_SOURCE_ALL_PROVIDERS list; otherwise it
+   * returns the catalog for the requested source. The source is never
+   * persisted: callers send it on every request.
+   *
+   * @generated from field: chill.v4.TVShowsSource source = 1;
+   */
+  source: TVShowsSource;
 };
 
 /**
@@ -1770,6 +1779,31 @@ export enum TVShowsSource {
    * @generated from enum value: TV_SHOWS_SOURCE_DISNEY_PLUS = 5;
    */
   TV_SHOWS_SOURCE_DISNEY_PLUS = 5,
+
+  /**
+   * @generated from enum value: TV_SHOWS_SOURCE_ALL_PROVIDERS = 6;
+   */
+  TV_SHOWS_SOURCE_ALL_PROVIDERS = 6,
+
+  /**
+   * @generated from enum value: TV_SHOWS_SOURCE_HULU = 7;
+   */
+  TV_SHOWS_SOURCE_HULU = 7,
+
+  /**
+   * @generated from enum value: TV_SHOWS_SOURCE_PARAMOUNT_PLUS = 8;
+   */
+  TV_SHOWS_SOURCE_PARAMOUNT_PLUS = 8,
+
+  /**
+   * @generated from enum value: TV_SHOWS_SOURCE_AMC_PLUS = 9;
+   */
+  TV_SHOWS_SOURCE_AMC_PLUS = 9,
+
+  /**
+   * @generated from enum value: TV_SHOWS_SOURCE_PEACOCK = 10;
+   */
+  TV_SHOWS_SOURCE_PEACOCK = 10,
 }
 
 /**
