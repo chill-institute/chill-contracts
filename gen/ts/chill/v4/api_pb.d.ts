@@ -417,6 +417,11 @@ export declare type SearchResponse = Message<"chill.v4.SearchResponse"> & {
    * @generated from field: repeated chill.v4.SearchResult results = 2;
    */
   results: SearchResult[];
+
+  /**
+   * @generated from field: repeated chill.v4.IndexerStat indexer_stats = 3;
+   */
+  indexerStats: IndexerStat[];
 };
 
 /**
@@ -424,6 +429,42 @@ export declare type SearchResponse = Message<"chill.v4.SearchResponse"> & {
  * Use `create(SearchResponseSchema)` to create a new message.
  */
 export declare const SearchResponseSchema: GenMessage<SearchResponse>;
+
+/**
+ * @generated from message chill.v4.IndexerStat
+ */
+export declare type IndexerStat = Message<"chill.v4.IndexerStat"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: int32 elapsed_ms = 3;
+   */
+  elapsedMs: number;
+
+  /**
+   * @generated from field: int32 result_count = 4;
+   */
+  resultCount: number;
+
+  /**
+   * @generated from field: string error = 5;
+   */
+  error: string;
+};
+
+/**
+ * Describes the message chill.v4.IndexerStat.
+ * Use `create(IndexerStatSchema)` to create a new message.
+ */
+export declare const IndexerStatSchema: GenMessage<IndexerStat>;
 
 /**
  * @generated from message chill.v4.UserSearchRequest

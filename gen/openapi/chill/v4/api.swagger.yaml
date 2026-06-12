@@ -814,6 +814,21 @@ definitions:
           type: string
       status:
         $ref: '#/definitions/v4IndexerStatus'
+  v4IndexerStat:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      elapsedMs:
+        type: integer
+        format: int32
+      resultCount:
+        type: integer
+        format: int32
+      error:
+        type: string
   v4IndexerStatus:
     type: string
     enum:
@@ -965,6 +980,11 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v4SearchResult'
+      indexerStats:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4IndexerStat'
   v4SearchResult:
     type: object
     properties:

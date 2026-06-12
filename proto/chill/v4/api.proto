@@ -499,6 +499,15 @@ message SearchResult {
 message SearchResponse {
   string query = 1;
   repeated SearchResult results = 2;
+  repeated IndexerStat indexer_stats = 3;
+}
+
+message IndexerStat {
+  string id = 1;
+  string name = 2;
+  int32 elapsed_ms = 3;
+  int32 result_count = 4;
+  string error = 5;
 }
 
 message UserSearchRequest {
