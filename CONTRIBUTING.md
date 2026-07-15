@@ -80,6 +80,7 @@ git push origin main
 ```
 
 The `Main` workflow also supports manual dispatch from `main` when an operator needs to rerun the trusted publish path without a fresh merge.
+The release job uses a GitHub-hosted runner because npm trusted publishing and provenance require that runner environment; verification remains on Blacksmith.
 
 Versioning notes:
 
