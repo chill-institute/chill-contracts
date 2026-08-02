@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for contributing to `chill-contracts`
+Thanks for contributing to `chill-contracts`.
 
 ## Setup
 
@@ -23,24 +23,18 @@ mise run verify
 
 ## Development Notes
 
-This repo owns:
+This repo owns the public contract surface:
 
 - protobuf source files in `proto/`
 - generated Go artifacts in `gen/go/`
 - generated TypeScript artifacts in `gen/ts/`
 - generated OpenAPI output in `gen/openapi/`
 
-This repo does not own:
+Schema changes should be deliberate and consumer-aware. Keep generated artifacts in sync with schema changes, and expect consumers to depend on releases rather than `main`.
 
-- backend implementation
-- web, mobile, or CLI application logic
-- deploy/runtime configuration
+`testdata/consumers/` holds downstream Go and TypeScript fixtures used by `mise run verify-consumers`.
 
-Schema changes should be deliberate and consumer-aware. Keep generated artifacts in sync with schema changes, and expect consumers to depend on releases rather than `main`
-
-`testdata/consumers/` holds tiny downstream Go and TypeScript fixtures used by `mise run verify-consumers`
-
-## Consumer Usage
+## Consume the contracts
 
 Go consumers import generated artifacts directly:
 
@@ -61,7 +55,7 @@ Example import:
 import { UserService } from "@chill-institute/contracts/chill/v4/api_pb";
 ```
 
-## Release Flow
+## Release
 
 Normal contract change flow:
 
@@ -71,13 +65,7 @@ Normal contract change flow:
 4. Run `mise run verify`
 5. Commit schema and generated output together.
 6. Open or update a pull request. GitHub Actions runs `Verify` on pull requests.
-7. Merge to `main`, where GitHub Actions runs `Main`, re-verifies the repo, runs `semantic-release`, tags `vX.Y.Z`, publishes the npm package through trusted publishing, creates the GitHub release, and commits the updated `package.json` back to `main`
-
-Example:
-
-```bash
-git push origin main
-```
+7. Merge to `main`, where GitHub Actions runs `Main`, re-verifies the repo, runs `semantic-release`, tags `vX.Y.Z`, publishes the npm package through trusted publishing, creates the GitHub release, and commits the updated `package.json` back to `main`.
 
 The `Main` workflow also supports manual dispatch from `main` when an operator needs to rerun the trusted publish path without a fresh merge.
 The release job uses a GitHub-hosted runner because npm trusted publishing and provenance require that runner environment; verification remains on Blacksmith.
@@ -88,7 +76,7 @@ Versioning notes:
 - `feat:` produces a minor release.
 - `fix:`, `perf:`, `refactor:`, `docs:`, `test:`, `build:`, `ci:`, and `chore:` produce a patch release.
 - Breaking changes produce a major release.
-- Do not manually edit `package.json` just to cut a release.
+- Let semantic-release update `package.json` as part of the release commit.
 
 ## Pull Requests
 

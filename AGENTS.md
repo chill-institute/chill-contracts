@@ -20,7 +20,7 @@
 - Treat changes here as consumer-facing API changes.
 - Keep protobuf sources, generated artifacts, and package metadata in sync.
 - Commit schema and generated output together.
-- This repo does not own backend, web, mobile, or CLI application logic.
+- Keep application behavior in the consuming repos; this repo owns the public schema and published artifacts.
 
 ## Read More
 

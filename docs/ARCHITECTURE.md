@@ -10,7 +10,7 @@ graph LR
   Generated --> Web["web"]
   Generated --> CLI["cli"]
   Generated --> Backend["backend"]
-  Generated --> Future["future clients"]
+  Generated --> Consumers["other consumers"]
 ```
 
 ## Components
@@ -19,7 +19,7 @@ graph LR
 |-----------|----------------|----------|
 | `proto/` | Canonical public API schemas | Buf, generators |
 | `gen/go/` | Generated Go contract types | backend consumers |
-| `gen/ts/` | Generated TypeScript contract types | `web`, future JS clients |
+| `gen/ts/` | Generated TypeScript contract types | `web`, other JavaScript consumers |
 | `gen/openapi/` | Generated OpenAPI output | docs and tooling |
 | `testdata/consumers/` | Tiny downstream fixtures proving Go and TypeScript consumers still compile/import | generated artifacts, `mise` |
 | package metadata | Publish the TypeScript package and release artifacts | npm, GitHub releases |
@@ -38,8 +38,8 @@ graph TD
 
 ## Boundaries
 
-- This repo owns public contracts only.
-- Backend behavior, web UX, and CLI command surfaces do not live here.
+- This repo owns the public schemas and generated contract artifacts.
+- Consumer repos own the behavior built on those contracts.
 - Compatibility decisions here are consumer-facing and should be treated like API changes.
 
 ## Release Model
@@ -51,4 +51,4 @@ graph TD
 - `Main` re-verifies the repo and then publishes the npm package and GitHub release from `main`
 - npm publishing uses trusted publishing from the `Main` workflow with the `release` environment
 - release jobs opt into only the GitHub token scopes they need, run only from `main`, and use pinned workflow actions
-- `Main` remains available as a manual fallback for the trusted publish path from `main`
+- Operators can manually dispatch `Main` from `main` to rerun the trusted publish path.
