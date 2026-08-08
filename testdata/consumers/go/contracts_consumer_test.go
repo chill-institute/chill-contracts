@@ -33,6 +33,17 @@ func TestGeneratedContractsCompileForConsumer(t *testing.T) {
 	if settings.GetDownload().GetFolderId() != folderID {
 		t.Fatal("expected nested settings type to expose download folder")
 	}
+	transfer := &chillv4.AddTransferRequest{
+		Url: "magnet:?xt=urn:btih:example",
+		CatalogOrigin: &chillv4.CatalogOrigin{
+			Catalog: &chillv4.CatalogOrigin_MoviesSource{
+				MoviesSource: chillv4.MoviesSource_MOVIES_SOURCE_TRAKT,
+			},
+		},
+	}
+	if transfer.GetCatalogOrigin().GetMoviesSource() != chillv4.MoviesSource_MOVIES_SOURCE_TRAKT {
+		t.Fatal("expected transfer request to expose catalog origin")
+	}
 
 	client := chillv4connect.NewUserServiceClient(http.DefaultClient, "https://example.com")
 	if client == nil {
