@@ -1384,6 +1384,34 @@ export declare type SaveUserSettingsRequest = Message<"chill.v4.SaveUserSettings
 export declare const SaveUserSettingsRequestSchema: GenMessage<SaveUserSettingsRequest>;
 
 /**
+ * @generated from message chill.v4.CatalogOrigin
+ */
+export declare type CatalogOrigin = Message<"chill.v4.CatalogOrigin"> & {
+  /**
+   * @generated from oneof chill.v4.CatalogOrigin.catalog
+   */
+  catalog: {
+    /**
+     * @generated from field: chill.v4.MoviesSource movies_source = 1;
+     */
+    value: MoviesSource;
+    case: "moviesSource";
+  } | {
+    /**
+     * @generated from field: chill.v4.TVShowsSource tv_shows_source = 2;
+     */
+    value: TVShowsSource;
+    case: "tvShowsSource";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message chill.v4.CatalogOrigin.
+ * Use `create(CatalogOriginSchema)` to create a new message.
+ */
+export declare const CatalogOriginSchema: GenMessage<CatalogOrigin>;
+
+/**
  * @generated from message chill.v4.AddTransferRequest
  */
 export declare type AddTransferRequest = Message<"chill.v4.AddTransferRequest"> & {
@@ -1391,6 +1419,11 @@ export declare type AddTransferRequest = Message<"chill.v4.AddTransferRequest"> 
    * @generated from field: string url = 1;
    */
   url: string;
+
+  /**
+   * @generated from field: chill.v4.CatalogOrigin catalog_origin = 2;
+   */
+  catalogOrigin?: CatalogOrigin | undefined;
 };
 
 /**

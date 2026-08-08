@@ -833,8 +833,16 @@ message SaveUserSettingsRequest {
   UserSettings settings = 1;
 }
 
+message CatalogOrigin {
+  oneof catalog {
+    MoviesSource movies_source = 1;
+    TVShowsSource tv_shows_source = 2;
+  }
+}
+
 message AddTransferRequest {
   string url = 1;
+  CatalogOrigin catalog_origin = 2;
 }
 
 message AddTransferResponse {

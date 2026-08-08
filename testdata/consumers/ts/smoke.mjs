@@ -1,4 +1,6 @@
 import {
+  AddTransferRequestSchema,
+  CatalogOriginSchema,
   CatalogSettingsSchema,
   DownloadSettingsSchema,
   ReleaseInfoSchema,
@@ -39,6 +41,14 @@ if (CatalogSettingsSchema.typeName !== "chill.v4.CatalogSettings") {
 
 if (DownloadSettingsSchema.typeName !== "chill.v4.DownloadSettings") {
   throw new Error(`unexpected download settings type name: ${DownloadSettingsSchema.typeName}`);
+}
+
+if (CatalogOriginSchema.typeName !== "chill.v4.CatalogOrigin") {
+  throw new Error(`unexpected catalog origin type name: ${CatalogOriginSchema.typeName}`);
+}
+
+if (AddTransferRequestSchema.typeName !== "chill.v4.AddTransferRequest") {
+  throw new Error(`unexpected add transfer request type name: ${AddTransferRequestSchema.typeName}`);
 }
 
 console.log("ts consumer import smoke passed");

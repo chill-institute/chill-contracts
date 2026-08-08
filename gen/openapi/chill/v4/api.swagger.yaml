@@ -576,6 +576,8 @@ definitions:
     properties:
       url:
         type: string
+      catalogOrigin:
+        $ref: '#/definitions/v4CatalogOrigin'
   v4AddTransferResponse:
     type: object
     properties:
@@ -583,6 +585,13 @@ definitions:
         type: string
       transfer:
         $ref: '#/definitions/v4Transfer'
+  v4CatalogOrigin:
+    type: object
+    properties:
+      moviesSource:
+        $ref: '#/definitions/v4MoviesSource'
+      tvShowsSource:
+        $ref: '#/definitions/v4TVShowsSource'
   v4CatalogSettings:
     type: object
     properties:
