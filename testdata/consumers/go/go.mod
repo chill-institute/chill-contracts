@@ -1,6 +1,6 @@
 module example.com/chill-contracts-consumer-go
 
-go 1.26.5
+go 1.26.6
 
 require github.com/chill-institute/chill-contracts v0.0.0
 

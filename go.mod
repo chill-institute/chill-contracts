@@ -1,6 +1,6 @@
 module github.com/chill-institute/chill-contracts
 
-go 1.26.5
+go 1.26.6
 
 require (
 	connectrpc.com/connect v1.19.2
