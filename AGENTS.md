@@ -8,12 +8,12 @@
 - generated Go, TypeScript, and OpenAPI artifacts
 - `mise` for generation and verification
 
-## Commands
+## Lifecycle
 
 - `mise install`
-- `mise run generate`
-- `mise run verify-consumers`
-- `mise run verify`
+- `mise run generate` regenerates all published artifacts.
+- `mise run verify` is the canonical gate and compiles the generated package
+  through clean Go and TypeScript consumers.
 
 ## Conventions
 
