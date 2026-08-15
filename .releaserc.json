@@ -6,6 +6,7 @@
     [
       "@semantic-release/commit-analyzer",
       {
+        "preset": "conventionalcommits",
         "releaseRules": [
           {
             "breaking": true,
@@ -54,22 +55,27 @@
         ]
       }
     ],
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
     [
       "@semantic-release/npm",
       {
         "npmPublish": true
       }
     ],
-    "@semantic-release/github",
     [
-      "@semantic-release/git",
+      "@jno21/semantic-release-github-commit",
       {
-        "assets": [
+        "files": [
           "package.json"
         ],
-        "message": "chore(contracts): release ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        "commitMessage": "chore(contracts): release ${nextRelease.version} [skip ci]"
       }
-    ]
+    ],
+    "@semantic-release/github"
   ]
 }
