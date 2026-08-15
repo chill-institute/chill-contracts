@@ -6,7 +6,7 @@ managed:
       module: buf.build/grpc-ecosystem/grpc-gateway
   override:
     - file_option: go_package_prefix
-      value: github.com/chill-institute/chill-contracts/gen/go
+      value: github.com/chill-institute/chill-contracts/v2/gen/go
 plugins:
   - remote: buf.build/protocolbuffers/go:v1.36.10
     out: gen/go

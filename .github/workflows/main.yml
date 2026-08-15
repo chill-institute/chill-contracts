@@ -83,3 +83,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ steps.release.outputs.new_release_git_tag }}
         run: gh release verify "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY"
+
+      - name: Verify published Go module
+        if: steps.release.outputs.new_release_published == 'true'
+        env:
+          GO_MODULE: github.com/chill-institute/chill-contracts/v2
+          RELEASE_TAG: ${{ steps.release.outputs.new_release_git_tag }}
+        run: GOPROXY=direct go mod download "$GO_MODULE@$RELEASE_TAG"

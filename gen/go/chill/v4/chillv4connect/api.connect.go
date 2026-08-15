@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v4 "github.com/chill-institute/chill-contracts/gen/go/chill/v4"
+	v4 "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4"
 	http "net/http"
 	strings "strings"
 )

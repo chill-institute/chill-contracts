@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"testing"
 
-	chillv4 "github.com/chill-institute/chill-contracts/gen/go/chill/v4"
-	chillv4connect "github.com/chill-institute/chill-contracts/gen/go/chill/v4/chillv4connect"
+	chillv4 "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4"
+	chillv4connect "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4/chillv4connect"
 )
 
 func TestGeneratedContractsCompileForConsumer(t *testing.T) {

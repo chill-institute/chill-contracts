@@ -4964,7 +4964,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"BearerAuth\x12\x00r?\n" +
 	"=\n" +
-	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01B\x90\x03\x92A\xef\x01\x12\x15\n" +
+	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01B\x93\x03\x92A\xef\x01\x12\x15\n" +
 	"\x10Chill API v4 RPC2\x014\"\x03/v4Z\xd0\x01\n" +
 	"Z\n" +
 	"\n" +
@@ -4972,7 +4972,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"r\n" +
 	"\n" +
 	"BearerAuth\x12d\b\x02\x12OUser auth token. Format: Bearer <token>. Do not send API keys as Bearer tokens.\x1a\rAuthorization \x02\n" +
-	"\fcom.chill.v4B\bApiProtoP\x01ZBgithub.com/chill-institute/chill-contracts/gen/go/chill/v4;chillv4\xa2\x02\x03CXX\xaa\x02\bChill.V4\xca\x02\bChill\\V4\xe2\x02\x14Chill\\V4\\GPBMetadata\xea\x02\tChill::V4b\x06proto3"
+	"\fcom.chill.v4B\bApiProtoP\x01ZEgithub.com/chill-institute/chill-contracts/v2/gen/go/chill/v4;chillv4\xa2\x02\x03CXX\xaa\x02\bChill.V4\xca\x02\bChill\\V4\xe2\x02\x14Chill\\V4\\GPBMetadata\xea\x02\tChill::V4b\x06proto3"
 
 var (
 	file_chill_v4_api_proto_rawDescOnce sync.Once

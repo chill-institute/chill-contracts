@@ -2,7 +2,7 @@ module example.com/chill-contracts-consumer-go
 
 go 1.26.6
 
-require github.com/chill-institute/chill-contracts v0.0.0
+require github.com/chill-institute/chill-contracts/v2 v2.0.0
 
 require (
 	connectrpc.com/connect v1.19.2 // indirect
@@ -10,4 +10,4 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 )
 
-replace github.com/chill-institute/chill-contracts => ../../..
+replace github.com/chill-institute/chill-contracts/v2 => ../../..
