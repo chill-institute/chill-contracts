@@ -1,6 +1,7 @@
 # Architecture
 
-This document describes how `chill-contracts` is built.
+`chill-contracts` turns one protobuf source tree into the artifacts consumed by
+the API, web app, CLI, and external clients.
 
 ## System Context
 
@@ -15,14 +16,13 @@ graph LR
 
 ## Components
 
-| Component | Responsibility | Talks to |
-|-----------|----------------|----------|
-| `proto/` | Canonical public API schemas | Buf, generators |
-| `gen/go/` | Generated Go contract types | backend consumers |
-| `gen/ts/` | Generated TypeScript contract types | `web`, other JavaScript consumers |
-| `gen/openapi/` | Generated OpenAPI output | docs and tooling |
-| `testdata/consumers/` | Tiny downstream fixtures proving Go and TypeScript consumers still compile/import | generated artifacts, `mise` |
-| package metadata | Publish the TypeScript package and release artifacts | npm, GitHub releases |
+| Path | Owns |
+| --- | --- |
+| `proto/` | Canonical public API schemas |
+| `gen/go/` | Go types and Connect bindings |
+| `gen/ts/` | TypeScript types and Connect bindings |
+| `gen/openapi/` | OpenAPI output |
+| `testdata/consumers/` | Clean Go and TypeScript compile checks |
 
 ## Generation Model
 
@@ -36,19 +36,14 @@ graph TD
   TS --> Web["web consumers"]
 ```
 
-## Boundaries
+## Contract
 
 - This repo owns the public schemas and generated contract artifacts.
 - Consumer repos own the behavior built on those contracts.
 - Compatibility decisions here are consumer-facing and should be treated like API changes.
 
-## Release Model
+## Delivery
 
-- `main` is the release branch.
-- `Verify` runs on pull requests.
-- `Main` runs on pushes to `main`.
-- verification includes tiny downstream consumer checks for Go and TypeScript fixtures under `testdata/consumers/`
-- `Main` re-verifies the repo and then publishes the npm package and GitHub release from `main`
-- npm publishing uses trusted publishing from the `Main` workflow with the `release` environment
-- release jobs opt into only the GitHub token scopes they need, run only from `main`, and use pinned workflow actions
-- Operators can manually dispatch `Main` from `main` to rerun the trusted publish path.
+Pull requests run `mise run verify`. Merges to `main` are reverified before
+semantic-release publishes the npm package and immutable GitHub release. The
+release commit is created through GitHub with bot attribution and verification.

@@ -2,25 +2,19 @@
 
 `contracts` is the public contract boundary for `chill.institute`.
 
-## Stack
-
-- protobuf source schemas in `proto/`
-- generated Go, TypeScript, and OpenAPI artifacts
-- `mise` for generation and verification
-
-## Lifecycle
+## Work
 
 - `mise install`
-- `mise run generate` regenerates all published artifacts.
-- `mise run verify` is the canonical gate and compiles the generated package
-  through clean Go and TypeScript consumers.
+- `mise run generate` regenerates Go, TypeScript, and OpenAPI output.
+- `mise run verify` is the canonical gate, including clean consumer builds.
 
 ## Conventions
 
 - Treat changes here as consumer-facing API changes.
 - Keep protobuf sources, generated artifacts, and package metadata in sync.
 - Commit schema and generated output together.
-- Keep application behavior in the consuming repos; this repo owns the public schema and published artifacts.
+- Keep application behavior in consumers; this repo owns only schemas and
+  generated artifacts.
 
 ## Read More
 
