@@ -26,7 +26,7 @@ run = "cd testdata/consumers/go && go test ./..."
 description = "Import the published TypeScript surface from a downstream package"
 run = [
   "cd testdata/consumers/ts && corepack pnpm install --ignore-workspace --force --lockfile=false",
-  "cd testdata/consumers/ts && PNPM_CONFIG_LOCKFILE=false corepack pnpm --ignore-workspace run smoke"
+  "cd testdata/consumers/ts && node ./smoke.mjs"
 ]
 
 [tasks.verify-consumers]
