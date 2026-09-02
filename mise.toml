@@ -1,7 +1,9 @@
 [tools]
+actionlint = "1.7.12"
 buf = "1.69.0"
 go = "1.26.6"
 node = "24.14.0"
+zizmor = "1.29.0"
 
 [env]
 GOWORK = "off"
@@ -36,6 +38,15 @@ run = [
   "mise run verify-consumers-ts"
 ]
 
+[tasks.actions]
+description = "Validate and audit GitHub Actions"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+actionlint
+zizmor .github/workflows
+'''
+
 [tasks.verify]
 description = "Verify protobuf contracts and generated artifacts"
 run = [
@@ -43,7 +54,8 @@ run = [
   "buf lint",
   "mise run generate",
   "go test ./...",
-  "mise run verify-consumers"
+  "mise run verify-consumers",
+  "mise run actions"
 ]
 
 [tasks."hooks:pre-commit"]
