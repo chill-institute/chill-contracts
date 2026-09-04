@@ -11,7 +11,7 @@ permissions: {}
 jobs:
   verify:
     if: "${{ !(contains(github.event.head_commit.message, '[skip ci]') && startsWith(github.event.head_commit.message, 'chore(contracts): release ')) }}"
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     concurrency:
       group: verify-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
