@@ -34,29 +34,7 @@ jobs:
             exit 1
           }
 
-      - name: Fetch main for breaking-change check
-        run: git fetch --no-tags origin main:main
-
-      - name: Check breaking changes against main
-        run: |
-          if buf breaking --against '.git#branch=main'; then
-            exit 0
-          fi
-
-          breaking_marker_regex='(^[a-z]+(\([^)]+\))?!:)|(^BREAKING CHANGE:)'
-          if ! git log --format=%B origin/main..HEAD | grep -Eq "$breaking_marker_regex"; then
-            echo "Breaking changes detected without a Conventional Commit breaking marker in the commits that semantic-release will analyze"
-            exit 1
-          fi
-
-          wire_config="$(printf '%s\n' \
-            'version: v2' \
-            'modules:' \
-            '  - path: proto' \
-            'deps:' \
-            '  - buf.build/grpc-ecosystem/grpc-gateway' \
-            'breaking:' \
-            '  use:' \
-            '    - WIRE')"
-          echo "Breaking changes detected and marked for a major release; checking wire compatibility"
-          buf breaking --against '.git#branch=main' --config "$wire_config"
+      - name: Check compatibility against the pull-request base
+        env:
+          CONTRACTS_BASE_REF: ${{ github.event.pull_request.base.sha }}
+        run: mise run compatibility:check

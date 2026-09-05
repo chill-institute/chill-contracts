@@ -59,3 +59,23 @@ func TestOrgWorkflowInvariants(t *testing.T) {
 		})
 	}
 }
+
+func TestBothWorkflowsRequireCompatibility(t *testing.T) {
+	all := workflows(t)
+	for name, base := range map[string]string{
+		"verify.yml": "${{ github.event.pull_request.base.sha }}",
+		"main.yml":   "release",
+	} {
+		verification, _, _ := strings.Cut(all[name], "\n  release:")
+		want := "CONTRACTS_BASE_REF: " + base + "\n        run: mise run compatibility:check"
+		if !strings.Contains(verification, want) {
+			t.Fatalf("%s must run the shared compatibility policy with baseline %s", name, base)
+		}
+		if strings.Contains(verification, "buf breaking") {
+			t.Fatalf("%s duplicates the shared compatibility policy", name)
+		}
+	}
+	if !strings.Contains(all["main.yml"], "needs: [verify]\n    if: ${{ github.ref == 'refs/heads/main' && needs.verify.result == 'success' }}") {
+		t.Fatal("release must require successful verification")
+	}
+}

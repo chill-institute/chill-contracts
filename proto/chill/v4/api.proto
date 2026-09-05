@@ -5,31 +5,31 @@ package chill.v4;
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  base_path: "/v4";
+  base_path: "/v4"
   info: {
-    title: "Chill API v4 RPC";
-    version: "4";
-  };
+    title: "Chill API v4 RPC"
+    version: "4"
+  }
   security_definitions: {
     security: {
-      key: "ApiKeyAuth";
+      key: "ApiKeyAuth"
       value: {
-        type: TYPE_API_KEY;
-        description: "Core API key. Send the key in X-API-Key. Do not use Bearer.";
-        in: IN_HEADER;
-        name: "X-API-Key";
-      };
-    };
+        type: TYPE_API_KEY
+        description: "Core API key. Send the key in X-API-Key. Do not use Bearer."
+        in: IN_HEADER
+        name: "X-API-Key"
+      }
+    }
     security: {
-      key: "BearerAuth";
+      key: "BearerAuth"
       value: {
-        type: TYPE_API_KEY;
-        description: "User auth token. Format: Bearer <token>. Do not send API keys as Bearer tokens.";
-        in: IN_HEADER;
-        name: "Authorization";
-      };
-    };
-  };
+        type: TYPE_API_KEY
+        description: "User auth token. Format: Bearer <token>. Do not send API keys as Bearer tokens."
+        in: IN_HEADER
+        name: "Authorization"
+      }
+    }
+  }
 };
 
 service CoreService {
@@ -37,90 +37,90 @@ service CoreService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "ApiKeyAuth";
-          value: {};
-        };
-      };
+          key: "ApiKeyAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "X-API-Key";
-          description: "Core API key";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "X-API-Key"
+          description: "Core API key"
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetIndexers(CoreGetIndexersRequest) returns (CoreGetIndexersResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "ApiKeyAuth";
-          value: {};
-        };
-      };
+          key: "ApiKeyAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "X-API-Key";
-          description: "Core API key";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "X-API-Key"
+          description: "Core API key"
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc Search(CoreSearchRequest) returns (SearchResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "ApiKeyAuth";
-          value: {};
-        };
-      };
+          key: "ApiKeyAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "X-API-Key";
-          description: "Core API key";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "X-API-Key"
+          description: "Core API key"
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetMoviesBySource(GetMoviesBySourceRequest) returns (GetMoviesBySourceResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "ApiKeyAuth";
-          value: {};
-        };
-      };
+          key: "ApiKeyAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "X-API-Key";
-          description: "Core API key";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "X-API-Key"
+          description: "Core API key"
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTVShowsBySource(GetTVShowsBySourceRequest) returns (GetTVShowsBySourceResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "ApiKeyAuth";
-          value: {};
-        };
-      };
+          key: "ApiKeyAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "X-API-Key";
-          description: "Core API key";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "X-API-Key"
+          description: "Core API key"
+          type: STRING
+          required: true
+        }
+      }
     };
   }
 }
@@ -130,270 +130,270 @@ service UserService {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc Search(UserSearchRequest) returns (SearchResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetMovies(GetMoviesRequest) returns (GetMoviesResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTVShows(GetTVShowsRequest) returns (GetTVShowsResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTVShowDetail(GetTVShowDetailRequest) returns (GetTVShowDetailResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTVShowSeason(GetTVShowSeasonRequest) returns (GetTVShowSeasonResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTVShowEpisodeDownload(GetTVShowEpisodeDownloadRequest) returns (GetTVShowEpisodeDownloadResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTVShowSeasonDownloads(GetTVShowSeasonDownloadsRequest) returns (GetTVShowSeasonDownloadsResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetUserSettings(GetUserSettingsRequest) returns (UserSettings) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc SaveUserSettings(SaveUserSettingsRequest) returns (UserSettings) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc AddTransfer(AddTransferRequest) returns (AddTransferResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetTransfer(GetTransferRequest) returns (GetTransferResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetDownloadFolder(GetDownloadFolderRequest) returns (GetDownloadFolderResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetFolder(GetFolderRequest) returns (GetFolderResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
   rpc GetUserProfile(GetUserProfileRequest) returns (UserProfile) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
         security_requirement: {
-          key: "BearerAuth";
-          value: {};
-        };
-      };
+          key: "BearerAuth"
+          value: {}
+        }
+      }
       parameters: {
         headers: {
-          name: "Authorization";
-          description: "User auth token. Format: Bearer <token>.";
-          type: STRING;
-          required: true;
-        };
-      };
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
     };
   }
 }
@@ -592,7 +592,10 @@ message GetMoviesResponse {
 message TVShow {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      required: ["imdb_id", "poster_url"]
+      required: [
+        "imdb_id",
+        "poster_url"
+      ]
     }
   };
 
@@ -777,29 +780,16 @@ enum SortDirection {
 message UserSettings {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      required: ["search", "catalog", "download"]
+      required: [
+        "search",
+        "catalog",
+        "download"
+      ]
     }
   };
 
   reserved 1 to 18;
-  reserved
-    "codec_filters",
-    "disabled_indexer_ids",
-    "download_folder_id",
-    "filter_nasty_results",
-    "filter_results_with_no_seeders",
-    "other_filters",
-    "remember_quick_filters",
-    "resolution_filters",
-    "search_result_display_behavior",
-    "search_result_title_behavior",
-    "show_movies",
-    "sort_by",
-    "sort_direction",
-    "card_display_type",
-    "movies_source",
-    "show_tv_shows",
-    "tv_shows_source";
+  reserved "codec_filters", "disabled_indexer_ids", "download_folder_id", "filter_nasty_results", "filter_results_with_no_seeders", "other_filters", "remember_quick_filters", "resolution_filters", "search_result_display_behavior", "search_result_title_behavior", "show_movies", "sort_by", "sort_direction", "card_display_type", "movies_source", "show_tv_shows", "tv_shows_source";
 
   SearchSettings search = 19;
   CatalogSettings catalog = 20;

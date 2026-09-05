@@ -37,6 +37,11 @@ jobs:
             exit 1
           }
 
+      - name: Check compatibility against the preceding release
+        env:
+          CONTRACTS_BASE_REF: release
+        run: mise run compatibility:check
+
   release:
     needs: [verify]
     if: ${{ github.ref == 'refs/heads/main' && needs.verify.result == 'success' }}

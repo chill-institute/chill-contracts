@@ -16,6 +16,14 @@ run = [
   "go mod tidy"
 ]
 
+[tasks."fmt:check"]
+description = "Check protobuf source formatting without changing files"
+run = "buf format --diff --exit-code"
+
+[tasks."compatibility:check"]
+description = "Check compatibility against CONTRACTS_BASE_REF or the preceding stable release"
+run = 'go run ./tools/check-compatibility --against "${CONTRACTS_BASE_REF:-release}"'
+
 [tasks.smoke]
 description = "Run a fast protobuf compile smoke check"
 run = "buf build"
@@ -50,6 +58,7 @@ zizmor .github/workflows
 [tasks.verify]
 description = "Verify protobuf contracts and generated artifacts"
 run = [
+  "mise run fmt:check",
   "mise run smoke",
   "buf lint",
   "mise run generate",
