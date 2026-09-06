@@ -1,5 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>chill-institute/renovate-config"],
-  "ignorePaths": ["testdata/**"]
+  "extends": ["github>chill-institute/renovate-config"]
 }
