@@ -1,6 +1,6 @@
 {
   "name": "@chill-institute/contracts",
-  "version": "2.3.15",
+  "version": "2.3.16",
   "description": "Protobuf schemas and generated clients for chill.institute",
   "license": "MIT",
   "packageManager": "pnpm@12.1.0",
