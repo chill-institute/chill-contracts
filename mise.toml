@@ -3,7 +3,7 @@ actionlint = "1.7.12"
 buf = "1.72.0"
 go = "1.26.6"
 node = "24.14.0"
-zizmor = "1.29.0"
+zizmor = "1.30.0"
 
 [env]
 GOWORK = "off"
