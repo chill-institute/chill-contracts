@@ -1,7 +1,7 @@
 [tools]
 actionlint = "1.7.12"
 buf = "1.72.0"
-go = "1.26.6"
+go = "1.27.1"
 node = "24.14.0"
 zizmor = "1.30.0"
 
