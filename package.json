@@ -3,7 +3,7 @@
   "version": "2.3.16",
   "description": "Protobuf schemas and generated clients for chill.institute",
   "license": "MIT",
-  "packageManager": "pnpm@12.3.2",
+  "packageManager": "pnpm@12.3.4",
   "type": "module",
   "sideEffects": false,
   "files": [
