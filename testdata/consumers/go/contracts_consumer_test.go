@@ -6,6 +6,7 @@ import (
 
 	chillv4 "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4"
 	chillv4connect "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4/chillv4connect"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestGeneratedContractsCompileForConsumer(t *testing.T) {
@@ -48,5 +49,30 @@ func TestGeneratedContractsCompileForConsumer(t *testing.T) {
 	client := chillv4connect.NewUserServiceClient(http.DefaultClient, "https://example.com")
 	if client == nil {
 		t.Fatal("expected generated connect client")
+	}
+}
+
+func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {
+	for _, sort := range []*chillv4.CatalogSort{
+		nil,
+		chillv4.CatalogSort_CATALOG_SORT_UNSPECIFIED.Enum(),
+		chillv4.CatalogSort_CATALOG_SORT_POPULARITY.Enum(),
+		chillv4.CatalogSort_CATALOG_SORT_RELEASE_DATE_ASC.Enum(),
+	} {
+		original := &chillv4.CatalogSettings{MoviesSort: sort}
+		encoded, err := proto.Marshal(original)
+		if err != nil {
+			t.Fatal(err)
+		}
+		decoded := &chillv4.CatalogSettings{}
+		if err := proto.Unmarshal(encoded, decoded); err != nil {
+			t.Fatal(err)
+		}
+		if !proto.Equal(original, decoded) || (decoded.MoviesSort == nil) != (sort == nil) {
+			t.Fatalf("sort presence changed: original=%v decoded=%v", original, decoded)
+		}
+		if decoded.TvShowsSort != nil {
+			t.Fatal("movie sort must not populate the independent TV preference")
+		}
 	}
 }

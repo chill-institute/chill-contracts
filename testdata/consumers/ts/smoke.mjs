@@ -1,7 +1,10 @@
+import assert from "node:assert/strict";
+import { create, fromBinary, fromJson, toBinary, toJson } from "@bufbuild/protobuf";
 import {
   AddTransferRequestSchema,
   CatalogOriginSchema,
   CatalogSettingsSchema,
+  CatalogSort,
   DownloadSettingsSchema,
   ReleaseInfoSchema,
   SearchSettingsSchema,
@@ -49,6 +52,22 @@ if (CatalogOriginSchema.typeName !== "chill.v4.CatalogOrigin") {
 
 if (AddTransferRequestSchema.typeName !== "chill.v4.AddTransferRequest") {
   throw new Error(`unexpected add transfer request type name: ${AddTransferRequestSchema.typeName}`);
+}
+
+for (const moviesSort of [
+  undefined,
+  CatalogSort.UNSPECIFIED,
+  CatalogSort.POPULARITY,
+  CatalogSort.RELEASE_DATE_DESC,
+]) {
+  const settings = create(CatalogSettingsSchema, { moviesSort });
+  for (const decoded of [
+    fromBinary(CatalogSettingsSchema, toBinary(CatalogSettingsSchema, settings)),
+    fromJson(CatalogSettingsSchema, toJson(CatalogSettingsSchema, settings)),
+  ]) {
+    assert.equal(decoded.moviesSort, moviesSort);
+    assert.equal(decoded.tvShowsSort, undefined);
+  }
 }
 
 console.log("ts consumer import smoke passed");

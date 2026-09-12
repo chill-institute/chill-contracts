@@ -574,6 +574,8 @@ message Movie {
   string backdrop_url = 14;
   string overview = 15;
   repeated string genres = 16;
+  // Movie release date as YYYY-MM-DD; empty when unknown.
+  string release_date = 17;
 }
 
 message GetMoviesBySourceResponse {
@@ -610,6 +612,8 @@ message TVShow {
   int32 season_count = 9;
   TVShowStatus status = 10;
   repeated string networks = 11;
+  // Series premiere date as YYYY-MM-DD; empty when unknown.
+  string first_air_date = 12;
 }
 
 message GetTVShowsBySourceRequest {
@@ -647,6 +651,8 @@ message TVShowDetail {
   TVShowStatus status = 10;
   repeated string networks = 11;
   repeated string genres = 12;
+  // Series premiere date as YYYY-MM-DD; empty when unknown.
+  string first_air_date = 13;
 }
 
 message TVShowSeason {
@@ -810,9 +816,25 @@ message SearchSettings {
   SortDirection sort_direction = 11;
 }
 
+enum CatalogSort {
+  CATALOG_SORT_UNSPECIFIED = 0;
+  // Default ordering supplied by the selected provider.
+  CATALOG_SORT_POPULARITY = 1;
+  CATALOG_SORT_RATING_DESC = 2;
+  CATALOG_SORT_RATING_ASC = 3;
+  CATALOG_SORT_RELEASE_DATE_DESC = 4;
+  CATALOG_SORT_RELEASE_DATE_ASC = 5;
+}
+
 message CatalogSettings {
   MoviesSource movies_source = 1;
   TVShowsSource tv_shows_source = 2;
+  // Omission on save preserves the stored preference; missing stored values
+  // default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+  optional CatalogSort movies_sort = 3;
+  // Omission on save preserves the stored preference; missing stored values
+  // default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+  optional CatalogSort tv_shows_sort = 4;
 }
 
 message DownloadSettings {

@@ -599,6 +599,25 @@ definitions:
         $ref: '#/definitions/v4MoviesSource'
       tvShowsSource:
         $ref: '#/definitions/v4TVShowsSource'
+      moviesSort:
+        $ref: '#/definitions/v4CatalogSort'
+        description: |-
+          Omission on save preserves the stored preference; missing stored values
+          default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+      tvShowsSort:
+        $ref: '#/definitions/v4CatalogSort'
+        description: |-
+          Omission on save preserves the stored preference; missing stored values
+          default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+  v4CatalogSort:
+    type: string
+    enum:
+      - CATALOG_SORT_POPULARITY
+      - CATALOG_SORT_RATING_DESC
+      - CATALOG_SORT_RATING_ASC
+      - CATALOG_SORT_RELEASE_DATE_DESC
+      - CATALOG_SORT_RELEASE_DATE_ASC
+    description: ' - CATALOG_SORT_POPULARITY: Default ordering supplied by the selected provider.'
   v4CodecFilter:
     type: string
     enum:
@@ -886,6 +905,9 @@ definitions:
         type: array
         items:
           type: string
+      releaseDate:
+        type: string
+        description: Movie release date as YYYY-MM-DD; empty when unknown.
     required:
       - posterUrl
   v4MoviesSource:
@@ -1108,6 +1130,9 @@ definitions:
         type: array
         items:
           type: string
+      firstAirDate:
+        type: string
+        description: Series premiere date as YYYY-MM-DD; empty when unknown.
     required:
       - imdbId
       - posterUrl
@@ -1145,6 +1170,9 @@ definitions:
         type: array
         items:
           type: string
+      firstAirDate:
+        type: string
+        description: Series premiere date as YYYY-MM-DD; empty when unknown.
   v4TVShowDownload:
     type: object
     properties:
