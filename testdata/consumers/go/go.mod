@@ -2,7 +2,7 @@ module example.com/chill-contracts-consumer-go
 
 go 1.26.6
 
-require github.com/chill-institute/chill-contracts/v2 v2.3.12
+require github.com/chill-institute/chill-contracts/v2 v2.3.13
 
 require (
 	connectrpc.com/connect v1.20.0 // indirect
