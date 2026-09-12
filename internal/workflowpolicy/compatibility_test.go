@@ -10,6 +10,21 @@ import (
 	"testing"
 )
 
+func TestMain(m *testing.M) {
+	// Git hooks export repository paths that would redirect fixture commands
+	// from their temporary directories into the caller's repository.
+	variables, err := exec.Command("git", "rev-parse", "--local-env-vars").Output()
+	if err != nil {
+		panic(err)
+	}
+	for _, variable := range strings.Fields(string(variables)) {
+		if err := os.Unsetenv(variable); err != nil {
+			panic(err)
+		}
+	}
+	os.Exit(m.Run())
+}
+
 func TestCompatibilityPolicy(t *testing.T) {
 	for _, test := range []struct {
 		name    string
