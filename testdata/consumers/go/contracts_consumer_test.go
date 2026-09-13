@@ -59,7 +59,7 @@ func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {
 		chillv4.CatalogSort_CATALOG_SORT_POPULARITY.Enum(),
 		chillv4.CatalogSort_CATALOG_SORT_RELEASE_DATE_ASC.Enum(),
 	} {
-		original := &chillv4.CatalogSettings{MoviesSort: sort}
+		original := &chillv4.CatalogSettings{Sort: sort}
 		encoded, err := proto.Marshal(original)
 		if err != nil {
 			t.Fatal(err)
@@ -68,11 +68,8 @@ func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {
 		if err := proto.Unmarshal(encoded, decoded); err != nil {
 			t.Fatal(err)
 		}
-		if !proto.Equal(original, decoded) || (decoded.MoviesSort == nil) != (sort == nil) {
+		if !proto.Equal(original, decoded) || (decoded.Sort == nil) != (sort == nil) {
 			t.Fatalf("sort presence changed: original=%v decoded=%v", original, decoded)
-		}
-		if decoded.TvShowsSort != nil {
-			t.Fatal("movie sort must not populate the independent TV preference")
 		}
 	}
 }

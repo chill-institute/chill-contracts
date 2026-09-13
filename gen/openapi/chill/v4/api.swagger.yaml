@@ -601,14 +601,16 @@ definitions:
         $ref: '#/definitions/v4TVShowsSource'
       moviesSort:
         $ref: '#/definitions/v4CatalogSort'
-        description: |-
-          Omission on save preserves the stored preference; missing stored values
-          default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+        description: Use sort for the shared catalog preference.
       tvShowsSort:
         $ref: '#/definitions/v4CatalogSort'
+        description: Use sort for the shared catalog preference.
+      sort:
+        $ref: '#/definitions/v4CatalogSort'
         description: |-
-          Omission on save preserves the stored preference; missing stored values
-          default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+          Shared across movies, TV shows, and providers. Omission on save preserves
+          the stored preference; missing stored values default to POPULARITY.
+          Explicit UNSPECIFIED is invalid on save.
   v4CatalogSort:
     type: string
     enum:
