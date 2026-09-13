@@ -26,3 +26,17 @@ The schema lives in:
 - `gen/ts/chill/v4/`
 
 Use the generated OpenAPI and generated client artifacts for field-level request and response details.
+
+## Catalog dates and sorting
+
+`Movie.release_date` and `TVShow.first_air_date` contain date-only `YYYY-MM-DD`
+values, or an empty string when unknown. TV dates refer to the series premiere;
+`TVShowDetail.first_air_date` has the same meaning.
+
+`CatalogSettings.movies_sort` and `tv_shows_sort` are independent of search-result
+sorting. `POPULARITY` is the default and preserves the selected provider's order.
+Other choices sort by rating or release date in either direction.
+
+On `SaveUserSettings`, omitting either optional sort preserves its stored value.
+Missing stored preferences default to `POPULARITY`. Sending `POPULARITY` explicitly
+resets a preference; sending `UNSPECIFIED` explicitly is invalid.

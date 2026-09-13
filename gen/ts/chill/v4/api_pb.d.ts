@@ -586,6 +586,13 @@ export declare type Movie = Message<"chill.v4.Movie"> & {
    * @generated from field: repeated string genres = 16;
    */
   genres: string[];
+
+  /**
+   * Movie release date as YYYY-MM-DD; empty when unknown.
+   *
+   * @generated from field: string release_date = 17;
+   */
+  releaseDate: string;
 };
 
 /**
@@ -711,6 +718,13 @@ export declare type TVShow = Message<"chill.v4.TVShow"> & {
    * @generated from field: repeated string networks = 11;
    */
   networks: string[];
+
+  /**
+   * Series premiere date as YYYY-MM-DD; empty when unknown.
+   *
+   * @generated from field: string first_air_date = 12;
+   */
+  firstAirDate: string;
 };
 
 /**
@@ -861,6 +875,13 @@ export declare type TVShowDetail = Message<"chill.v4.TVShowDetail"> & {
    * @generated from field: repeated string genres = 12;
    */
   genres: string[];
+
+  /**
+   * Series premiere date as YYYY-MM-DD; empty when unknown.
+   *
+   * @generated from field: string first_air_date = 13;
+   */
+  firstAirDate: string;
 };
 
 /**
@@ -1343,6 +1364,22 @@ export declare type CatalogSettings = Message<"chill.v4.CatalogSettings"> & {
    * @generated from field: chill.v4.TVShowsSource tv_shows_source = 2;
    */
   tvShowsSource: TVShowsSource;
+
+  /**
+   * Omission on save preserves the stored preference; missing stored values
+   * default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+   *
+   * @generated from field: optional chill.v4.CatalogSort movies_sort = 3;
+   */
+  moviesSort?: CatalogSort | undefined;
+
+  /**
+   * Omission on save preserves the stored preference; missing stored values
+   * default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+   *
+   * @generated from field: optional chill.v4.CatalogSort tv_shows_sort = 4;
+   */
+  tvShowsSort?: CatalogSort | undefined;
 };
 
 /**
@@ -2114,6 +2151,48 @@ export enum SortDirection {
  * Describes the enum chill.v4.SortDirection.
  */
 export declare const SortDirectionSchema: GenEnum<SortDirection>;
+
+/**
+ * @generated from enum chill.v4.CatalogSort
+ */
+export enum CatalogSort {
+  /**
+   * @generated from enum value: CATALOG_SORT_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Default ordering supplied by the selected provider.
+   *
+   * @generated from enum value: CATALOG_SORT_POPULARITY = 1;
+   */
+  POPULARITY = 1,
+
+  /**
+   * @generated from enum value: CATALOG_SORT_RATING_DESC = 2;
+   */
+  RATING_DESC = 2,
+
+  /**
+   * @generated from enum value: CATALOG_SORT_RATING_ASC = 3;
+   */
+  RATING_ASC = 3,
+
+  /**
+   * @generated from enum value: CATALOG_SORT_RELEASE_DATE_DESC = 4;
+   */
+  RELEASE_DATE_DESC = 4,
+
+  /**
+   * @generated from enum value: CATALOG_SORT_RELEASE_DATE_ASC = 5;
+   */
+  RELEASE_DATE_ASC = 5,
+}
+
+/**
+ * Describes the enum chill.v4.CatalogSort.
+ */
+export declare const CatalogSortSchema: GenEnum<CatalogSort>;
 
 /**
  * @generated from service chill.v4.CoreService
