@@ -1366,20 +1366,29 @@ export declare type CatalogSettings = Message<"chill.v4.CatalogSettings"> & {
   tvShowsSource: TVShowsSource;
 
   /**
-   * Omission on save preserves the stored preference; missing stored values
-   * default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+   * Use sort for the shared catalog preference.
    *
-   * @generated from field: optional chill.v4.CatalogSort movies_sort = 3;
+   * @generated from field: optional chill.v4.CatalogSort movies_sort = 3 [deprecated = true];
+   * @deprecated
    */
   moviesSort?: CatalogSort | undefined;
 
   /**
-   * Omission on save preserves the stored preference; missing stored values
-   * default to POPULARITY. Explicit UNSPECIFIED is invalid on save.
+   * Use sort for the shared catalog preference.
    *
-   * @generated from field: optional chill.v4.CatalogSort tv_shows_sort = 4;
+   * @generated from field: optional chill.v4.CatalogSort tv_shows_sort = 4 [deprecated = true];
+   * @deprecated
    */
   tvShowsSort?: CatalogSort | undefined;
+
+  /**
+   * Shared across movies, TV shows, and providers. Omission on save preserves
+   * the stored preference; missing stored values default to POPULARITY.
+   * Explicit UNSPECIFIED is invalid on save.
+   *
+   * @generated from field: optional chill.v4.CatalogSort sort = 5;
+   */
+  sort?: CatalogSort | undefined;
 };
 
 /**

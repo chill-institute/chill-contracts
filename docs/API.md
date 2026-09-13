@@ -33,10 +33,13 @@ Use the generated OpenAPI and generated client artifacts for field-level request
 values, or an empty string when unknown. TV dates refer to the series premiere;
 `TVShowDetail.first_air_date` has the same meaning.
 
-`CatalogSettings.movies_sort` and `tv_shows_sort` are independent of search-result
-sorting. `POPULARITY` is the default and preserves the selected provider's order.
+`CatalogSettings.sort` is shared across movies, TV shows, and providers, independently
+of search-result sorting. `POPULARITY` is the default and preserves the selected provider's order.
 Other choices sort by rating or release date in either direction.
 
-On `SaveUserSettings`, omitting either optional sort preserves its stored value.
+On `SaveUserSettings`, omitting the optional sort preserves its stored value.
 Missing stored preferences default to `POPULARITY`. Sending `POPULARITY` explicitly
 resets a preference; sending `UNSPECIFIED` explicitly is invalid.
+
+The deprecated `movies_sort` and `tv_shows_sort` fields remain in the wire contract;
+new consumers use `sort`.

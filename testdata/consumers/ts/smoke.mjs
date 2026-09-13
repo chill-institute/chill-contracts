@@ -54,19 +54,18 @@ if (AddTransferRequestSchema.typeName !== "chill.v4.AddTransferRequest") {
   throw new Error(`unexpected add transfer request type name: ${AddTransferRequestSchema.typeName}`);
 }
 
-for (const moviesSort of [
+for (const sort of [
   undefined,
   CatalogSort.UNSPECIFIED,
   CatalogSort.POPULARITY,
   CatalogSort.RELEASE_DATE_DESC,
 ]) {
-  const settings = create(CatalogSettingsSchema, { moviesSort });
+  const settings = create(CatalogSettingsSchema, { sort });
   for (const decoded of [
     fromBinary(CatalogSettingsSchema, toBinary(CatalogSettingsSchema, settings)),
     fromJson(CatalogSettingsSchema, toJson(CatalogSettingsSchema, settings)),
   ]) {
-    assert.equal(decoded.moviesSort, moviesSort);
-    assert.equal(decoded.tvShowsSort, undefined);
+    assert.equal(decoded.sort, sort);
   }
 }
 
