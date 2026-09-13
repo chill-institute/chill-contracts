@@ -497,6 +497,36 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/ResolvePlayback:
+    post:
+      summary: |-
+        Resolve media with the same regular user bearer as other UserService RPCs.
+        Read-only: never initiate a transfer or conversion.
+      operationId: UserService_ResolvePlayback
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4ResolvePlaybackResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4ResolvePlaybackRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
   /chill.v4.UserService/SaveUserSettings:
     post:
       operationId: UserService_SaveUserSettings
@@ -585,6 +615,10 @@ definitions:
         type: string
       transfer:
         $ref: '#/definitions/v4Transfer'
+  v4AudioCodec:
+    type: string
+    enum:
+      - AUDIO_CODEC_AAC
   v4CatalogOrigin:
     type: object
     properties:
@@ -625,6 +659,10 @@ definitions:
     enum:
       - CODEC_FILTER_X264
       - CODEC_FILTER_X265
+  v4Container:
+    type: string
+    enum:
+      - CONTAINER_MP4
   v4CoreGetIndexersRequest:
     type: object
   v4CoreGetIndexersResponse:
@@ -924,6 +962,63 @@ definitions:
     type: string
     enum:
       - OTHER_FILTER_HDR
+  v4PendingReason:
+    type: string
+    enum:
+      - PENDING_REASON_PROCESSING
+  v4PlaybackFormat:
+    type: object
+    properties:
+      container:
+        $ref: '#/definitions/v4Container'
+      videoCodec:
+        $ref: '#/definitions/v4VideoCodec'
+      audioCodec:
+        $ref: '#/definitions/v4AudioCodec'
+  v4PlaybackPending:
+    type: object
+    properties:
+      reason:
+        $ref: '#/definitions/v4PendingReason'
+        description: |-
+          Describes existing provider work only; callers must explicitly resolve
+          again to observe a change. No background polling or conversion request.
+  v4PlaybackReady:
+    type: object
+    properties:
+      media:
+        $ref: '#/definitions/v4PlaybackUrl'
+      format:
+        $ref: '#/definitions/v4PlaybackFormat'
+        description: |-
+          Provider format information when known; unspecified values mean unknown.
+          Clients decide whether their playback surface supports the format.
+      subtitles:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4Subtitle'
+        description: |-
+          At most 32 tracks. Every URL is independently usable without a provider
+          bearer; omit tracks that cannot meet this requirement.
+  v4PlaybackUnavailable:
+    type: object
+    properties:
+      reason:
+        $ref: '#/definitions/v4UnavailableReason'
+  v4PlaybackUrl:
+    type: object
+    properties:
+      url:
+        type: string
+        description: |-
+          Required direct HTTPS URL usable without forwarding provider credentials.
+          Signed URLs are sensitive: never log or share-cache them.
+      expiresAt:
+        type: string
+        format: date-time
+      expiryUnknown:
+        type: boolean
   v4ReleaseInfo:
     type: object
     properties:
@@ -998,6 +1093,24 @@ definitions:
       - RESOLUTION_FILTER_720P
       - RESOLUTION_FILTER_1080P
       - RESOLUTION_FILTER_2160P
+  v4ResolvePlaybackRequest:
+    type: object
+    properties:
+      fileId:
+        type: string
+        format: int64
+        description: |-
+          Positive provider file ID. Check current access for the authenticated user
+          before resolving any URL; never trust a previous folder listing.
+  v4ResolvePlaybackResponse:
+    type: object
+    properties:
+      ready:
+        $ref: '#/definitions/v4PlaybackReady'
+      pending:
+        $ref: '#/definitions/v4PlaybackPending'
+      unavailable:
+        $ref: '#/definitions/v4PlaybackUnavailable'
   v4SaveUserSettingsRequest:
     type: object
     properties:
@@ -1102,6 +1215,24 @@ definitions:
     enum:
       - SORT_DIRECTION_ASC
       - SORT_DIRECTION_DESC
+  v4Subtitle:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique within the response, without credentials or URLs.
+      language:
+        type: string
+        description: ISO 639-2 language code, or und when unknown.
+      format:
+        $ref: '#/definitions/v4SubtitleFormat'
+      source:
+        $ref: '#/definitions/v4PlaybackUrl'
+  v4SubtitleFormat:
+    type: string
+    enum:
+      - SUBTITLE_FORMAT_VTT
+      - SUBTITLE_FORMAT_SRT
   v4TVShow:
     type: object
     properties:
@@ -1331,6 +1462,13 @@ definitions:
         type: string
       isFinished:
         type: boolean
+  v4UnavailableReason:
+    type: string
+    enum:
+      - UNAVAILABLE_REASON_NOT_FOUND
+      - UNAVAILABLE_REASON_UNSUPPORTED_FORMAT
+      - UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE
+    description: ' - UNAVAILABLE_REASON_NOT_FOUND: Missing files and files inaccessible to the user are indistinguishable.'
   v4UserFile:
     type: object
     properties:
@@ -1401,6 +1539,10 @@ definitions:
       - search
       - catalog
       - download
+  v4VideoCodec:
+    type: string
+    enum:
+      - VIDEO_CODEC_H264
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey

@@ -82,6 +82,9 @@ const (
 	UserServiceGetDownloadFolderProcedure = "/chill.v4.UserService/GetDownloadFolder"
 	// UserServiceGetFolderProcedure is the fully-qualified name of the UserService's GetFolder RPC.
 	UserServiceGetFolderProcedure = "/chill.v4.UserService/GetFolder"
+	// UserServiceResolvePlaybackProcedure is the fully-qualified name of the UserService's
+	// ResolvePlayback RPC.
+	UserServiceResolvePlaybackProcedure = "/chill.v4.UserService/ResolvePlayback"
 	// UserServiceGetUserProfileProcedure is the fully-qualified name of the UserService's
 	// GetUserProfile RPC.
 	UserServiceGetUserProfileProcedure = "/chill.v4.UserService/GetUserProfile"
@@ -277,6 +280,9 @@ type UserServiceClient interface {
 	GetTransfer(context.Context, *connect.Request[v4.GetTransferRequest]) (*connect.Response[v4.GetTransferResponse], error)
 	GetDownloadFolder(context.Context, *connect.Request[v4.GetDownloadFolderRequest]) (*connect.Response[v4.GetDownloadFolderResponse], error)
 	GetFolder(context.Context, *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error)
+	// Resolve media with the same regular user bearer as other UserService RPCs.
+	// Read-only: never initiate a transfer or conversion.
+	ResolvePlayback(context.Context, *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error)
 	GetUserProfile(context.Context, *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error)
 }
 
@@ -375,6 +381,13 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("GetFolder")),
 			connect.WithClientOptions(opts...),
 		),
+		resolvePlayback: connect.NewClient[v4.ResolvePlaybackRequest, v4.ResolvePlaybackResponse](
+			httpClient,
+			baseURL+UserServiceResolvePlaybackProcedure,
+			connect.WithSchema(userServiceMethods.ByName("ResolvePlayback")),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		getUserProfile: connect.NewClient[v4.GetUserProfileRequest, v4.UserProfile](
 			httpClient,
 			baseURL+UserServiceGetUserProfileProcedure,
@@ -400,6 +413,7 @@ type userServiceClient struct {
 	getTransfer              *connect.Client[v4.GetTransferRequest, v4.GetTransferResponse]
 	getDownloadFolder        *connect.Client[v4.GetDownloadFolderRequest, v4.GetDownloadFolderResponse]
 	getFolder                *connect.Client[v4.GetFolderRequest, v4.GetFolderResponse]
+	resolvePlayback          *connect.Client[v4.ResolvePlaybackRequest, v4.ResolvePlaybackResponse]
 	getUserProfile           *connect.Client[v4.GetUserProfileRequest, v4.UserProfile]
 }
 
@@ -473,6 +487,11 @@ func (c *userServiceClient) GetFolder(ctx context.Context, req *connect.Request[
 	return c.getFolder.CallUnary(ctx, req)
 }
 
+// ResolvePlayback calls chill.v4.UserService.ResolvePlayback.
+func (c *userServiceClient) ResolvePlayback(ctx context.Context, req *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error) {
+	return c.resolvePlayback.CallUnary(ctx, req)
+}
+
 // GetUserProfile calls chill.v4.UserService.GetUserProfile.
 func (c *userServiceClient) GetUserProfile(ctx context.Context, req *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error) {
 	return c.getUserProfile.CallUnary(ctx, req)
@@ -494,6 +513,9 @@ type UserServiceHandler interface {
 	GetTransfer(context.Context, *connect.Request[v4.GetTransferRequest]) (*connect.Response[v4.GetTransferResponse], error)
 	GetDownloadFolder(context.Context, *connect.Request[v4.GetDownloadFolderRequest]) (*connect.Response[v4.GetDownloadFolderResponse], error)
 	GetFolder(context.Context, *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error)
+	// Resolve media with the same regular user bearer as other UserService RPCs.
+	// Read-only: never initiate a transfer or conversion.
+	ResolvePlayback(context.Context, *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error)
 	GetUserProfile(context.Context, *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error)
 }
 
@@ -588,6 +610,13 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("GetFolder")),
 		connect.WithHandlerOptions(opts...),
 	)
+	userServiceResolvePlaybackHandler := connect.NewUnaryHandler(
+		UserServiceResolvePlaybackProcedure,
+		svc.ResolvePlayback,
+		connect.WithSchema(userServiceMethods.ByName("ResolvePlayback")),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	userServiceGetUserProfileHandler := connect.NewUnaryHandler(
 		UserServiceGetUserProfileProcedure,
 		svc.GetUserProfile,
@@ -624,6 +653,8 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 			userServiceGetDownloadFolderHandler.ServeHTTP(w, r)
 		case UserServiceGetFolderProcedure:
 			userServiceGetFolderHandler.ServeHTTP(w, r)
+		case UserServiceResolvePlaybackProcedure:
+			userServiceResolvePlaybackHandler.ServeHTTP(w, r)
 		case UserServiceGetUserProfileProcedure:
 			userServiceGetUserProfileHandler.ServeHTTP(w, r)
 		default:
@@ -689,6 +720,10 @@ func (UnimplementedUserServiceHandler) GetDownloadFolder(context.Context, *conne
 
 func (UnimplementedUserServiceHandler) GetFolder(context.Context, *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetFolder is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) ResolvePlayback(context.Context, *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.ResolvePlayback is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) GetUserProfile(context.Context, *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error) {

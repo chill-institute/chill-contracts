@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package chill.v4;
 
+import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
@@ -378,6 +379,27 @@ service UserService {
       }
     };
   }
+  // Resolve media with the same regular user bearer as other UserService RPCs.
+  // Read-only: never initiate a transfer or conversion.
+  rpc ResolvePlayback(ResolvePlaybackRequest) returns (ResolvePlaybackResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
   rpc GetUserProfile(GetUserProfileRequest) returns (UserProfile) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
@@ -396,6 +418,104 @@ service UserService {
       }
     };
   }
+}
+
+message ResolvePlaybackRequest {
+  // Positive provider file ID. Check current access for the authenticated user
+  // before resolving any URL; never trust a previous folder listing.
+  int64 file_id = 1;
+}
+
+message ResolvePlaybackResponse {
+  // Exactly one result is required. Invalid/expired credentials return
+  // unauthenticated, not unavailable; transient provider failure returns
+  // unavailable RPC status. Calls never initiate transfers or conversion.
+  oneof result {
+    PlaybackReady ready = 1;
+    PlaybackPending pending = 2;
+    PlaybackUnavailable unavailable = 3;
+  }
+}
+
+message PlaybackReady {
+  PlaybackUrl media = 1;
+  // Provider format information when known; unspecified values mean unknown.
+  // Clients decide whether their playback surface supports the format.
+  PlaybackFormat format = 2;
+  // At most 32 tracks. Every URL is independently usable without a provider
+  // bearer; omit tracks that cannot meet this requirement.
+  repeated Subtitle subtitles = 3;
+}
+
+message PlaybackPending {
+  // Describes existing provider work only; callers must explicitly resolve
+  // again to observe a change. No background polling or conversion request.
+  PendingReason reason = 1;
+}
+
+enum PendingReason {
+  PENDING_REASON_UNSPECIFIED = 0;
+  PENDING_REASON_PROCESSING = 1;
+}
+
+message PlaybackUnavailable {
+  UnavailableReason reason = 1;
+}
+
+enum UnavailableReason {
+  UNAVAILABLE_REASON_UNSPECIFIED = 0;
+  // Missing files and files inaccessible to the user are indistinguishable.
+  UNAVAILABLE_REASON_NOT_FOUND = 1;
+  UNAVAILABLE_REASON_UNSUPPORTED_FORMAT = 2;
+  UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE = 3;
+}
+
+message PlaybackUrl {
+  // Required direct HTTPS URL usable without forwarding provider credentials.
+  // Signed URLs are sensitive: never log or share-cache them.
+  string url = 1;
+  // Exactly one expiry state is required. Unknown must be true when selected;
+  // unknown expiry is not a guarantee that the URL remains valid.
+  oneof expiry {
+    google.protobuf.Timestamp expires_at = 2;
+    bool expiry_unknown = 3;
+  }
+}
+
+message PlaybackFormat {
+  Container container = 1;
+  VideoCodec video_codec = 2;
+  AudioCodec audio_codec = 3;
+}
+
+enum Container {
+  CONTAINER_UNSPECIFIED = 0;
+  CONTAINER_MP4 = 1;
+}
+
+enum VideoCodec {
+  VIDEO_CODEC_UNSPECIFIED = 0;
+  VIDEO_CODEC_H264 = 1;
+}
+
+enum AudioCodec {
+  AUDIO_CODEC_UNSPECIFIED = 0;
+  AUDIO_CODEC_AAC = 1;
+}
+
+message Subtitle {
+  // Unique within the response, without credentials or URLs.
+  string id = 1;
+  // ISO 639-2 language code, or und when unknown.
+  string language = 2;
+  SubtitleFormat format = 3;
+  PlaybackUrl source = 4;
+}
+
+enum SubtitleFormat {
+  SUBTITLE_FORMAT_UNSPECIFIED = 0;
+  SUBTITLE_FORMAT_VTT = 1;
+  SUBTITLE_FORMAT_SRT = 2;
 }
 
 message HealthCheckRequest {}

@@ -10,6 +10,7 @@ import (
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,6 +22,292 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type PendingReason int32
+
+const (
+	PendingReason_PENDING_REASON_UNSPECIFIED PendingReason = 0
+	PendingReason_PENDING_REASON_PROCESSING  PendingReason = 1
+)
+
+// Enum value maps for PendingReason.
+var (
+	PendingReason_name = map[int32]string{
+		0: "PENDING_REASON_UNSPECIFIED",
+		1: "PENDING_REASON_PROCESSING",
+	}
+	PendingReason_value = map[string]int32{
+		"PENDING_REASON_UNSPECIFIED": 0,
+		"PENDING_REASON_PROCESSING":  1,
+	}
+)
+
+func (x PendingReason) Enum() *PendingReason {
+	p := new(PendingReason)
+	*p = x
+	return p
+}
+
+func (x PendingReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PendingReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_chill_v4_api_proto_enumTypes[0].Descriptor()
+}
+
+func (PendingReason) Type() protoreflect.EnumType {
+	return &file_chill_v4_api_proto_enumTypes[0]
+}
+
+func (x PendingReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PendingReason.Descriptor instead.
+func (PendingReason) EnumDescriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{0}
+}
+
+type UnavailableReason int32
+
+const (
+	UnavailableReason_UNAVAILABLE_REASON_UNSPECIFIED UnavailableReason = 0
+	// Missing files and files inaccessible to the user are indistinguishable.
+	UnavailableReason_UNAVAILABLE_REASON_NOT_FOUND          UnavailableReason = 1
+	UnavailableReason_UNAVAILABLE_REASON_UNSUPPORTED_FORMAT UnavailableReason = 2
+	UnavailableReason_UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE UnavailableReason = 3
+)
+
+// Enum value maps for UnavailableReason.
+var (
+	UnavailableReason_name = map[int32]string{
+		0: "UNAVAILABLE_REASON_UNSPECIFIED",
+		1: "UNAVAILABLE_REASON_NOT_FOUND",
+		2: "UNAVAILABLE_REASON_UNSUPPORTED_FORMAT",
+		3: "UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE",
+	}
+	UnavailableReason_value = map[string]int32{
+		"UNAVAILABLE_REASON_UNSPECIFIED":        0,
+		"UNAVAILABLE_REASON_NOT_FOUND":          1,
+		"UNAVAILABLE_REASON_UNSUPPORTED_FORMAT": 2,
+		"UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE": 3,
+	}
+)
+
+func (x UnavailableReason) Enum() *UnavailableReason {
+	p := new(UnavailableReason)
+	*p = x
+	return p
+}
+
+func (x UnavailableReason) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UnavailableReason) Descriptor() protoreflect.EnumDescriptor {
+	return file_chill_v4_api_proto_enumTypes[1].Descriptor()
+}
+
+func (UnavailableReason) Type() protoreflect.EnumType {
+	return &file_chill_v4_api_proto_enumTypes[1]
+}
+
+func (x UnavailableReason) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UnavailableReason.Descriptor instead.
+func (UnavailableReason) EnumDescriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{1}
+}
+
+type Container int32
+
+const (
+	Container_CONTAINER_UNSPECIFIED Container = 0
+	Container_CONTAINER_MP4         Container = 1
+)
+
+// Enum value maps for Container.
+var (
+	Container_name = map[int32]string{
+		0: "CONTAINER_UNSPECIFIED",
+		1: "CONTAINER_MP4",
+	}
+	Container_value = map[string]int32{
+		"CONTAINER_UNSPECIFIED": 0,
+		"CONTAINER_MP4":         1,
+	}
+)
+
+func (x Container) Enum() *Container {
+	p := new(Container)
+	*p = x
+	return p
+}
+
+func (x Container) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Container) Descriptor() protoreflect.EnumDescriptor {
+	return file_chill_v4_api_proto_enumTypes[2].Descriptor()
+}
+
+func (Container) Type() protoreflect.EnumType {
+	return &file_chill_v4_api_proto_enumTypes[2]
+}
+
+func (x Container) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Container.Descriptor instead.
+func (Container) EnumDescriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{2}
+}
+
+type VideoCodec int32
+
+const (
+	VideoCodec_VIDEO_CODEC_UNSPECIFIED VideoCodec = 0
+	VideoCodec_VIDEO_CODEC_H264        VideoCodec = 1
+)
+
+// Enum value maps for VideoCodec.
+var (
+	VideoCodec_name = map[int32]string{
+		0: "VIDEO_CODEC_UNSPECIFIED",
+		1: "VIDEO_CODEC_H264",
+	}
+	VideoCodec_value = map[string]int32{
+		"VIDEO_CODEC_UNSPECIFIED": 0,
+		"VIDEO_CODEC_H264":        1,
+	}
+)
+
+func (x VideoCodec) Enum() *VideoCodec {
+	p := new(VideoCodec)
+	*p = x
+	return p
+}
+
+func (x VideoCodec) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VideoCodec) Descriptor() protoreflect.EnumDescriptor {
+	return file_chill_v4_api_proto_enumTypes[3].Descriptor()
+}
+
+func (VideoCodec) Type() protoreflect.EnumType {
+	return &file_chill_v4_api_proto_enumTypes[3]
+}
+
+func (x VideoCodec) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VideoCodec.Descriptor instead.
+func (VideoCodec) EnumDescriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{3}
+}
+
+type AudioCodec int32
+
+const (
+	AudioCodec_AUDIO_CODEC_UNSPECIFIED AudioCodec = 0
+	AudioCodec_AUDIO_CODEC_AAC         AudioCodec = 1
+)
+
+// Enum value maps for AudioCodec.
+var (
+	AudioCodec_name = map[int32]string{
+		0: "AUDIO_CODEC_UNSPECIFIED",
+		1: "AUDIO_CODEC_AAC",
+	}
+	AudioCodec_value = map[string]int32{
+		"AUDIO_CODEC_UNSPECIFIED": 0,
+		"AUDIO_CODEC_AAC":         1,
+	}
+)
+
+func (x AudioCodec) Enum() *AudioCodec {
+	p := new(AudioCodec)
+	*p = x
+	return p
+}
+
+func (x AudioCodec) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AudioCodec) Descriptor() protoreflect.EnumDescriptor {
+	return file_chill_v4_api_proto_enumTypes[4].Descriptor()
+}
+
+func (AudioCodec) Type() protoreflect.EnumType {
+	return &file_chill_v4_api_proto_enumTypes[4]
+}
+
+func (x AudioCodec) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AudioCodec.Descriptor instead.
+func (AudioCodec) EnumDescriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{4}
+}
+
+type SubtitleFormat int32
+
+const (
+	SubtitleFormat_SUBTITLE_FORMAT_UNSPECIFIED SubtitleFormat = 0
+	SubtitleFormat_SUBTITLE_FORMAT_VTT         SubtitleFormat = 1
+	SubtitleFormat_SUBTITLE_FORMAT_SRT         SubtitleFormat = 2
+)
+
+// Enum value maps for SubtitleFormat.
+var (
+	SubtitleFormat_name = map[int32]string{
+		0: "SUBTITLE_FORMAT_UNSPECIFIED",
+		1: "SUBTITLE_FORMAT_VTT",
+		2: "SUBTITLE_FORMAT_SRT",
+	}
+	SubtitleFormat_value = map[string]int32{
+		"SUBTITLE_FORMAT_UNSPECIFIED": 0,
+		"SUBTITLE_FORMAT_VTT":         1,
+		"SUBTITLE_FORMAT_SRT":         2,
+	}
+)
+
+func (x SubtitleFormat) Enum() *SubtitleFormat {
+	p := new(SubtitleFormat)
+	*p = x
+	return p
+}
+
+func (x SubtitleFormat) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (SubtitleFormat) Descriptor() protoreflect.EnumDescriptor {
+	return file_chill_v4_api_proto_enumTypes[5].Descriptor()
+}
+
+func (SubtitleFormat) Type() protoreflect.EnumType {
+	return &file_chill_v4_api_proto_enumTypes[5]
+}
+
+func (x SubtitleFormat) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use SubtitleFormat.Descriptor instead.
+func (SubtitleFormat) EnumDescriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{5}
+}
 
 type IndexerStatus int32
 
@@ -58,11 +345,11 @@ func (x IndexerStatus) String() string {
 }
 
 func (IndexerStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[0].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[6].Descriptor()
 }
 
 func (IndexerStatus) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[0]
+	return &file_chill_v4_api_proto_enumTypes[6]
 }
 
 func (x IndexerStatus) Number() protoreflect.EnumNumber {
@@ -71,7 +358,7 @@ func (x IndexerStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use IndexerStatus.Descriptor instead.
 func (IndexerStatus) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{0}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{6}
 }
 
 type MoviesSource int32
@@ -116,11 +403,11 @@ func (x MoviesSource) String() string {
 }
 
 func (MoviesSource) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[1].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[7].Descriptor()
 }
 
 func (MoviesSource) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[1]
+	return &file_chill_v4_api_proto_enumTypes[7]
 }
 
 func (x MoviesSource) Number() protoreflect.EnumNumber {
@@ -129,7 +416,7 @@ func (x MoviesSource) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use MoviesSource.Descriptor instead.
 func (MoviesSource) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{1}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{7}
 }
 
 type TVShowsSource int32
@@ -189,11 +476,11 @@ func (x TVShowsSource) String() string {
 }
 
 func (TVShowsSource) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[2].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[8].Descriptor()
 }
 
 func (TVShowsSource) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[2]
+	return &file_chill_v4_api_proto_enumTypes[8]
 }
 
 func (x TVShowsSource) Number() protoreflect.EnumNumber {
@@ -202,7 +489,7 @@ func (x TVShowsSource) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TVShowsSource.Descriptor instead.
 func (TVShowsSource) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{2}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{8}
 }
 
 type TVShowStatus int32
@@ -247,11 +534,11 @@ func (x TVShowStatus) String() string {
 }
 
 func (TVShowStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[3].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[9].Descriptor()
 }
 
 func (TVShowStatus) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[3]
+	return &file_chill_v4_api_proto_enumTypes[9]
 }
 
 func (x TVShowStatus) Number() protoreflect.EnumNumber {
@@ -260,7 +547,7 @@ func (x TVShowStatus) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TVShowStatus.Descriptor instead.
 func (TVShowStatus) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{3}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{9}
 }
 
 type ResolutionFilter int32
@@ -299,11 +586,11 @@ func (x ResolutionFilter) String() string {
 }
 
 func (ResolutionFilter) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[4].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[10].Descriptor()
 }
 
 func (ResolutionFilter) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[4]
+	return &file_chill_v4_api_proto_enumTypes[10]
 }
 
 func (x ResolutionFilter) Number() protoreflect.EnumNumber {
@@ -312,7 +599,7 @@ func (x ResolutionFilter) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use ResolutionFilter.Descriptor instead.
 func (ResolutionFilter) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{4}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{10}
 }
 
 type CodecFilter int32
@@ -348,11 +635,11 @@ func (x CodecFilter) String() string {
 }
 
 func (CodecFilter) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[5].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[11].Descriptor()
 }
 
 func (CodecFilter) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[5]
+	return &file_chill_v4_api_proto_enumTypes[11]
 }
 
 func (x CodecFilter) Number() protoreflect.EnumNumber {
@@ -361,7 +648,7 @@ func (x CodecFilter) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CodecFilter.Descriptor instead.
 func (CodecFilter) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{5}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{11}
 }
 
 type OtherFilter int32
@@ -394,11 +681,11 @@ func (x OtherFilter) String() string {
 }
 
 func (OtherFilter) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[6].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[12].Descriptor()
 }
 
 func (OtherFilter) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[6]
+	return &file_chill_v4_api_proto_enumTypes[12]
 }
 
 func (x OtherFilter) Number() protoreflect.EnumNumber {
@@ -407,7 +694,7 @@ func (x OtherFilter) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use OtherFilter.Descriptor instead.
 func (OtherFilter) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{6}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{12}
 }
 
 type SearchResultDisplayBehavior int32
@@ -443,11 +730,11 @@ func (x SearchResultDisplayBehavior) String() string {
 }
 
 func (SearchResultDisplayBehavior) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[7].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[13].Descriptor()
 }
 
 func (SearchResultDisplayBehavior) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[7]
+	return &file_chill_v4_api_proto_enumTypes[13]
 }
 
 func (x SearchResultDisplayBehavior) Number() protoreflect.EnumNumber {
@@ -456,7 +743,7 @@ func (x SearchResultDisplayBehavior) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SearchResultDisplayBehavior.Descriptor instead.
 func (SearchResultDisplayBehavior) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{7}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{13}
 }
 
 type SearchResultTitleBehavior int32
@@ -492,11 +779,11 @@ func (x SearchResultTitleBehavior) String() string {
 }
 
 func (SearchResultTitleBehavior) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[8].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[14].Descriptor()
 }
 
 func (SearchResultTitleBehavior) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[8]
+	return &file_chill_v4_api_proto_enumTypes[14]
 }
 
 func (x SearchResultTitleBehavior) Number() protoreflect.EnumNumber {
@@ -505,7 +792,7 @@ func (x SearchResultTitleBehavior) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SearchResultTitleBehavior.Descriptor instead.
 func (SearchResultTitleBehavior) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{8}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{14}
 }
 
 type SortBy int32
@@ -550,11 +837,11 @@ func (x SortBy) String() string {
 }
 
 func (SortBy) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[9].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[15].Descriptor()
 }
 
 func (SortBy) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[9]
+	return &file_chill_v4_api_proto_enumTypes[15]
 }
 
 func (x SortBy) Number() protoreflect.EnumNumber {
@@ -563,7 +850,7 @@ func (x SortBy) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SortBy.Descriptor instead.
 func (SortBy) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{9}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{15}
 }
 
 type SortDirection int32
@@ -599,11 +886,11 @@ func (x SortDirection) String() string {
 }
 
 func (SortDirection) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[10].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[16].Descriptor()
 }
 
 func (SortDirection) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[10]
+	return &file_chill_v4_api_proto_enumTypes[16]
 }
 
 func (x SortDirection) Number() protoreflect.EnumNumber {
@@ -612,7 +899,7 @@ func (x SortDirection) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SortDirection.Descriptor instead.
 func (SortDirection) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{10}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{16}
 }
 
 type CatalogSort int32
@@ -658,11 +945,11 @@ func (x CatalogSort) String() string {
 }
 
 func (CatalogSort) Descriptor() protoreflect.EnumDescriptor {
-	return file_chill_v4_api_proto_enumTypes[11].Descriptor()
+	return file_chill_v4_api_proto_enumTypes[17].Descriptor()
 }
 
 func (CatalogSort) Type() protoreflect.EnumType {
-	return &file_chill_v4_api_proto_enumTypes[11]
+	return &file_chill_v4_api_proto_enumTypes[17]
 }
 
 func (x CatalogSort) Number() protoreflect.EnumNumber {
@@ -671,7 +958,534 @@ func (x CatalogSort) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CatalogSort.Descriptor instead.
 func (CatalogSort) EnumDescriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{11}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{17}
+}
+
+type ResolvePlaybackRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Positive provider file ID. Check current access for the authenticated user
+	// before resolving any URL; never trust a previous folder listing.
+	FileId        int64 `protobuf:"varint,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResolvePlaybackRequest) Reset() {
+	*x = ResolvePlaybackRequest{}
+	mi := &file_chill_v4_api_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResolvePlaybackRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResolvePlaybackRequest) ProtoMessage() {}
+
+func (x *ResolvePlaybackRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResolvePlaybackRequest.ProtoReflect.Descriptor instead.
+func (*ResolvePlaybackRequest) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ResolvePlaybackRequest) GetFileId() int64 {
+	if x != nil {
+		return x.FileId
+	}
+	return 0
+}
+
+type ResolvePlaybackResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Exactly one result is required. Invalid/expired credentials return
+	// unauthenticated, not unavailable; transient provider failure returns
+	// unavailable RPC status. Calls never initiate transfers or conversion.
+	//
+	// Types that are valid to be assigned to Result:
+	//
+	//	*ResolvePlaybackResponse_Ready
+	//	*ResolvePlaybackResponse_Pending
+	//	*ResolvePlaybackResponse_Unavailable
+	Result        isResolvePlaybackResponse_Result `protobuf_oneof:"result"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResolvePlaybackResponse) Reset() {
+	*x = ResolvePlaybackResponse{}
+	mi := &file_chill_v4_api_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResolvePlaybackResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResolvePlaybackResponse) ProtoMessage() {}
+
+func (x *ResolvePlaybackResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResolvePlaybackResponse.ProtoReflect.Descriptor instead.
+func (*ResolvePlaybackResponse) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ResolvePlaybackResponse) GetResult() isResolvePlaybackResponse_Result {
+	if x != nil {
+		return x.Result
+	}
+	return nil
+}
+
+func (x *ResolvePlaybackResponse) GetReady() *PlaybackReady {
+	if x != nil {
+		if x, ok := x.Result.(*ResolvePlaybackResponse_Ready); ok {
+			return x.Ready
+		}
+	}
+	return nil
+}
+
+func (x *ResolvePlaybackResponse) GetPending() *PlaybackPending {
+	if x != nil {
+		if x, ok := x.Result.(*ResolvePlaybackResponse_Pending); ok {
+			return x.Pending
+		}
+	}
+	return nil
+}
+
+func (x *ResolvePlaybackResponse) GetUnavailable() *PlaybackUnavailable {
+	if x != nil {
+		if x, ok := x.Result.(*ResolvePlaybackResponse_Unavailable); ok {
+			return x.Unavailable
+		}
+	}
+	return nil
+}
+
+type isResolvePlaybackResponse_Result interface {
+	isResolvePlaybackResponse_Result()
+}
+
+type ResolvePlaybackResponse_Ready struct {
+	Ready *PlaybackReady `protobuf:"bytes,1,opt,name=ready,proto3,oneof"`
+}
+
+type ResolvePlaybackResponse_Pending struct {
+	Pending *PlaybackPending `protobuf:"bytes,2,opt,name=pending,proto3,oneof"`
+}
+
+type ResolvePlaybackResponse_Unavailable struct {
+	Unavailable *PlaybackUnavailable `protobuf:"bytes,3,opt,name=unavailable,proto3,oneof"`
+}
+
+func (*ResolvePlaybackResponse_Ready) isResolvePlaybackResponse_Result() {}
+
+func (*ResolvePlaybackResponse_Pending) isResolvePlaybackResponse_Result() {}
+
+func (*ResolvePlaybackResponse_Unavailable) isResolvePlaybackResponse_Result() {}
+
+type PlaybackReady struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Media *PlaybackUrl           `protobuf:"bytes,1,opt,name=media,proto3" json:"media,omitempty"`
+	// Provider format information when known; unspecified values mean unknown.
+	// Clients decide whether their playback surface supports the format.
+	Format *PlaybackFormat `protobuf:"bytes,2,opt,name=format,proto3" json:"format,omitempty"`
+	// At most 32 tracks. Every URL is independently usable without a provider
+	// bearer; omit tracks that cannot meet this requirement.
+	Subtitles     []*Subtitle `protobuf:"bytes,3,rep,name=subtitles,proto3" json:"subtitles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlaybackReady) Reset() {
+	*x = PlaybackReady{}
+	mi := &file_chill_v4_api_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlaybackReady) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlaybackReady) ProtoMessage() {}
+
+func (x *PlaybackReady) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlaybackReady.ProtoReflect.Descriptor instead.
+func (*PlaybackReady) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PlaybackReady) GetMedia() *PlaybackUrl {
+	if x != nil {
+		return x.Media
+	}
+	return nil
+}
+
+func (x *PlaybackReady) GetFormat() *PlaybackFormat {
+	if x != nil {
+		return x.Format
+	}
+	return nil
+}
+
+func (x *PlaybackReady) GetSubtitles() []*Subtitle {
+	if x != nil {
+		return x.Subtitles
+	}
+	return nil
+}
+
+type PlaybackPending struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Describes existing provider work only; callers must explicitly resolve
+	// again to observe a change. No background polling or conversion request.
+	Reason        PendingReason `protobuf:"varint,1,opt,name=reason,proto3,enum=chill.v4.PendingReason" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlaybackPending) Reset() {
+	*x = PlaybackPending{}
+	mi := &file_chill_v4_api_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlaybackPending) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlaybackPending) ProtoMessage() {}
+
+func (x *PlaybackPending) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlaybackPending.ProtoReflect.Descriptor instead.
+func (*PlaybackPending) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PlaybackPending) GetReason() PendingReason {
+	if x != nil {
+		return x.Reason
+	}
+	return PendingReason_PENDING_REASON_UNSPECIFIED
+}
+
+type PlaybackUnavailable struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Reason        UnavailableReason      `protobuf:"varint,1,opt,name=reason,proto3,enum=chill.v4.UnavailableReason" json:"reason,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlaybackUnavailable) Reset() {
+	*x = PlaybackUnavailable{}
+	mi := &file_chill_v4_api_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlaybackUnavailable) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlaybackUnavailable) ProtoMessage() {}
+
+func (x *PlaybackUnavailable) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlaybackUnavailable.ProtoReflect.Descriptor instead.
+func (*PlaybackUnavailable) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PlaybackUnavailable) GetReason() UnavailableReason {
+	if x != nil {
+		return x.Reason
+	}
+	return UnavailableReason_UNAVAILABLE_REASON_UNSPECIFIED
+}
+
+type PlaybackUrl struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Required direct HTTPS URL usable without forwarding provider credentials.
+	// Signed URLs are sensitive: never log or share-cache them.
+	Url string `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	// Exactly one expiry state is required. Unknown must be true when selected;
+	// unknown expiry is not a guarantee that the URL remains valid.
+	//
+	// Types that are valid to be assigned to Expiry:
+	//
+	//	*PlaybackUrl_ExpiresAt
+	//	*PlaybackUrl_ExpiryUnknown
+	Expiry        isPlaybackUrl_Expiry `protobuf_oneof:"expiry"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlaybackUrl) Reset() {
+	*x = PlaybackUrl{}
+	mi := &file_chill_v4_api_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlaybackUrl) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlaybackUrl) ProtoMessage() {}
+
+func (x *PlaybackUrl) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlaybackUrl.ProtoReflect.Descriptor instead.
+func (*PlaybackUrl) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PlaybackUrl) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *PlaybackUrl) GetExpiry() isPlaybackUrl_Expiry {
+	if x != nil {
+		return x.Expiry
+	}
+	return nil
+}
+
+func (x *PlaybackUrl) GetExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		if x, ok := x.Expiry.(*PlaybackUrl_ExpiresAt); ok {
+			return x.ExpiresAt
+		}
+	}
+	return nil
+}
+
+func (x *PlaybackUrl) GetExpiryUnknown() bool {
+	if x != nil {
+		if x, ok := x.Expiry.(*PlaybackUrl_ExpiryUnknown); ok {
+			return x.ExpiryUnknown
+		}
+	}
+	return false
+}
+
+type isPlaybackUrl_Expiry interface {
+	isPlaybackUrl_Expiry()
+}
+
+type PlaybackUrl_ExpiresAt struct {
+	ExpiresAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3,oneof"`
+}
+
+type PlaybackUrl_ExpiryUnknown struct {
+	ExpiryUnknown bool `protobuf:"varint,3,opt,name=expiry_unknown,json=expiryUnknown,proto3,oneof"`
+}
+
+func (*PlaybackUrl_ExpiresAt) isPlaybackUrl_Expiry() {}
+
+func (*PlaybackUrl_ExpiryUnknown) isPlaybackUrl_Expiry() {}
+
+type PlaybackFormat struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Container     Container              `protobuf:"varint,1,opt,name=container,proto3,enum=chill.v4.Container" json:"container,omitempty"`
+	VideoCodec    VideoCodec             `protobuf:"varint,2,opt,name=video_codec,json=videoCodec,proto3,enum=chill.v4.VideoCodec" json:"video_codec,omitempty"`
+	AudioCodec    AudioCodec             `protobuf:"varint,3,opt,name=audio_codec,json=audioCodec,proto3,enum=chill.v4.AudioCodec" json:"audio_codec,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlaybackFormat) Reset() {
+	*x = PlaybackFormat{}
+	mi := &file_chill_v4_api_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlaybackFormat) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlaybackFormat) ProtoMessage() {}
+
+func (x *PlaybackFormat) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlaybackFormat.ProtoReflect.Descriptor instead.
+func (*PlaybackFormat) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *PlaybackFormat) GetContainer() Container {
+	if x != nil {
+		return x.Container
+	}
+	return Container_CONTAINER_UNSPECIFIED
+}
+
+func (x *PlaybackFormat) GetVideoCodec() VideoCodec {
+	if x != nil {
+		return x.VideoCodec
+	}
+	return VideoCodec_VIDEO_CODEC_UNSPECIFIED
+}
+
+func (x *PlaybackFormat) GetAudioCodec() AudioCodec {
+	if x != nil {
+		return x.AudioCodec
+	}
+	return AudioCodec_AUDIO_CODEC_UNSPECIFIED
+}
+
+type Subtitle struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Unique within the response, without credentials or URLs.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// ISO 639-2 language code, or und when unknown.
+	Language      string         `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`
+	Format        SubtitleFormat `protobuf:"varint,3,opt,name=format,proto3,enum=chill.v4.SubtitleFormat" json:"format,omitempty"`
+	Source        *PlaybackUrl   `protobuf:"bytes,4,opt,name=source,proto3" json:"source,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Subtitle) Reset() {
+	*x = Subtitle{}
+	mi := &file_chill_v4_api_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Subtitle) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Subtitle) ProtoMessage() {}
+
+func (x *Subtitle) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Subtitle.ProtoReflect.Descriptor instead.
+func (*Subtitle) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Subtitle) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Subtitle) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+func (x *Subtitle) GetFormat() SubtitleFormat {
+	if x != nil {
+		return x.Format
+	}
+	return SubtitleFormat_SUBTITLE_FORMAT_UNSPECIFIED
+}
+
+func (x *Subtitle) GetSource() *PlaybackUrl {
+	if x != nil {
+		return x.Source
+	}
+	return nil
 }
 
 type HealthCheckRequest struct {
@@ -682,7 +1496,7 @@ type HealthCheckRequest struct {
 
 func (x *HealthCheckRequest) Reset() {
 	*x = HealthCheckRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[0]
+	mi := &file_chill_v4_api_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -694,7 +1508,7 @@ func (x *HealthCheckRequest) String() string {
 func (*HealthCheckRequest) ProtoMessage() {}
 
 func (x *HealthCheckRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[0]
+	mi := &file_chill_v4_api_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -707,7 +1521,7 @@ func (x *HealthCheckRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HealthCheckRequest.ProtoReflect.Descriptor instead.
 func (*HealthCheckRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{0}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{8}
 }
 
 type HealthResponse struct {
@@ -719,7 +1533,7 @@ type HealthResponse struct {
 
 func (x *HealthResponse) Reset() {
 	*x = HealthResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[1]
+	mi := &file_chill_v4_api_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -731,7 +1545,7 @@ func (x *HealthResponse) String() string {
 func (*HealthResponse) ProtoMessage() {}
 
 func (x *HealthResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[1]
+	mi := &file_chill_v4_api_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -744,7 +1558,7 @@ func (x *HealthResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HealthResponse.ProtoReflect.Descriptor instead.
 func (*HealthResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{1}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *HealthResponse) GetStatus() string {
@@ -762,7 +1576,7 @@ type CoreGetIndexersRequest struct {
 
 func (x *CoreGetIndexersRequest) Reset() {
 	*x = CoreGetIndexersRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[2]
+	mi := &file_chill_v4_api_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -774,7 +1588,7 @@ func (x *CoreGetIndexersRequest) String() string {
 func (*CoreGetIndexersRequest) ProtoMessage() {}
 
 func (x *CoreGetIndexersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[2]
+	mi := &file_chill_v4_api_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -787,7 +1601,7 @@ func (x *CoreGetIndexersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CoreGetIndexersRequest.ProtoReflect.Descriptor instead.
 func (*CoreGetIndexersRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{2}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{10}
 }
 
 type Indexer struct {
@@ -802,7 +1616,7 @@ type Indexer struct {
 
 func (x *Indexer) Reset() {
 	*x = Indexer{}
-	mi := &file_chill_v4_api_proto_msgTypes[3]
+	mi := &file_chill_v4_api_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -814,7 +1628,7 @@ func (x *Indexer) String() string {
 func (*Indexer) ProtoMessage() {}
 
 func (x *Indexer) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[3]
+	mi := &file_chill_v4_api_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -827,7 +1641,7 @@ func (x *Indexer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Indexer.ProtoReflect.Descriptor instead.
 func (*Indexer) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{3}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Indexer) GetId() string {
@@ -867,7 +1681,7 @@ type CoreGetIndexersResponse struct {
 
 func (x *CoreGetIndexersResponse) Reset() {
 	*x = CoreGetIndexersResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[4]
+	mi := &file_chill_v4_api_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -879,7 +1693,7 @@ func (x *CoreGetIndexersResponse) String() string {
 func (*CoreGetIndexersResponse) ProtoMessage() {}
 
 func (x *CoreGetIndexersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[4]
+	mi := &file_chill_v4_api_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -892,7 +1706,7 @@ func (x *CoreGetIndexersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CoreGetIndexersResponse.ProtoReflect.Descriptor instead.
 func (*CoreGetIndexersResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{4}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CoreGetIndexersResponse) GetIndexers() []*Indexer {
@@ -910,7 +1724,7 @@ type UserGetIndexersRequest struct {
 
 func (x *UserGetIndexersRequest) Reset() {
 	*x = UserGetIndexersRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[5]
+	mi := &file_chill_v4_api_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -922,7 +1736,7 @@ func (x *UserGetIndexersRequest) String() string {
 func (*UserGetIndexersRequest) ProtoMessage() {}
 
 func (x *UserGetIndexersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[5]
+	mi := &file_chill_v4_api_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -935,7 +1749,7 @@ func (x *UserGetIndexersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGetIndexersRequest.ProtoReflect.Descriptor instead.
 func (*UserGetIndexersRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{5}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{13}
 }
 
 type UserGetIndexersResponse struct {
@@ -947,7 +1761,7 @@ type UserGetIndexersResponse struct {
 
 func (x *UserGetIndexersResponse) Reset() {
 	*x = UserGetIndexersResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[6]
+	mi := &file_chill_v4_api_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -959,7 +1773,7 @@ func (x *UserGetIndexersResponse) String() string {
 func (*UserGetIndexersResponse) ProtoMessage() {}
 
 func (x *UserGetIndexersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[6]
+	mi := &file_chill_v4_api_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -972,7 +1786,7 @@ func (x *UserGetIndexersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserGetIndexersResponse.ProtoReflect.Descriptor instead.
 func (*UserGetIndexersResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{6}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *UserGetIndexersResponse) GetIndexers() []*UserIndexer {
@@ -995,7 +1809,7 @@ type UserIndexer struct {
 
 func (x *UserIndexer) Reset() {
 	*x = UserIndexer{}
-	mi := &file_chill_v4_api_proto_msgTypes[7]
+	mi := &file_chill_v4_api_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1007,7 +1821,7 @@ func (x *UserIndexer) String() string {
 func (*UserIndexer) ProtoMessage() {}
 
 func (x *UserIndexer) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[7]
+	mi := &file_chill_v4_api_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1020,7 +1834,7 @@ func (x *UserIndexer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserIndexer.ProtoReflect.Descriptor instead.
 func (*UserIndexer) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{7}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *UserIndexer) GetId() string {
@@ -1067,7 +1881,7 @@ type CoreSearchRequest struct {
 
 func (x *CoreSearchRequest) Reset() {
 	*x = CoreSearchRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[8]
+	mi := &file_chill_v4_api_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1079,7 +1893,7 @@ func (x *CoreSearchRequest) String() string {
 func (*CoreSearchRequest) ProtoMessage() {}
 
 func (x *CoreSearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[8]
+	mi := &file_chill_v4_api_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1092,7 +1906,7 @@ func (x *CoreSearchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CoreSearchRequest.ProtoReflect.Descriptor instead.
 func (*CoreSearchRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{8}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CoreSearchRequest) GetQuery() string {
@@ -1140,7 +1954,7 @@ type ReleaseInfo struct {
 
 func (x *ReleaseInfo) Reset() {
 	*x = ReleaseInfo{}
-	mi := &file_chill_v4_api_proto_msgTypes[9]
+	mi := &file_chill_v4_api_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1152,7 +1966,7 @@ func (x *ReleaseInfo) String() string {
 func (*ReleaseInfo) ProtoMessage() {}
 
 func (x *ReleaseInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[9]
+	mi := &file_chill_v4_api_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1165,7 +1979,7 @@ func (x *ReleaseInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReleaseInfo.ProtoReflect.Descriptor instead.
 func (*ReleaseInfo) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{9}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ReleaseInfo) GetTitle() string {
@@ -1397,7 +2211,7 @@ type SearchResult struct {
 
 func (x *SearchResult) Reset() {
 	*x = SearchResult{}
-	mi := &file_chill_v4_api_proto_msgTypes[10]
+	mi := &file_chill_v4_api_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1409,7 +2223,7 @@ func (x *SearchResult) String() string {
 func (*SearchResult) ProtoMessage() {}
 
 func (x *SearchResult) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[10]
+	mi := &file_chill_v4_api_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1422,7 +2236,7 @@ func (x *SearchResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchResult.ProtoReflect.Descriptor instead.
 func (*SearchResult) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{10}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *SearchResult) GetId() string {
@@ -1513,7 +2327,7 @@ type SearchResponse struct {
 
 func (x *SearchResponse) Reset() {
 	*x = SearchResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[11]
+	mi := &file_chill_v4_api_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1525,7 +2339,7 @@ func (x *SearchResponse) String() string {
 func (*SearchResponse) ProtoMessage() {}
 
 func (x *SearchResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[11]
+	mi := &file_chill_v4_api_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1538,7 +2352,7 @@ func (x *SearchResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchResponse.ProtoReflect.Descriptor instead.
 func (*SearchResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{11}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *SearchResponse) GetQuery() string {
@@ -1575,7 +2389,7 @@ type IndexerStat struct {
 
 func (x *IndexerStat) Reset() {
 	*x = IndexerStat{}
-	mi := &file_chill_v4_api_proto_msgTypes[12]
+	mi := &file_chill_v4_api_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1587,7 +2401,7 @@ func (x *IndexerStat) String() string {
 func (*IndexerStat) ProtoMessage() {}
 
 func (x *IndexerStat) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[12]
+	mi := &file_chill_v4_api_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1600,7 +2414,7 @@ func (x *IndexerStat) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IndexerStat.ProtoReflect.Descriptor instead.
 func (*IndexerStat) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{12}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *IndexerStat) GetId() string {
@@ -1648,7 +2462,7 @@ type UserSearchRequest struct {
 
 func (x *UserSearchRequest) Reset() {
 	*x = UserSearchRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[13]
+	mi := &file_chill_v4_api_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1660,7 +2474,7 @@ func (x *UserSearchRequest) String() string {
 func (*UserSearchRequest) ProtoMessage() {}
 
 func (x *UserSearchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[13]
+	mi := &file_chill_v4_api_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1673,7 +2487,7 @@ func (x *UserSearchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserSearchRequest.ProtoReflect.Descriptor instead.
 func (*UserSearchRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{13}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *UserSearchRequest) GetQuery() string {
@@ -1699,7 +2513,7 @@ type GetMoviesBySourceRequest struct {
 
 func (x *GetMoviesBySourceRequest) Reset() {
 	*x = GetMoviesBySourceRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[14]
+	mi := &file_chill_v4_api_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1711,7 +2525,7 @@ func (x *GetMoviesBySourceRequest) String() string {
 func (*GetMoviesBySourceRequest) ProtoMessage() {}
 
 func (x *GetMoviesBySourceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[14]
+	mi := &file_chill_v4_api_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1724,7 +2538,7 @@ func (x *GetMoviesBySourceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMoviesBySourceRequest.ProtoReflect.Descriptor instead.
 func (*GetMoviesBySourceRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{14}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetMoviesBySourceRequest) GetSource() MoviesSource {
@@ -1760,7 +2574,7 @@ type Movie struct {
 
 func (x *Movie) Reset() {
 	*x = Movie{}
-	mi := &file_chill_v4_api_proto_msgTypes[15]
+	mi := &file_chill_v4_api_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1772,7 +2586,7 @@ func (x *Movie) String() string {
 func (*Movie) ProtoMessage() {}
 
 func (x *Movie) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[15]
+	mi := &file_chill_v4_api_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1785,7 +2599,7 @@ func (x *Movie) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Movie.ProtoReflect.Descriptor instead.
 func (*Movie) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{15}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *Movie) GetId() string {
@@ -1917,7 +2731,7 @@ type GetMoviesBySourceResponse struct {
 
 func (x *GetMoviesBySourceResponse) Reset() {
 	*x = GetMoviesBySourceResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[16]
+	mi := &file_chill_v4_api_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1929,7 +2743,7 @@ func (x *GetMoviesBySourceResponse) String() string {
 func (*GetMoviesBySourceResponse) ProtoMessage() {}
 
 func (x *GetMoviesBySourceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[16]
+	mi := &file_chill_v4_api_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1942,7 +2756,7 @@ func (x *GetMoviesBySourceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMoviesBySourceResponse.ProtoReflect.Descriptor instead.
 func (*GetMoviesBySourceResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{16}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetMoviesBySourceResponse) GetSource() MoviesSource {
@@ -1967,7 +2781,7 @@ type GetMoviesRequest struct {
 
 func (x *GetMoviesRequest) Reset() {
 	*x = GetMoviesRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[17]
+	mi := &file_chill_v4_api_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1979,7 +2793,7 @@ func (x *GetMoviesRequest) String() string {
 func (*GetMoviesRequest) ProtoMessage() {}
 
 func (x *GetMoviesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[17]
+	mi := &file_chill_v4_api_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1992,7 +2806,7 @@ func (x *GetMoviesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMoviesRequest.ProtoReflect.Descriptor instead.
 func (*GetMoviesRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{17}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{25}
 }
 
 type GetMoviesResponse struct {
@@ -2006,7 +2820,7 @@ type GetMoviesResponse struct {
 
 func (x *GetMoviesResponse) Reset() {
 	*x = GetMoviesResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[18]
+	mi := &file_chill_v4_api_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2018,7 +2832,7 @@ func (x *GetMoviesResponse) String() string {
 func (*GetMoviesResponse) ProtoMessage() {}
 
 func (x *GetMoviesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[18]
+	mi := &file_chill_v4_api_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2031,7 +2845,7 @@ func (x *GetMoviesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMoviesResponse.ProtoReflect.Descriptor instead.
 func (*GetMoviesResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{18}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetMoviesResponse) GetSource() MoviesSource {
@@ -2076,7 +2890,7 @@ type TVShow struct {
 
 func (x *TVShow) Reset() {
 	*x = TVShow{}
-	mi := &file_chill_v4_api_proto_msgTypes[19]
+	mi := &file_chill_v4_api_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2088,7 +2902,7 @@ func (x *TVShow) String() string {
 func (*TVShow) ProtoMessage() {}
 
 func (x *TVShow) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[19]
+	mi := &file_chill_v4_api_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2101,7 +2915,7 @@ func (x *TVShow) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TVShow.ProtoReflect.Descriptor instead.
 func (*TVShow) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{19}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *TVShow) GetImdbId() string {
@@ -2197,7 +3011,7 @@ type GetTVShowsBySourceRequest struct {
 
 func (x *GetTVShowsBySourceRequest) Reset() {
 	*x = GetTVShowsBySourceRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[20]
+	mi := &file_chill_v4_api_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2209,7 +3023,7 @@ func (x *GetTVShowsBySourceRequest) String() string {
 func (*GetTVShowsBySourceRequest) ProtoMessage() {}
 
 func (x *GetTVShowsBySourceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[20]
+	mi := &file_chill_v4_api_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2222,7 +3036,7 @@ func (x *GetTVShowsBySourceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowsBySourceRequest.ProtoReflect.Descriptor instead.
 func (*GetTVShowsBySourceRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{20}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *GetTVShowsBySourceRequest) GetSource() TVShowsSource {
@@ -2242,7 +3056,7 @@ type GetTVShowsBySourceResponse struct {
 
 func (x *GetTVShowsBySourceResponse) Reset() {
 	*x = GetTVShowsBySourceResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[21]
+	mi := &file_chill_v4_api_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2254,7 +3068,7 @@ func (x *GetTVShowsBySourceResponse) String() string {
 func (*GetTVShowsBySourceResponse) ProtoMessage() {}
 
 func (x *GetTVShowsBySourceResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[21]
+	mi := &file_chill_v4_api_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2267,7 +3081,7 @@ func (x *GetTVShowsBySourceResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowsBySourceResponse.ProtoReflect.Descriptor instead.
 func (*GetTVShowsBySourceResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{21}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GetTVShowsBySourceResponse) GetSource() TVShowsSource {
@@ -2297,7 +3111,7 @@ type GetTVShowsRequest struct {
 
 func (x *GetTVShowsRequest) Reset() {
 	*x = GetTVShowsRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[22]
+	mi := &file_chill_v4_api_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2309,7 +3123,7 @@ func (x *GetTVShowsRequest) String() string {
 func (*GetTVShowsRequest) ProtoMessage() {}
 
 func (x *GetTVShowsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[22]
+	mi := &file_chill_v4_api_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2322,7 +3136,7 @@ func (x *GetTVShowsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowsRequest.ProtoReflect.Descriptor instead.
 func (*GetTVShowsRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{22}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *GetTVShowsRequest) GetSource() TVShowsSource {
@@ -2342,7 +3156,7 @@ type GetTVShowsResponse struct {
 
 func (x *GetTVShowsResponse) Reset() {
 	*x = GetTVShowsResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[23]
+	mi := &file_chill_v4_api_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2354,7 +3168,7 @@ func (x *GetTVShowsResponse) String() string {
 func (*GetTVShowsResponse) ProtoMessage() {}
 
 func (x *GetTVShowsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[23]
+	mi := &file_chill_v4_api_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2367,7 +3181,7 @@ func (x *GetTVShowsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowsResponse.ProtoReflect.Descriptor instead.
 func (*GetTVShowsResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{23}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GetTVShowsResponse) GetSource() TVShowsSource {
@@ -2406,7 +3220,7 @@ type TVShowDetail struct {
 
 func (x *TVShowDetail) Reset() {
 	*x = TVShowDetail{}
-	mi := &file_chill_v4_api_proto_msgTypes[24]
+	mi := &file_chill_v4_api_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2418,7 +3232,7 @@ func (x *TVShowDetail) String() string {
 func (*TVShowDetail) ProtoMessage() {}
 
 func (x *TVShowDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[24]
+	mi := &file_chill_v4_api_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2431,7 +3245,7 @@ func (x *TVShowDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TVShowDetail.ProtoReflect.Descriptor instead.
 func (*TVShowDetail) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{24}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *TVShowDetail) GetImdbId() string {
@@ -2538,7 +3352,7 @@ type TVShowSeason struct {
 
 func (x *TVShowSeason) Reset() {
 	*x = TVShowSeason{}
-	mi := &file_chill_v4_api_proto_msgTypes[25]
+	mi := &file_chill_v4_api_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2550,7 +3364,7 @@ func (x *TVShowSeason) String() string {
 func (*TVShowSeason) ProtoMessage() {}
 
 func (x *TVShowSeason) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[25]
+	mi := &file_chill_v4_api_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2563,7 +3377,7 @@ func (x *TVShowSeason) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TVShowSeason.ProtoReflect.Descriptor instead.
 func (*TVShowSeason) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{25}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *TVShowSeason) GetSeasonNumber() int32 {
@@ -2617,7 +3431,7 @@ type TVShowEpisode struct {
 
 func (x *TVShowEpisode) Reset() {
 	*x = TVShowEpisode{}
-	mi := &file_chill_v4_api_proto_msgTypes[26]
+	mi := &file_chill_v4_api_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2629,7 +3443,7 @@ func (x *TVShowEpisode) String() string {
 func (*TVShowEpisode) ProtoMessage() {}
 
 func (x *TVShowEpisode) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[26]
+	mi := &file_chill_v4_api_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2642,7 +3456,7 @@ func (x *TVShowEpisode) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TVShowEpisode.ProtoReflect.Descriptor instead.
 func (*TVShowEpisode) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{26}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *TVShowEpisode) GetSeasonNumber() int32 {
@@ -2710,7 +3524,7 @@ type GetTVShowDetailRequest struct {
 
 func (x *GetTVShowDetailRequest) Reset() {
 	*x = GetTVShowDetailRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[27]
+	mi := &file_chill_v4_api_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2722,7 +3536,7 @@ func (x *GetTVShowDetailRequest) String() string {
 func (*GetTVShowDetailRequest) ProtoMessage() {}
 
 func (x *GetTVShowDetailRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[27]
+	mi := &file_chill_v4_api_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2735,7 +3549,7 @@ func (x *GetTVShowDetailRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowDetailRequest.ProtoReflect.Descriptor instead.
 func (*GetTVShowDetailRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{27}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetTVShowDetailRequest) GetImdbId() string {
@@ -2755,7 +3569,7 @@ type GetTVShowDetailResponse struct {
 
 func (x *GetTVShowDetailResponse) Reset() {
 	*x = GetTVShowDetailResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[28]
+	mi := &file_chill_v4_api_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2767,7 +3581,7 @@ func (x *GetTVShowDetailResponse) String() string {
 func (*GetTVShowDetailResponse) ProtoMessage() {}
 
 func (x *GetTVShowDetailResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[28]
+	mi := &file_chill_v4_api_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2780,7 +3594,7 @@ func (x *GetTVShowDetailResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowDetailResponse.ProtoReflect.Descriptor instead.
 func (*GetTVShowDetailResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{28}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetTVShowDetailResponse) GetShow() *TVShowDetail {
@@ -2807,7 +3621,7 @@ type GetTVShowSeasonRequest struct {
 
 func (x *GetTVShowSeasonRequest) Reset() {
 	*x = GetTVShowSeasonRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[29]
+	mi := &file_chill_v4_api_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2819,7 +3633,7 @@ func (x *GetTVShowSeasonRequest) String() string {
 func (*GetTVShowSeasonRequest) ProtoMessage() {}
 
 func (x *GetTVShowSeasonRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[29]
+	mi := &file_chill_v4_api_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2832,7 +3646,7 @@ func (x *GetTVShowSeasonRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowSeasonRequest.ProtoReflect.Descriptor instead.
 func (*GetTVShowSeasonRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{29}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GetTVShowSeasonRequest) GetImdbId() string {
@@ -2861,7 +3675,7 @@ type GetTVShowSeasonResponse struct {
 
 func (x *GetTVShowSeasonResponse) Reset() {
 	*x = GetTVShowSeasonResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[30]
+	mi := &file_chill_v4_api_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2873,7 +3687,7 @@ func (x *GetTVShowSeasonResponse) String() string {
 func (*GetTVShowSeasonResponse) ProtoMessage() {}
 
 func (x *GetTVShowSeasonResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[30]
+	mi := &file_chill_v4_api_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2886,7 +3700,7 @@ func (x *GetTVShowSeasonResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowSeasonResponse.ProtoReflect.Descriptor instead.
 func (*GetTVShowSeasonResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{30}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *GetTVShowSeasonResponse) GetImdbId() string {
@@ -2935,7 +3749,7 @@ type TVShowDownload struct {
 
 func (x *TVShowDownload) Reset() {
 	*x = TVShowDownload{}
-	mi := &file_chill_v4_api_proto_msgTypes[31]
+	mi := &file_chill_v4_api_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2947,7 +3761,7 @@ func (x *TVShowDownload) String() string {
 func (*TVShowDownload) ProtoMessage() {}
 
 func (x *TVShowDownload) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[31]
+	mi := &file_chill_v4_api_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2960,7 +3774,7 @@ func (x *TVShowDownload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TVShowDownload.ProtoReflect.Descriptor instead.
 func (*TVShowDownload) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{31}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *TVShowDownload) GetTitle() string {
@@ -3044,7 +3858,7 @@ type GetTVShowEpisodeDownloadRequest struct {
 
 func (x *GetTVShowEpisodeDownloadRequest) Reset() {
 	*x = GetTVShowEpisodeDownloadRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[32]
+	mi := &file_chill_v4_api_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3056,7 +3870,7 @@ func (x *GetTVShowEpisodeDownloadRequest) String() string {
 func (*GetTVShowEpisodeDownloadRequest) ProtoMessage() {}
 
 func (x *GetTVShowEpisodeDownloadRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[32]
+	mi := &file_chill_v4_api_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3069,7 +3883,7 @@ func (x *GetTVShowEpisodeDownloadRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowEpisodeDownloadRequest.ProtoReflect.Descriptor instead.
 func (*GetTVShowEpisodeDownloadRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{32}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *GetTVShowEpisodeDownloadRequest) GetImdbId() string {
@@ -3103,7 +3917,7 @@ type GetTVShowEpisodeDownloadResponse struct {
 
 func (x *GetTVShowEpisodeDownloadResponse) Reset() {
 	*x = GetTVShowEpisodeDownloadResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[33]
+	mi := &file_chill_v4_api_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3115,7 +3929,7 @@ func (x *GetTVShowEpisodeDownloadResponse) String() string {
 func (*GetTVShowEpisodeDownloadResponse) ProtoMessage() {}
 
 func (x *GetTVShowEpisodeDownloadResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[33]
+	mi := &file_chill_v4_api_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3128,7 +3942,7 @@ func (x *GetTVShowEpisodeDownloadResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowEpisodeDownloadResponse.ProtoReflect.Descriptor instead.
 func (*GetTVShowEpisodeDownloadResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{33}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetTVShowEpisodeDownloadResponse) GetDownload() *TVShowDownload {
@@ -3155,7 +3969,7 @@ type GetTVShowSeasonDownloadsRequest struct {
 
 func (x *GetTVShowSeasonDownloadsRequest) Reset() {
 	*x = GetTVShowSeasonDownloadsRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[34]
+	mi := &file_chill_v4_api_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3167,7 +3981,7 @@ func (x *GetTVShowSeasonDownloadsRequest) String() string {
 func (*GetTVShowSeasonDownloadsRequest) ProtoMessage() {}
 
 func (x *GetTVShowSeasonDownloadsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[34]
+	mi := &file_chill_v4_api_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3180,7 +3994,7 @@ func (x *GetTVShowSeasonDownloadsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowSeasonDownloadsRequest.ProtoReflect.Descriptor instead.
 func (*GetTVShowSeasonDownloadsRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{34}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GetTVShowSeasonDownloadsRequest) GetImdbId() string {
@@ -3208,7 +4022,7 @@ type GetTVShowSeasonDownloadsResponse struct {
 
 func (x *GetTVShowSeasonDownloadsResponse) Reset() {
 	*x = GetTVShowSeasonDownloadsResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[35]
+	mi := &file_chill_v4_api_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3220,7 +4034,7 @@ func (x *GetTVShowSeasonDownloadsResponse) String() string {
 func (*GetTVShowSeasonDownloadsResponse) ProtoMessage() {}
 
 func (x *GetTVShowSeasonDownloadsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[35]
+	mi := &file_chill_v4_api_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3233,7 +4047,7 @@ func (x *GetTVShowSeasonDownloadsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTVShowSeasonDownloadsResponse.ProtoReflect.Descriptor instead.
 func (*GetTVShowSeasonDownloadsResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{35}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *GetTVShowSeasonDownloadsResponse) GetSeasonPack() *TVShowDownload {
@@ -3268,7 +4082,7 @@ type TVShowEpisodeDownloadResult struct {
 
 func (x *TVShowEpisodeDownloadResult) Reset() {
 	*x = TVShowEpisodeDownloadResult{}
-	mi := &file_chill_v4_api_proto_msgTypes[36]
+	mi := &file_chill_v4_api_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3280,7 +4094,7 @@ func (x *TVShowEpisodeDownloadResult) String() string {
 func (*TVShowEpisodeDownloadResult) ProtoMessage() {}
 
 func (x *TVShowEpisodeDownloadResult) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[36]
+	mi := &file_chill_v4_api_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3293,7 +4107,7 @@ func (x *TVShowEpisodeDownloadResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TVShowEpisodeDownloadResult.ProtoReflect.Descriptor instead.
 func (*TVShowEpisodeDownloadResult) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{36}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *TVShowEpisodeDownloadResult) GetEpisodeNumber() int32 {
@@ -3325,7 +4139,7 @@ type GetUserSettingsRequest struct {
 
 func (x *GetUserSettingsRequest) Reset() {
 	*x = GetUserSettingsRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[37]
+	mi := &file_chill_v4_api_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3337,7 +4151,7 @@ func (x *GetUserSettingsRequest) String() string {
 func (*GetUserSettingsRequest) ProtoMessage() {}
 
 func (x *GetUserSettingsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[37]
+	mi := &file_chill_v4_api_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3350,7 +4164,7 @@ func (x *GetUserSettingsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserSettingsRequest.ProtoReflect.Descriptor instead.
 func (*GetUserSettingsRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{37}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{45}
 }
 
 type UserSettings struct {
@@ -3364,7 +4178,7 @@ type UserSettings struct {
 
 func (x *UserSettings) Reset() {
 	*x = UserSettings{}
-	mi := &file_chill_v4_api_proto_msgTypes[38]
+	mi := &file_chill_v4_api_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3376,7 +4190,7 @@ func (x *UserSettings) String() string {
 func (*UserSettings) ProtoMessage() {}
 
 func (x *UserSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[38]
+	mi := &file_chill_v4_api_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3389,7 +4203,7 @@ func (x *UserSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserSettings.ProtoReflect.Descriptor instead.
 func (*UserSettings) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{38}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *UserSettings) GetSearch() *SearchSettings {
@@ -3432,7 +4246,7 @@ type SearchSettings struct {
 
 func (x *SearchSettings) Reset() {
 	*x = SearchSettings{}
-	mi := &file_chill_v4_api_proto_msgTypes[39]
+	mi := &file_chill_v4_api_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3444,7 +4258,7 @@ func (x *SearchSettings) String() string {
 func (*SearchSettings) ProtoMessage() {}
 
 func (x *SearchSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[39]
+	mi := &file_chill_v4_api_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3457,7 +4271,7 @@ func (x *SearchSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SearchSettings.ProtoReflect.Descriptor instead.
 func (*SearchSettings) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{39}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *SearchSettings) GetCodecFilters() []CodecFilter {
@@ -3559,7 +4373,7 @@ type CatalogSettings struct {
 
 func (x *CatalogSettings) Reset() {
 	*x = CatalogSettings{}
-	mi := &file_chill_v4_api_proto_msgTypes[40]
+	mi := &file_chill_v4_api_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3571,7 +4385,7 @@ func (x *CatalogSettings) String() string {
 func (*CatalogSettings) ProtoMessage() {}
 
 func (x *CatalogSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[40]
+	mi := &file_chill_v4_api_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3584,7 +4398,7 @@ func (x *CatalogSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CatalogSettings.ProtoReflect.Descriptor instead.
 func (*CatalogSettings) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{40}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *CatalogSettings) GetMoviesSource() MoviesSource {
@@ -3633,7 +4447,7 @@ type DownloadSettings struct {
 
 func (x *DownloadSettings) Reset() {
 	*x = DownloadSettings{}
-	mi := &file_chill_v4_api_proto_msgTypes[41]
+	mi := &file_chill_v4_api_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3645,7 +4459,7 @@ func (x *DownloadSettings) String() string {
 func (*DownloadSettings) ProtoMessage() {}
 
 func (x *DownloadSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[41]
+	mi := &file_chill_v4_api_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3658,7 +4472,7 @@ func (x *DownloadSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DownloadSettings.ProtoReflect.Descriptor instead.
 func (*DownloadSettings) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{41}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *DownloadSettings) GetFolderId() int64 {
@@ -3677,7 +4491,7 @@ type SaveUserSettingsRequest struct {
 
 func (x *SaveUserSettingsRequest) Reset() {
 	*x = SaveUserSettingsRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[42]
+	mi := &file_chill_v4_api_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3689,7 +4503,7 @@ func (x *SaveUserSettingsRequest) String() string {
 func (*SaveUserSettingsRequest) ProtoMessage() {}
 
 func (x *SaveUserSettingsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[42]
+	mi := &file_chill_v4_api_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3702,7 +4516,7 @@ func (x *SaveUserSettingsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SaveUserSettingsRequest.ProtoReflect.Descriptor instead.
 func (*SaveUserSettingsRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{42}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *SaveUserSettingsRequest) GetSettings() *UserSettings {
@@ -3725,7 +4539,7 @@ type CatalogOrigin struct {
 
 func (x *CatalogOrigin) Reset() {
 	*x = CatalogOrigin{}
-	mi := &file_chill_v4_api_proto_msgTypes[43]
+	mi := &file_chill_v4_api_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3737,7 +4551,7 @@ func (x *CatalogOrigin) String() string {
 func (*CatalogOrigin) ProtoMessage() {}
 
 func (x *CatalogOrigin) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[43]
+	mi := &file_chill_v4_api_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3750,7 +4564,7 @@ func (x *CatalogOrigin) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CatalogOrigin.ProtoReflect.Descriptor instead.
 func (*CatalogOrigin) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{43}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *CatalogOrigin) GetCatalog() isCatalogOrigin_Catalog {
@@ -3804,7 +4618,7 @@ type AddTransferRequest struct {
 
 func (x *AddTransferRequest) Reset() {
 	*x = AddTransferRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[44]
+	mi := &file_chill_v4_api_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3816,7 +4630,7 @@ func (x *AddTransferRequest) String() string {
 func (*AddTransferRequest) ProtoMessage() {}
 
 func (x *AddTransferRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[44]
+	mi := &file_chill_v4_api_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3829,7 +4643,7 @@ func (x *AddTransferRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddTransferRequest.ProtoReflect.Descriptor instead.
 func (*AddTransferRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{44}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *AddTransferRequest) GetUrl() string {
@@ -3856,7 +4670,7 @@ type AddTransferResponse struct {
 
 func (x *AddTransferResponse) Reset() {
 	*x = AddTransferResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[45]
+	mi := &file_chill_v4_api_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3868,7 +4682,7 @@ func (x *AddTransferResponse) String() string {
 func (*AddTransferResponse) ProtoMessage() {}
 
 func (x *AddTransferResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[45]
+	mi := &file_chill_v4_api_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3881,7 +4695,7 @@ func (x *AddTransferResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddTransferResponse.ProtoReflect.Descriptor instead.
 func (*AddTransferResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{45}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *AddTransferResponse) GetStatus() string {
@@ -3907,7 +4721,7 @@ type GetTransferRequest struct {
 
 func (x *GetTransferRequest) Reset() {
 	*x = GetTransferRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[46]
+	mi := &file_chill_v4_api_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3919,7 +4733,7 @@ func (x *GetTransferRequest) String() string {
 func (*GetTransferRequest) ProtoMessage() {}
 
 func (x *GetTransferRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[46]
+	mi := &file_chill_v4_api_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3932,7 +4746,7 @@ func (x *GetTransferRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransferRequest.ProtoReflect.Descriptor instead.
 func (*GetTransferRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{46}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *GetTransferRequest) GetId() int64 {
@@ -3951,7 +4765,7 @@ type GetTransferResponse struct {
 
 func (x *GetTransferResponse) Reset() {
 	*x = GetTransferResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[47]
+	mi := &file_chill_v4_api_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3963,7 +4777,7 @@ func (x *GetTransferResponse) String() string {
 func (*GetTransferResponse) ProtoMessage() {}
 
 func (x *GetTransferResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[47]
+	mi := &file_chill_v4_api_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3976,7 +4790,7 @@ func (x *GetTransferResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransferResponse.ProtoReflect.Descriptor instead.
 func (*GetTransferResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{47}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *GetTransferResponse) GetTransfer() *Transfer {
@@ -4016,7 +4830,7 @@ type Transfer struct {
 
 func (x *Transfer) Reset() {
 	*x = Transfer{}
-	mi := &file_chill_v4_api_proto_msgTypes[48]
+	mi := &file_chill_v4_api_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4028,7 +4842,7 @@ func (x *Transfer) String() string {
 func (*Transfer) ProtoMessage() {}
 
 func (x *Transfer) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[48]
+	mi := &file_chill_v4_api_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4041,7 +4855,7 @@ func (x *Transfer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Transfer.ProtoReflect.Descriptor instead.
 func (*Transfer) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{48}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *Transfer) GetId() int64 {
@@ -4206,7 +5020,7 @@ type GetDownloadFolderRequest struct {
 
 func (x *GetDownloadFolderRequest) Reset() {
 	*x = GetDownloadFolderRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[49]
+	mi := &file_chill_v4_api_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4218,7 +5032,7 @@ func (x *GetDownloadFolderRequest) String() string {
 func (*GetDownloadFolderRequest) ProtoMessage() {}
 
 func (x *GetDownloadFolderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[49]
+	mi := &file_chill_v4_api_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4231,7 +5045,7 @@ func (x *GetDownloadFolderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDownloadFolderRequest.ProtoReflect.Descriptor instead.
 func (*GetDownloadFolderRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{49}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{57}
 }
 
 type GetDownloadFolderResponse struct {
@@ -4243,7 +5057,7 @@ type GetDownloadFolderResponse struct {
 
 func (x *GetDownloadFolderResponse) Reset() {
 	*x = GetDownloadFolderResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[50]
+	mi := &file_chill_v4_api_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4255,7 +5069,7 @@ func (x *GetDownloadFolderResponse) String() string {
 func (*GetDownloadFolderResponse) ProtoMessage() {}
 
 func (x *GetDownloadFolderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[50]
+	mi := &file_chill_v4_api_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4268,7 +5082,7 @@ func (x *GetDownloadFolderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDownloadFolderResponse.ProtoReflect.Descriptor instead.
 func (*GetDownloadFolderResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{50}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *GetDownloadFolderResponse) GetFolder() *UserFile {
@@ -4287,7 +5101,7 @@ type GetFolderRequest struct {
 
 func (x *GetFolderRequest) Reset() {
 	*x = GetFolderRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[51]
+	mi := &file_chill_v4_api_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4299,7 +5113,7 @@ func (x *GetFolderRequest) String() string {
 func (*GetFolderRequest) ProtoMessage() {}
 
 func (x *GetFolderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[51]
+	mi := &file_chill_v4_api_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4312,7 +5126,7 @@ func (x *GetFolderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFolderRequest.ProtoReflect.Descriptor instead.
 func (*GetFolderRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{51}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *GetFolderRequest) GetId() int64 {
@@ -4335,7 +5149,7 @@ type UserFile struct {
 
 func (x *UserFile) Reset() {
 	*x = UserFile{}
-	mi := &file_chill_v4_api_proto_msgTypes[52]
+	mi := &file_chill_v4_api_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4347,7 +5161,7 @@ func (x *UserFile) String() string {
 func (*UserFile) ProtoMessage() {}
 
 func (x *UserFile) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[52]
+	mi := &file_chill_v4_api_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4360,7 +5174,7 @@ func (x *UserFile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserFile.ProtoReflect.Descriptor instead.
 func (*UserFile) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{52}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *UserFile) GetId() int64 {
@@ -4408,7 +5222,7 @@ type GetFolderResponse struct {
 
 func (x *GetFolderResponse) Reset() {
 	*x = GetFolderResponse{}
-	mi := &file_chill_v4_api_proto_msgTypes[53]
+	mi := &file_chill_v4_api_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4420,7 +5234,7 @@ func (x *GetFolderResponse) String() string {
 func (*GetFolderResponse) ProtoMessage() {}
 
 func (x *GetFolderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[53]
+	mi := &file_chill_v4_api_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4433,7 +5247,7 @@ func (x *GetFolderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetFolderResponse.ProtoReflect.Descriptor instead.
 func (*GetFolderResponse) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{53}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *GetFolderResponse) GetParent() *UserFile {
@@ -4458,7 +5272,7 @@ type GetUserProfileRequest struct {
 
 func (x *GetUserProfileRequest) Reset() {
 	*x = GetUserProfileRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[54]
+	mi := &file_chill_v4_api_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4470,7 +5284,7 @@ func (x *GetUserProfileRequest) String() string {
 func (*GetUserProfileRequest) ProtoMessage() {}
 
 func (x *GetUserProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[54]
+	mi := &file_chill_v4_api_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4483,7 +5297,7 @@ func (x *GetUserProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetUserProfileRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{54}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{62}
 }
 
 type UserProfile struct {
@@ -4498,7 +5312,7 @@ type UserProfile struct {
 
 func (x *UserProfile) Reset() {
 	*x = UserProfile{}
-	mi := &file_chill_v4_api_proto_msgTypes[55]
+	mi := &file_chill_v4_api_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4510,7 +5324,7 @@ func (x *UserProfile) String() string {
 func (*UserProfile) ProtoMessage() {}
 
 func (x *UserProfile) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[55]
+	mi := &file_chill_v4_api_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4523,7 +5337,7 @@ func (x *UserProfile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserProfile.ProtoReflect.Descriptor instead.
 func (*UserProfile) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{55}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *UserProfile) GetUserId() string {
@@ -4558,7 +5372,39 @@ var File_chill_v4_api_proto protoreflect.FileDescriptor
 
 const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
-	"\x12chill/v4/api.proto\x12\bchill.v4\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x14\n" +
+	"\x12chill/v4/api.proto\x12\bchill.v4\x1a\x1fgoogle/protobuf/timestamp.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"1\n" +
+	"\x16ResolvePlaybackRequest\x12\x17\n" +
+	"\afile_id\x18\x01 \x01(\x03R\x06fileId\"\xce\x01\n" +
+	"\x17ResolvePlaybackResponse\x12/\n" +
+	"\x05ready\x18\x01 \x01(\v2\x17.chill.v4.PlaybackReadyH\x00R\x05ready\x125\n" +
+	"\apending\x18\x02 \x01(\v2\x19.chill.v4.PlaybackPendingH\x00R\apending\x12A\n" +
+	"\vunavailable\x18\x03 \x01(\v2\x1d.chill.v4.PlaybackUnavailableH\x00R\vunavailableB\b\n" +
+	"\x06result\"\xa0\x01\n" +
+	"\rPlaybackReady\x12+\n" +
+	"\x05media\x18\x01 \x01(\v2\x15.chill.v4.PlaybackUrlR\x05media\x120\n" +
+	"\x06format\x18\x02 \x01(\v2\x18.chill.v4.PlaybackFormatR\x06format\x120\n" +
+	"\tsubtitles\x18\x03 \x03(\v2\x12.chill.v4.SubtitleR\tsubtitles\"B\n" +
+	"\x0fPlaybackPending\x12/\n" +
+	"\x06reason\x18\x01 \x01(\x0e2\x17.chill.v4.PendingReasonR\x06reason\"J\n" +
+	"\x13PlaybackUnavailable\x123\n" +
+	"\x06reason\x18\x01 \x01(\x0e2\x1b.chill.v4.UnavailableReasonR\x06reason\"\x8f\x01\n" +
+	"\vPlaybackUrl\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\x12;\n" +
+	"\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\texpiresAt\x12'\n" +
+	"\x0eexpiry_unknown\x18\x03 \x01(\bH\x00R\rexpiryUnknownB\b\n" +
+	"\x06expiry\"\xb1\x01\n" +
+	"\x0ePlaybackFormat\x121\n" +
+	"\tcontainer\x18\x01 \x01(\x0e2\x13.chill.v4.ContainerR\tcontainer\x125\n" +
+	"\vvideo_codec\x18\x02 \x01(\x0e2\x14.chill.v4.VideoCodecR\n" +
+	"videoCodec\x125\n" +
+	"\vaudio_codec\x18\x03 \x01(\x0e2\x14.chill.v4.AudioCodecR\n" +
+	"audioCodec\"\x97\x01\n" +
+	"\bSubtitle\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\blanguage\x18\x02 \x01(\tR\blanguage\x120\n" +
+	"\x06format\x18\x03 \x01(\x0e2\x18.chill.v4.SubtitleFormatR\x06format\x12-\n" +
+	"\x06source\x18\x04 \x01(\v2\x15.chill.v4.PlaybackUrlR\x06source\"\x14\n" +
 	"\x12HealthCheckRequest\"(\n" +
 	"\x0eHealthResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\"\x18\n" +
@@ -4909,7 +5755,30 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1d\n" +
 	"\n" +
 	"avatar_url\x18\x03 \x01(\tR\tavatarUrl\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email*\x81\x01\n" +
+	"\x05email\x18\x04 \x01(\tR\x05email*N\n" +
+	"\rPendingReason\x12\x1e\n" +
+	"\x1aPENDING_REASON_UNSPECIFIED\x10\x00\x12\x1d\n" +
+	"\x19PENDING_REASON_PROCESSING\x10\x01*\xaf\x01\n" +
+	"\x11UnavailableReason\x12\"\n" +
+	"\x1eUNAVAILABLE_REASON_UNSPECIFIED\x10\x00\x12 \n" +
+	"\x1cUNAVAILABLE_REASON_NOT_FOUND\x10\x01\x12)\n" +
+	"%UNAVAILABLE_REASON_UNSUPPORTED_FORMAT\x10\x02\x12)\n" +
+	"%UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE\x10\x03*9\n" +
+	"\tContainer\x12\x19\n" +
+	"\x15CONTAINER_UNSPECIFIED\x10\x00\x12\x11\n" +
+	"\rCONTAINER_MP4\x10\x01*?\n" +
+	"\n" +
+	"VideoCodec\x12\x1b\n" +
+	"\x17VIDEO_CODEC_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10VIDEO_CODEC_H264\x10\x01*>\n" +
+	"\n" +
+	"AudioCodec\x12\x1b\n" +
+	"\x17AUDIO_CODEC_UNSPECIFIED\x10\x00\x12\x13\n" +
+	"\x0fAUDIO_CODEC_AAC\x10\x01*c\n" +
+	"\x0eSubtitleFormat\x12\x1f\n" +
+	"\x1bSUBTITLE_FORMAT_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13SUBTITLE_FORMAT_VTT\x10\x01\x12\x17\n" +
+	"\x13SUBTITLE_FORMAT_SRT\x10\x02*\x81\x01\n" +
 	"\rIndexerStatus\x12\x1e\n" +
 	"\x1aINDEXER_STATUS_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16INDEXER_STATUS_HEALTHY\x10\x01\x12\x1b\n" +
@@ -5010,7 +5879,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"ApiKeyAuth\x12\x00r\x1f\n" +
 	"\x1d\n" +
-	"\tX-API-Key\x12\fCore API key\x18\x01(\x012\xa0\x14\n" +
+	"\tX-API-Key\x12\fCore API key\x18\x01(\x012\xd4\x15\n" +
 	"\vUserService\x12\xaa\x01\n" +
 	"\vGetIndexers\x12 .chill.v4.UserGetIndexersRequest\x1a!.chill.v4.UserGetIndexersResponse\"V\x92ASb\x10\n" +
 	"\x0e\n" +
@@ -5096,7 +5965,13 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"BearerAuth\x12\x00r?\n" +
 	"=\n" +
-	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x12\xa0\x01\n" +
+	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x12\xb1\x01\n" +
+	"\x0fResolvePlayback\x12 .chill.v4.ResolvePlaybackRequest\x1a!.chill.v4.ResolvePlaybackResponse\"Y\x92ASb\x10\n" +
+	"\x0e\n" +
+	"\n" +
+	"BearerAuth\x12\x00r?\n" +
+	"=\n" +
+	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x90\x02\x01\x12\xa0\x01\n" +
 	"\x0eGetUserProfile\x12\x1f.chill.v4.GetUserProfileRequest\x1a\x15.chill.v4.UserProfile\"V\x92ASb\x10\n" +
 	"\x0e\n" +
 	"\n" +
@@ -5124,178 +5999,209 @@ func file_chill_v4_api_proto_rawDescGZIP() []byte {
 	return file_chill_v4_api_proto_rawDescData
 }
 
-var file_chill_v4_api_proto_enumTypes = make([]protoimpl.EnumInfo, 12)
-var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 56)
+var file_chill_v4_api_proto_enumTypes = make([]protoimpl.EnumInfo, 18)
+var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
 var file_chill_v4_api_proto_goTypes = []any{
-	(IndexerStatus)(0),                       // 0: chill.v4.IndexerStatus
-	(MoviesSource)(0),                        // 1: chill.v4.MoviesSource
-	(TVShowsSource)(0),                       // 2: chill.v4.TVShowsSource
-	(TVShowStatus)(0),                        // 3: chill.v4.TVShowStatus
-	(ResolutionFilter)(0),                    // 4: chill.v4.ResolutionFilter
-	(CodecFilter)(0),                         // 5: chill.v4.CodecFilter
-	(OtherFilter)(0),                         // 6: chill.v4.OtherFilter
-	(SearchResultDisplayBehavior)(0),         // 7: chill.v4.SearchResultDisplayBehavior
-	(SearchResultTitleBehavior)(0),           // 8: chill.v4.SearchResultTitleBehavior
-	(SortBy)(0),                              // 9: chill.v4.SortBy
-	(SortDirection)(0),                       // 10: chill.v4.SortDirection
-	(CatalogSort)(0),                         // 11: chill.v4.CatalogSort
-	(*HealthCheckRequest)(nil),               // 12: chill.v4.HealthCheckRequest
-	(*HealthResponse)(nil),                   // 13: chill.v4.HealthResponse
-	(*CoreGetIndexersRequest)(nil),           // 14: chill.v4.CoreGetIndexersRequest
-	(*Indexer)(nil),                          // 15: chill.v4.Indexer
-	(*CoreGetIndexersResponse)(nil),          // 16: chill.v4.CoreGetIndexersResponse
-	(*UserGetIndexersRequest)(nil),           // 17: chill.v4.UserGetIndexersRequest
-	(*UserGetIndexersResponse)(nil),          // 18: chill.v4.UserGetIndexersResponse
-	(*UserIndexer)(nil),                      // 19: chill.v4.UserIndexer
-	(*CoreSearchRequest)(nil),                // 20: chill.v4.CoreSearchRequest
-	(*ReleaseInfo)(nil),                      // 21: chill.v4.ReleaseInfo
-	(*SearchResult)(nil),                     // 22: chill.v4.SearchResult
-	(*SearchResponse)(nil),                   // 23: chill.v4.SearchResponse
-	(*IndexerStat)(nil),                      // 24: chill.v4.IndexerStat
-	(*UserSearchRequest)(nil),                // 25: chill.v4.UserSearchRequest
-	(*GetMoviesBySourceRequest)(nil),         // 26: chill.v4.GetMoviesBySourceRequest
-	(*Movie)(nil),                            // 27: chill.v4.Movie
-	(*GetMoviesBySourceResponse)(nil),        // 28: chill.v4.GetMoviesBySourceResponse
-	(*GetMoviesRequest)(nil),                 // 29: chill.v4.GetMoviesRequest
-	(*GetMoviesResponse)(nil),                // 30: chill.v4.GetMoviesResponse
-	(*TVShow)(nil),                           // 31: chill.v4.TVShow
-	(*GetTVShowsBySourceRequest)(nil),        // 32: chill.v4.GetTVShowsBySourceRequest
-	(*GetTVShowsBySourceResponse)(nil),       // 33: chill.v4.GetTVShowsBySourceResponse
-	(*GetTVShowsRequest)(nil),                // 34: chill.v4.GetTVShowsRequest
-	(*GetTVShowsResponse)(nil),               // 35: chill.v4.GetTVShowsResponse
-	(*TVShowDetail)(nil),                     // 36: chill.v4.TVShowDetail
-	(*TVShowSeason)(nil),                     // 37: chill.v4.TVShowSeason
-	(*TVShowEpisode)(nil),                    // 38: chill.v4.TVShowEpisode
-	(*GetTVShowDetailRequest)(nil),           // 39: chill.v4.GetTVShowDetailRequest
-	(*GetTVShowDetailResponse)(nil),          // 40: chill.v4.GetTVShowDetailResponse
-	(*GetTVShowSeasonRequest)(nil),           // 41: chill.v4.GetTVShowSeasonRequest
-	(*GetTVShowSeasonResponse)(nil),          // 42: chill.v4.GetTVShowSeasonResponse
-	(*TVShowDownload)(nil),                   // 43: chill.v4.TVShowDownload
-	(*GetTVShowEpisodeDownloadRequest)(nil),  // 44: chill.v4.GetTVShowEpisodeDownloadRequest
-	(*GetTVShowEpisodeDownloadResponse)(nil), // 45: chill.v4.GetTVShowEpisodeDownloadResponse
-	(*GetTVShowSeasonDownloadsRequest)(nil),  // 46: chill.v4.GetTVShowSeasonDownloadsRequest
-	(*GetTVShowSeasonDownloadsResponse)(nil), // 47: chill.v4.GetTVShowSeasonDownloadsResponse
-	(*TVShowEpisodeDownloadResult)(nil),      // 48: chill.v4.TVShowEpisodeDownloadResult
-	(*GetUserSettingsRequest)(nil),           // 49: chill.v4.GetUserSettingsRequest
-	(*UserSettings)(nil),                     // 50: chill.v4.UserSettings
-	(*SearchSettings)(nil),                   // 51: chill.v4.SearchSettings
-	(*CatalogSettings)(nil),                  // 52: chill.v4.CatalogSettings
-	(*DownloadSettings)(nil),                 // 53: chill.v4.DownloadSettings
-	(*SaveUserSettingsRequest)(nil),          // 54: chill.v4.SaveUserSettingsRequest
-	(*CatalogOrigin)(nil),                    // 55: chill.v4.CatalogOrigin
-	(*AddTransferRequest)(nil),               // 56: chill.v4.AddTransferRequest
-	(*AddTransferResponse)(nil),              // 57: chill.v4.AddTransferResponse
-	(*GetTransferRequest)(nil),               // 58: chill.v4.GetTransferRequest
-	(*GetTransferResponse)(nil),              // 59: chill.v4.GetTransferResponse
-	(*Transfer)(nil),                         // 60: chill.v4.Transfer
-	(*GetDownloadFolderRequest)(nil),         // 61: chill.v4.GetDownloadFolderRequest
-	(*GetDownloadFolderResponse)(nil),        // 62: chill.v4.GetDownloadFolderResponse
-	(*GetFolderRequest)(nil),                 // 63: chill.v4.GetFolderRequest
-	(*UserFile)(nil),                         // 64: chill.v4.UserFile
-	(*GetFolderResponse)(nil),                // 65: chill.v4.GetFolderResponse
-	(*GetUserProfileRequest)(nil),            // 66: chill.v4.GetUserProfileRequest
-	(*UserProfile)(nil),                      // 67: chill.v4.UserProfile
+	(PendingReason)(0),                       // 0: chill.v4.PendingReason
+	(UnavailableReason)(0),                   // 1: chill.v4.UnavailableReason
+	(Container)(0),                           // 2: chill.v4.Container
+	(VideoCodec)(0),                          // 3: chill.v4.VideoCodec
+	(AudioCodec)(0),                          // 4: chill.v4.AudioCodec
+	(SubtitleFormat)(0),                      // 5: chill.v4.SubtitleFormat
+	(IndexerStatus)(0),                       // 6: chill.v4.IndexerStatus
+	(MoviesSource)(0),                        // 7: chill.v4.MoviesSource
+	(TVShowsSource)(0),                       // 8: chill.v4.TVShowsSource
+	(TVShowStatus)(0),                        // 9: chill.v4.TVShowStatus
+	(ResolutionFilter)(0),                    // 10: chill.v4.ResolutionFilter
+	(CodecFilter)(0),                         // 11: chill.v4.CodecFilter
+	(OtherFilter)(0),                         // 12: chill.v4.OtherFilter
+	(SearchResultDisplayBehavior)(0),         // 13: chill.v4.SearchResultDisplayBehavior
+	(SearchResultTitleBehavior)(0),           // 14: chill.v4.SearchResultTitleBehavior
+	(SortBy)(0),                              // 15: chill.v4.SortBy
+	(SortDirection)(0),                       // 16: chill.v4.SortDirection
+	(CatalogSort)(0),                         // 17: chill.v4.CatalogSort
+	(*ResolvePlaybackRequest)(nil),           // 18: chill.v4.ResolvePlaybackRequest
+	(*ResolvePlaybackResponse)(nil),          // 19: chill.v4.ResolvePlaybackResponse
+	(*PlaybackReady)(nil),                    // 20: chill.v4.PlaybackReady
+	(*PlaybackPending)(nil),                  // 21: chill.v4.PlaybackPending
+	(*PlaybackUnavailable)(nil),              // 22: chill.v4.PlaybackUnavailable
+	(*PlaybackUrl)(nil),                      // 23: chill.v4.PlaybackUrl
+	(*PlaybackFormat)(nil),                   // 24: chill.v4.PlaybackFormat
+	(*Subtitle)(nil),                         // 25: chill.v4.Subtitle
+	(*HealthCheckRequest)(nil),               // 26: chill.v4.HealthCheckRequest
+	(*HealthResponse)(nil),                   // 27: chill.v4.HealthResponse
+	(*CoreGetIndexersRequest)(nil),           // 28: chill.v4.CoreGetIndexersRequest
+	(*Indexer)(nil),                          // 29: chill.v4.Indexer
+	(*CoreGetIndexersResponse)(nil),          // 30: chill.v4.CoreGetIndexersResponse
+	(*UserGetIndexersRequest)(nil),           // 31: chill.v4.UserGetIndexersRequest
+	(*UserGetIndexersResponse)(nil),          // 32: chill.v4.UserGetIndexersResponse
+	(*UserIndexer)(nil),                      // 33: chill.v4.UserIndexer
+	(*CoreSearchRequest)(nil),                // 34: chill.v4.CoreSearchRequest
+	(*ReleaseInfo)(nil),                      // 35: chill.v4.ReleaseInfo
+	(*SearchResult)(nil),                     // 36: chill.v4.SearchResult
+	(*SearchResponse)(nil),                   // 37: chill.v4.SearchResponse
+	(*IndexerStat)(nil),                      // 38: chill.v4.IndexerStat
+	(*UserSearchRequest)(nil),                // 39: chill.v4.UserSearchRequest
+	(*GetMoviesBySourceRequest)(nil),         // 40: chill.v4.GetMoviesBySourceRequest
+	(*Movie)(nil),                            // 41: chill.v4.Movie
+	(*GetMoviesBySourceResponse)(nil),        // 42: chill.v4.GetMoviesBySourceResponse
+	(*GetMoviesRequest)(nil),                 // 43: chill.v4.GetMoviesRequest
+	(*GetMoviesResponse)(nil),                // 44: chill.v4.GetMoviesResponse
+	(*TVShow)(nil),                           // 45: chill.v4.TVShow
+	(*GetTVShowsBySourceRequest)(nil),        // 46: chill.v4.GetTVShowsBySourceRequest
+	(*GetTVShowsBySourceResponse)(nil),       // 47: chill.v4.GetTVShowsBySourceResponse
+	(*GetTVShowsRequest)(nil),                // 48: chill.v4.GetTVShowsRequest
+	(*GetTVShowsResponse)(nil),               // 49: chill.v4.GetTVShowsResponse
+	(*TVShowDetail)(nil),                     // 50: chill.v4.TVShowDetail
+	(*TVShowSeason)(nil),                     // 51: chill.v4.TVShowSeason
+	(*TVShowEpisode)(nil),                    // 52: chill.v4.TVShowEpisode
+	(*GetTVShowDetailRequest)(nil),           // 53: chill.v4.GetTVShowDetailRequest
+	(*GetTVShowDetailResponse)(nil),          // 54: chill.v4.GetTVShowDetailResponse
+	(*GetTVShowSeasonRequest)(nil),           // 55: chill.v4.GetTVShowSeasonRequest
+	(*GetTVShowSeasonResponse)(nil),          // 56: chill.v4.GetTVShowSeasonResponse
+	(*TVShowDownload)(nil),                   // 57: chill.v4.TVShowDownload
+	(*GetTVShowEpisodeDownloadRequest)(nil),  // 58: chill.v4.GetTVShowEpisodeDownloadRequest
+	(*GetTVShowEpisodeDownloadResponse)(nil), // 59: chill.v4.GetTVShowEpisodeDownloadResponse
+	(*GetTVShowSeasonDownloadsRequest)(nil),  // 60: chill.v4.GetTVShowSeasonDownloadsRequest
+	(*GetTVShowSeasonDownloadsResponse)(nil), // 61: chill.v4.GetTVShowSeasonDownloadsResponse
+	(*TVShowEpisodeDownloadResult)(nil),      // 62: chill.v4.TVShowEpisodeDownloadResult
+	(*GetUserSettingsRequest)(nil),           // 63: chill.v4.GetUserSettingsRequest
+	(*UserSettings)(nil),                     // 64: chill.v4.UserSettings
+	(*SearchSettings)(nil),                   // 65: chill.v4.SearchSettings
+	(*CatalogSettings)(nil),                  // 66: chill.v4.CatalogSettings
+	(*DownloadSettings)(nil),                 // 67: chill.v4.DownloadSettings
+	(*SaveUserSettingsRequest)(nil),          // 68: chill.v4.SaveUserSettingsRequest
+	(*CatalogOrigin)(nil),                    // 69: chill.v4.CatalogOrigin
+	(*AddTransferRequest)(nil),               // 70: chill.v4.AddTransferRequest
+	(*AddTransferResponse)(nil),              // 71: chill.v4.AddTransferResponse
+	(*GetTransferRequest)(nil),               // 72: chill.v4.GetTransferRequest
+	(*GetTransferResponse)(nil),              // 73: chill.v4.GetTransferResponse
+	(*Transfer)(nil),                         // 74: chill.v4.Transfer
+	(*GetDownloadFolderRequest)(nil),         // 75: chill.v4.GetDownloadFolderRequest
+	(*GetDownloadFolderResponse)(nil),        // 76: chill.v4.GetDownloadFolderResponse
+	(*GetFolderRequest)(nil),                 // 77: chill.v4.GetFolderRequest
+	(*UserFile)(nil),                         // 78: chill.v4.UserFile
+	(*GetFolderResponse)(nil),                // 79: chill.v4.GetFolderResponse
+	(*GetUserProfileRequest)(nil),            // 80: chill.v4.GetUserProfileRequest
+	(*UserProfile)(nil),                      // 81: chill.v4.UserProfile
+	(*timestamppb.Timestamp)(nil),            // 82: google.protobuf.Timestamp
 }
 var file_chill_v4_api_proto_depIdxs = []int32{
-	0,  // 0: chill.v4.Indexer.status:type_name -> chill.v4.IndexerStatus
-	15, // 1: chill.v4.CoreGetIndexersResponse.indexers:type_name -> chill.v4.Indexer
-	19, // 2: chill.v4.UserGetIndexersResponse.indexers:type_name -> chill.v4.UserIndexer
-	0,  // 3: chill.v4.UserIndexer.status:type_name -> chill.v4.IndexerStatus
-	21, // 4: chill.v4.SearchResult.release_info:type_name -> chill.v4.ReleaseInfo
-	22, // 5: chill.v4.SearchResponse.results:type_name -> chill.v4.SearchResult
-	24, // 6: chill.v4.SearchResponse.indexer_stats:type_name -> chill.v4.IndexerStat
-	1,  // 7: chill.v4.GetMoviesBySourceRequest.source:type_name -> chill.v4.MoviesSource
-	1,  // 8: chill.v4.Movie.source:type_name -> chill.v4.MoviesSource
-	1,  // 9: chill.v4.GetMoviesBySourceResponse.source:type_name -> chill.v4.MoviesSource
-	27, // 10: chill.v4.GetMoviesBySourceResponse.movies:type_name -> chill.v4.Movie
-	1,  // 11: chill.v4.GetMoviesResponse.source:type_name -> chill.v4.MoviesSource
-	27, // 12: chill.v4.GetMoviesResponse.movies:type_name -> chill.v4.Movie
-	2,  // 13: chill.v4.TVShow.source:type_name -> chill.v4.TVShowsSource
-	3,  // 14: chill.v4.TVShow.status:type_name -> chill.v4.TVShowStatus
-	2,  // 15: chill.v4.GetTVShowsBySourceRequest.source:type_name -> chill.v4.TVShowsSource
-	2,  // 16: chill.v4.GetTVShowsBySourceResponse.source:type_name -> chill.v4.TVShowsSource
-	31, // 17: chill.v4.GetTVShowsBySourceResponse.shows:type_name -> chill.v4.TVShow
-	2,  // 18: chill.v4.GetTVShowsRequest.source:type_name -> chill.v4.TVShowsSource
-	2,  // 19: chill.v4.GetTVShowsResponse.source:type_name -> chill.v4.TVShowsSource
-	31, // 20: chill.v4.GetTVShowsResponse.shows:type_name -> chill.v4.TVShow
-	3,  // 21: chill.v4.TVShowDetail.status:type_name -> chill.v4.TVShowStatus
-	36, // 22: chill.v4.GetTVShowDetailResponse.show:type_name -> chill.v4.TVShowDetail
-	37, // 23: chill.v4.GetTVShowDetailResponse.seasons:type_name -> chill.v4.TVShowSeason
-	37, // 24: chill.v4.GetTVShowSeasonResponse.season:type_name -> chill.v4.TVShowSeason
-	38, // 25: chill.v4.GetTVShowSeasonResponse.episodes:type_name -> chill.v4.TVShowEpisode
-	43, // 26: chill.v4.GetTVShowEpisodeDownloadResponse.download:type_name -> chill.v4.TVShowDownload
-	43, // 27: chill.v4.GetTVShowSeasonDownloadsResponse.season_pack:type_name -> chill.v4.TVShowDownload
-	48, // 28: chill.v4.GetTVShowSeasonDownloadsResponse.episodes:type_name -> chill.v4.TVShowEpisodeDownloadResult
-	43, // 29: chill.v4.TVShowEpisodeDownloadResult.download:type_name -> chill.v4.TVShowDownload
-	51, // 30: chill.v4.UserSettings.search:type_name -> chill.v4.SearchSettings
-	52, // 31: chill.v4.UserSettings.catalog:type_name -> chill.v4.CatalogSettings
-	53, // 32: chill.v4.UserSettings.download:type_name -> chill.v4.DownloadSettings
-	5,  // 33: chill.v4.SearchSettings.codec_filters:type_name -> chill.v4.CodecFilter
-	6,  // 34: chill.v4.SearchSettings.other_filters:type_name -> chill.v4.OtherFilter
-	4,  // 35: chill.v4.SearchSettings.resolution_filters:type_name -> chill.v4.ResolutionFilter
-	7,  // 36: chill.v4.SearchSettings.search_result_display_behavior:type_name -> chill.v4.SearchResultDisplayBehavior
-	8,  // 37: chill.v4.SearchSettings.search_result_title_behavior:type_name -> chill.v4.SearchResultTitleBehavior
-	9,  // 38: chill.v4.SearchSettings.sort_by:type_name -> chill.v4.SortBy
-	10, // 39: chill.v4.SearchSettings.sort_direction:type_name -> chill.v4.SortDirection
-	1,  // 40: chill.v4.CatalogSettings.movies_source:type_name -> chill.v4.MoviesSource
-	2,  // 41: chill.v4.CatalogSettings.tv_shows_source:type_name -> chill.v4.TVShowsSource
-	11, // 42: chill.v4.CatalogSettings.movies_sort:type_name -> chill.v4.CatalogSort
-	11, // 43: chill.v4.CatalogSettings.tv_shows_sort:type_name -> chill.v4.CatalogSort
-	11, // 44: chill.v4.CatalogSettings.sort:type_name -> chill.v4.CatalogSort
-	50, // 45: chill.v4.SaveUserSettingsRequest.settings:type_name -> chill.v4.UserSettings
-	1,  // 46: chill.v4.CatalogOrigin.movies_source:type_name -> chill.v4.MoviesSource
-	2,  // 47: chill.v4.CatalogOrigin.tv_shows_source:type_name -> chill.v4.TVShowsSource
-	55, // 48: chill.v4.AddTransferRequest.catalog_origin:type_name -> chill.v4.CatalogOrigin
-	60, // 49: chill.v4.AddTransferResponse.transfer:type_name -> chill.v4.Transfer
-	60, // 50: chill.v4.GetTransferResponse.transfer:type_name -> chill.v4.Transfer
-	64, // 51: chill.v4.GetDownloadFolderResponse.folder:type_name -> chill.v4.UserFile
-	64, // 52: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
-	64, // 53: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
-	12, // 54: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
-	14, // 55: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
-	20, // 56: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
-	26, // 57: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
-	32, // 58: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
-	17, // 59: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
-	25, // 60: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
-	29, // 61: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
-	34, // 62: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
-	39, // 63: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
-	41, // 64: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
-	44, // 65: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
-	46, // 66: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
-	49, // 67: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
-	54, // 68: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
-	56, // 69: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
-	58, // 70: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
-	61, // 71: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
-	63, // 72: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
-	66, // 73: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
-	13, // 74: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
-	16, // 75: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
-	23, // 76: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
-	28, // 77: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
-	33, // 78: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
-	18, // 79: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
-	23, // 80: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
-	30, // 81: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
-	35, // 82: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
-	40, // 83: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
-	42, // 84: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
-	45, // 85: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
-	47, // 86: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
-	50, // 87: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
-	50, // 88: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
-	57, // 89: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
-	59, // 90: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
-	62, // 91: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
-	65, // 92: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
-	67, // 93: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
-	74, // [74:94] is the sub-list for method output_type
-	54, // [54:74] is the sub-list for method input_type
-	54, // [54:54] is the sub-list for extension type_name
-	54, // [54:54] is the sub-list for extension extendee
-	0,  // [0:54] is the sub-list for field type_name
+	20, // 0: chill.v4.ResolvePlaybackResponse.ready:type_name -> chill.v4.PlaybackReady
+	21, // 1: chill.v4.ResolvePlaybackResponse.pending:type_name -> chill.v4.PlaybackPending
+	22, // 2: chill.v4.ResolvePlaybackResponse.unavailable:type_name -> chill.v4.PlaybackUnavailable
+	23, // 3: chill.v4.PlaybackReady.media:type_name -> chill.v4.PlaybackUrl
+	24, // 4: chill.v4.PlaybackReady.format:type_name -> chill.v4.PlaybackFormat
+	25, // 5: chill.v4.PlaybackReady.subtitles:type_name -> chill.v4.Subtitle
+	0,  // 6: chill.v4.PlaybackPending.reason:type_name -> chill.v4.PendingReason
+	1,  // 7: chill.v4.PlaybackUnavailable.reason:type_name -> chill.v4.UnavailableReason
+	82, // 8: chill.v4.PlaybackUrl.expires_at:type_name -> google.protobuf.Timestamp
+	2,  // 9: chill.v4.PlaybackFormat.container:type_name -> chill.v4.Container
+	3,  // 10: chill.v4.PlaybackFormat.video_codec:type_name -> chill.v4.VideoCodec
+	4,  // 11: chill.v4.PlaybackFormat.audio_codec:type_name -> chill.v4.AudioCodec
+	5,  // 12: chill.v4.Subtitle.format:type_name -> chill.v4.SubtitleFormat
+	23, // 13: chill.v4.Subtitle.source:type_name -> chill.v4.PlaybackUrl
+	6,  // 14: chill.v4.Indexer.status:type_name -> chill.v4.IndexerStatus
+	29, // 15: chill.v4.CoreGetIndexersResponse.indexers:type_name -> chill.v4.Indexer
+	33, // 16: chill.v4.UserGetIndexersResponse.indexers:type_name -> chill.v4.UserIndexer
+	6,  // 17: chill.v4.UserIndexer.status:type_name -> chill.v4.IndexerStatus
+	35, // 18: chill.v4.SearchResult.release_info:type_name -> chill.v4.ReleaseInfo
+	36, // 19: chill.v4.SearchResponse.results:type_name -> chill.v4.SearchResult
+	38, // 20: chill.v4.SearchResponse.indexer_stats:type_name -> chill.v4.IndexerStat
+	7,  // 21: chill.v4.GetMoviesBySourceRequest.source:type_name -> chill.v4.MoviesSource
+	7,  // 22: chill.v4.Movie.source:type_name -> chill.v4.MoviesSource
+	7,  // 23: chill.v4.GetMoviesBySourceResponse.source:type_name -> chill.v4.MoviesSource
+	41, // 24: chill.v4.GetMoviesBySourceResponse.movies:type_name -> chill.v4.Movie
+	7,  // 25: chill.v4.GetMoviesResponse.source:type_name -> chill.v4.MoviesSource
+	41, // 26: chill.v4.GetMoviesResponse.movies:type_name -> chill.v4.Movie
+	8,  // 27: chill.v4.TVShow.source:type_name -> chill.v4.TVShowsSource
+	9,  // 28: chill.v4.TVShow.status:type_name -> chill.v4.TVShowStatus
+	8,  // 29: chill.v4.GetTVShowsBySourceRequest.source:type_name -> chill.v4.TVShowsSource
+	8,  // 30: chill.v4.GetTVShowsBySourceResponse.source:type_name -> chill.v4.TVShowsSource
+	45, // 31: chill.v4.GetTVShowsBySourceResponse.shows:type_name -> chill.v4.TVShow
+	8,  // 32: chill.v4.GetTVShowsRequest.source:type_name -> chill.v4.TVShowsSource
+	8,  // 33: chill.v4.GetTVShowsResponse.source:type_name -> chill.v4.TVShowsSource
+	45, // 34: chill.v4.GetTVShowsResponse.shows:type_name -> chill.v4.TVShow
+	9,  // 35: chill.v4.TVShowDetail.status:type_name -> chill.v4.TVShowStatus
+	50, // 36: chill.v4.GetTVShowDetailResponse.show:type_name -> chill.v4.TVShowDetail
+	51, // 37: chill.v4.GetTVShowDetailResponse.seasons:type_name -> chill.v4.TVShowSeason
+	51, // 38: chill.v4.GetTVShowSeasonResponse.season:type_name -> chill.v4.TVShowSeason
+	52, // 39: chill.v4.GetTVShowSeasonResponse.episodes:type_name -> chill.v4.TVShowEpisode
+	57, // 40: chill.v4.GetTVShowEpisodeDownloadResponse.download:type_name -> chill.v4.TVShowDownload
+	57, // 41: chill.v4.GetTVShowSeasonDownloadsResponse.season_pack:type_name -> chill.v4.TVShowDownload
+	62, // 42: chill.v4.GetTVShowSeasonDownloadsResponse.episodes:type_name -> chill.v4.TVShowEpisodeDownloadResult
+	57, // 43: chill.v4.TVShowEpisodeDownloadResult.download:type_name -> chill.v4.TVShowDownload
+	65, // 44: chill.v4.UserSettings.search:type_name -> chill.v4.SearchSettings
+	66, // 45: chill.v4.UserSettings.catalog:type_name -> chill.v4.CatalogSettings
+	67, // 46: chill.v4.UserSettings.download:type_name -> chill.v4.DownloadSettings
+	11, // 47: chill.v4.SearchSettings.codec_filters:type_name -> chill.v4.CodecFilter
+	12, // 48: chill.v4.SearchSettings.other_filters:type_name -> chill.v4.OtherFilter
+	10, // 49: chill.v4.SearchSettings.resolution_filters:type_name -> chill.v4.ResolutionFilter
+	13, // 50: chill.v4.SearchSettings.search_result_display_behavior:type_name -> chill.v4.SearchResultDisplayBehavior
+	14, // 51: chill.v4.SearchSettings.search_result_title_behavior:type_name -> chill.v4.SearchResultTitleBehavior
+	15, // 52: chill.v4.SearchSettings.sort_by:type_name -> chill.v4.SortBy
+	16, // 53: chill.v4.SearchSettings.sort_direction:type_name -> chill.v4.SortDirection
+	7,  // 54: chill.v4.CatalogSettings.movies_source:type_name -> chill.v4.MoviesSource
+	8,  // 55: chill.v4.CatalogSettings.tv_shows_source:type_name -> chill.v4.TVShowsSource
+	17, // 56: chill.v4.CatalogSettings.movies_sort:type_name -> chill.v4.CatalogSort
+	17, // 57: chill.v4.CatalogSettings.tv_shows_sort:type_name -> chill.v4.CatalogSort
+	17, // 58: chill.v4.CatalogSettings.sort:type_name -> chill.v4.CatalogSort
+	64, // 59: chill.v4.SaveUserSettingsRequest.settings:type_name -> chill.v4.UserSettings
+	7,  // 60: chill.v4.CatalogOrigin.movies_source:type_name -> chill.v4.MoviesSource
+	8,  // 61: chill.v4.CatalogOrigin.tv_shows_source:type_name -> chill.v4.TVShowsSource
+	69, // 62: chill.v4.AddTransferRequest.catalog_origin:type_name -> chill.v4.CatalogOrigin
+	74, // 63: chill.v4.AddTransferResponse.transfer:type_name -> chill.v4.Transfer
+	74, // 64: chill.v4.GetTransferResponse.transfer:type_name -> chill.v4.Transfer
+	78, // 65: chill.v4.GetDownloadFolderResponse.folder:type_name -> chill.v4.UserFile
+	78, // 66: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
+	78, // 67: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
+	26, // 68: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
+	28, // 69: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
+	34, // 70: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
+	40, // 71: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
+	46, // 72: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
+	31, // 73: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
+	39, // 74: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
+	43, // 75: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
+	48, // 76: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
+	53, // 77: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
+	55, // 78: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
+	58, // 79: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
+	60, // 80: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
+	63, // 81: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
+	68, // 82: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
+	70, // 83: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
+	72, // 84: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
+	75, // 85: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
+	77, // 86: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
+	18, // 87: chill.v4.UserService.ResolvePlayback:input_type -> chill.v4.ResolvePlaybackRequest
+	80, // 88: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
+	27, // 89: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
+	30, // 90: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
+	37, // 91: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
+	42, // 92: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
+	47, // 93: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
+	32, // 94: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
+	37, // 95: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
+	44, // 96: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
+	49, // 97: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
+	54, // 98: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
+	56, // 99: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
+	59, // 100: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
+	61, // 101: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
+	64, // 102: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
+	64, // 103: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
+	71, // 104: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
+	73, // 105: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
+	76, // 106: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
+	79, // 107: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
+	19, // 108: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
+	81, // 109: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
+	89, // [89:110] is the sub-list for method output_type
+	68, // [68:89] is the sub-list for method input_type
+	68, // [68:68] is the sub-list for extension type_name
+	68, // [68:68] is the sub-list for extension extendee
+	0,  // [0:68] is the sub-list for field type_name
 }
 
 func init() { file_chill_v4_api_proto_init() }
@@ -5303,29 +6209,38 @@ func file_chill_v4_api_proto_init() {
 	if File_chill_v4_api_proto != nil {
 		return
 	}
-	file_chill_v4_api_proto_msgTypes[3].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[7].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[9].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[10].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[13].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[31].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[33].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[35].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[36].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[40].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[1].OneofWrappers = []any{
+		(*ResolvePlaybackResponse_Ready)(nil),
+		(*ResolvePlaybackResponse_Pending)(nil),
+		(*ResolvePlaybackResponse_Unavailable)(nil),
+	}
+	file_chill_v4_api_proto_msgTypes[5].OneofWrappers = []any{
+		(*PlaybackUrl_ExpiresAt)(nil),
+		(*PlaybackUrl_ExpiryUnknown)(nil),
+	}
+	file_chill_v4_api_proto_msgTypes[11].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[15].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[17].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[18].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[21].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[39].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[41].OneofWrappers = []any{}
-	file_chill_v4_api_proto_msgTypes[43].OneofWrappers = []any{
+	file_chill_v4_api_proto_msgTypes[43].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[44].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[48].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[49].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[51].OneofWrappers = []any{
 		(*CatalogOrigin_MoviesSource)(nil),
 		(*CatalogOrigin_TvShowsSource)(nil),
 	}
-	file_chill_v4_api_proto_msgTypes[48].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[56].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chill_v4_api_proto_rawDesc), len(file_chill_v4_api_proto_rawDesc)),
-			NumEnums:      12,
-			NumMessages:   56,
+			NumEnums:      18,
+			NumMessages:   64,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

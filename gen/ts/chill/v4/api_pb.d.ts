@@ -4,11 +4,236 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
  * Describes the file chill/v4/api.proto.
  */
 export declare const file_chill_v4_api: GenFile;
+
+/**
+ * @generated from message chill.v4.ResolvePlaybackRequest
+ */
+export declare type ResolvePlaybackRequest = Message<"chill.v4.ResolvePlaybackRequest"> & {
+  /**
+   * Positive provider file ID. Check current access for the authenticated user
+   * before resolving any URL; never trust a previous folder listing.
+   *
+   * @generated from field: int64 file_id = 1;
+   */
+  fileId: bigint;
+};
+
+/**
+ * Describes the message chill.v4.ResolvePlaybackRequest.
+ * Use `create(ResolvePlaybackRequestSchema)` to create a new message.
+ */
+export declare const ResolvePlaybackRequestSchema: GenMessage<ResolvePlaybackRequest>;
+
+/**
+ * @generated from message chill.v4.ResolvePlaybackResponse
+ */
+export declare type ResolvePlaybackResponse = Message<"chill.v4.ResolvePlaybackResponse"> & {
+  /**
+   * Exactly one result is required. Invalid/expired credentials return
+   * unauthenticated, not unavailable; transient provider failure returns
+   * unavailable RPC status. Calls never initiate transfers or conversion.
+   *
+   * @generated from oneof chill.v4.ResolvePlaybackResponse.result
+   */
+  result: {
+    /**
+     * @generated from field: chill.v4.PlaybackReady ready = 1;
+     */
+    value: PlaybackReady;
+    case: "ready";
+  } | {
+    /**
+     * @generated from field: chill.v4.PlaybackPending pending = 2;
+     */
+    value: PlaybackPending;
+    case: "pending";
+  } | {
+    /**
+     * @generated from field: chill.v4.PlaybackUnavailable unavailable = 3;
+     */
+    value: PlaybackUnavailable;
+    case: "unavailable";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message chill.v4.ResolvePlaybackResponse.
+ * Use `create(ResolvePlaybackResponseSchema)` to create a new message.
+ */
+export declare const ResolvePlaybackResponseSchema: GenMessage<ResolvePlaybackResponse>;
+
+/**
+ * @generated from message chill.v4.PlaybackReady
+ */
+export declare type PlaybackReady = Message<"chill.v4.PlaybackReady"> & {
+  /**
+   * @generated from field: chill.v4.PlaybackUrl media = 1;
+   */
+  media?: PlaybackUrl | undefined;
+
+  /**
+   * Provider format information when known; unspecified values mean unknown.
+   * Clients decide whether their playback surface supports the format.
+   *
+   * @generated from field: chill.v4.PlaybackFormat format = 2;
+   */
+  format?: PlaybackFormat | undefined;
+
+  /**
+   * At most 32 tracks. Every URL is independently usable without a provider
+   * bearer; omit tracks that cannot meet this requirement.
+   *
+   * @generated from field: repeated chill.v4.Subtitle subtitles = 3;
+   */
+  subtitles: Subtitle[];
+};
+
+/**
+ * Describes the message chill.v4.PlaybackReady.
+ * Use `create(PlaybackReadySchema)` to create a new message.
+ */
+export declare const PlaybackReadySchema: GenMessage<PlaybackReady>;
+
+/**
+ * @generated from message chill.v4.PlaybackPending
+ */
+export declare type PlaybackPending = Message<"chill.v4.PlaybackPending"> & {
+  /**
+   * Describes existing provider work only; callers must explicitly resolve
+   * again to observe a change. No background polling or conversion request.
+   *
+   * @generated from field: chill.v4.PendingReason reason = 1;
+   */
+  reason: PendingReason;
+};
+
+/**
+ * Describes the message chill.v4.PlaybackPending.
+ * Use `create(PlaybackPendingSchema)` to create a new message.
+ */
+export declare const PlaybackPendingSchema: GenMessage<PlaybackPending>;
+
+/**
+ * @generated from message chill.v4.PlaybackUnavailable
+ */
+export declare type PlaybackUnavailable = Message<"chill.v4.PlaybackUnavailable"> & {
+  /**
+   * @generated from field: chill.v4.UnavailableReason reason = 1;
+   */
+  reason: UnavailableReason;
+};
+
+/**
+ * Describes the message chill.v4.PlaybackUnavailable.
+ * Use `create(PlaybackUnavailableSchema)` to create a new message.
+ */
+export declare const PlaybackUnavailableSchema: GenMessage<PlaybackUnavailable>;
+
+/**
+ * @generated from message chill.v4.PlaybackUrl
+ */
+export declare type PlaybackUrl = Message<"chill.v4.PlaybackUrl"> & {
+  /**
+   * Required direct HTTPS URL usable without forwarding provider credentials.
+   * Signed URLs are sensitive: never log or share-cache them.
+   *
+   * @generated from field: string url = 1;
+   */
+  url: string;
+
+  /**
+   * Exactly one expiry state is required. Unknown must be true when selected;
+   * unknown expiry is not a guarantee that the URL remains valid.
+   *
+   * @generated from oneof chill.v4.PlaybackUrl.expiry
+   */
+  expiry: {
+    /**
+     * @generated from field: google.protobuf.Timestamp expires_at = 2;
+     */
+    value: Timestamp;
+    case: "expiresAt";
+  } | {
+    /**
+     * @generated from field: bool expiry_unknown = 3;
+     */
+    value: boolean;
+    case: "expiryUnknown";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message chill.v4.PlaybackUrl.
+ * Use `create(PlaybackUrlSchema)` to create a new message.
+ */
+export declare const PlaybackUrlSchema: GenMessage<PlaybackUrl>;
+
+/**
+ * @generated from message chill.v4.PlaybackFormat
+ */
+export declare type PlaybackFormat = Message<"chill.v4.PlaybackFormat"> & {
+  /**
+   * @generated from field: chill.v4.Container container = 1;
+   */
+  container: Container;
+
+  /**
+   * @generated from field: chill.v4.VideoCodec video_codec = 2;
+   */
+  videoCodec: VideoCodec;
+
+  /**
+   * @generated from field: chill.v4.AudioCodec audio_codec = 3;
+   */
+  audioCodec: AudioCodec;
+};
+
+/**
+ * Describes the message chill.v4.PlaybackFormat.
+ * Use `create(PlaybackFormatSchema)` to create a new message.
+ */
+export declare const PlaybackFormatSchema: GenMessage<PlaybackFormat>;
+
+/**
+ * @generated from message chill.v4.Subtitle
+ */
+export declare type Subtitle = Message<"chill.v4.Subtitle"> & {
+  /**
+   * Unique within the response, without credentials or URLs.
+   *
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * ISO 639-2 language code, or und when unknown.
+   *
+   * @generated from field: string language = 2;
+   */
+  language: string;
+
+  /**
+   * @generated from field: chill.v4.SubtitleFormat format = 3;
+   */
+  format: SubtitleFormat;
+
+  /**
+   * @generated from field: chill.v4.PlaybackUrl source = 4;
+   */
+  source?: PlaybackUrl | undefined;
+};
+
+/**
+ * Describes the message chill.v4.Subtitle.
+ * Use `create(SubtitleSchema)` to create a new message.
+ */
+export declare const SubtitleSchema: GenMessage<Subtitle>;
 
 /**
  * @generated from message chill.v4.HealthCheckRequest
@@ -1797,6 +2022,143 @@ export declare type UserProfile = Message<"chill.v4.UserProfile"> & {
 export declare const UserProfileSchema: GenMessage<UserProfile>;
 
 /**
+ * @generated from enum chill.v4.PendingReason
+ */
+export enum PendingReason {
+  /**
+   * @generated from enum value: PENDING_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: PENDING_REASON_PROCESSING = 1;
+   */
+  PROCESSING = 1,
+}
+
+/**
+ * Describes the enum chill.v4.PendingReason.
+ */
+export declare const PendingReasonSchema: GenEnum<PendingReason>;
+
+/**
+ * @generated from enum chill.v4.UnavailableReason
+ */
+export enum UnavailableReason {
+  /**
+   * @generated from enum value: UNAVAILABLE_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Missing files and files inaccessible to the user are indistinguishable.
+   *
+   * @generated from enum value: UNAVAILABLE_REASON_NOT_FOUND = 1;
+   */
+  NOT_FOUND = 1,
+
+  /**
+   * @generated from enum value: UNAVAILABLE_REASON_UNSUPPORTED_FORMAT = 2;
+   */
+  UNSUPPORTED_FORMAT = 2,
+
+  /**
+   * @generated from enum value: UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE = 3;
+   */
+  NO_PLAYABLE_SOURCE = 3,
+}
+
+/**
+ * Describes the enum chill.v4.UnavailableReason.
+ */
+export declare const UnavailableReasonSchema: GenEnum<UnavailableReason>;
+
+/**
+ * @generated from enum chill.v4.Container
+ */
+export enum Container {
+  /**
+   * @generated from enum value: CONTAINER_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CONTAINER_MP4 = 1;
+   */
+  MP4 = 1,
+}
+
+/**
+ * Describes the enum chill.v4.Container.
+ */
+export declare const ContainerSchema: GenEnum<Container>;
+
+/**
+ * @generated from enum chill.v4.VideoCodec
+ */
+export enum VideoCodec {
+  /**
+   * @generated from enum value: VIDEO_CODEC_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: VIDEO_CODEC_H264 = 1;
+   */
+  H264 = 1,
+}
+
+/**
+ * Describes the enum chill.v4.VideoCodec.
+ */
+export declare const VideoCodecSchema: GenEnum<VideoCodec>;
+
+/**
+ * @generated from enum chill.v4.AudioCodec
+ */
+export enum AudioCodec {
+  /**
+   * @generated from enum value: AUDIO_CODEC_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: AUDIO_CODEC_AAC = 1;
+   */
+  AAC = 1,
+}
+
+/**
+ * Describes the enum chill.v4.AudioCodec.
+ */
+export declare const AudioCodecSchema: GenEnum<AudioCodec>;
+
+/**
+ * @generated from enum chill.v4.SubtitleFormat
+ */
+export enum SubtitleFormat {
+  /**
+   * @generated from enum value: SUBTITLE_FORMAT_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: SUBTITLE_FORMAT_VTT = 1;
+   */
+  VTT = 1,
+
+  /**
+   * @generated from enum value: SUBTITLE_FORMAT_SRT = 2;
+   */
+  SRT = 2,
+}
+
+/**
+ * Describes the enum chill.v4.SubtitleFormat.
+ */
+export declare const SubtitleFormatSchema: GenEnum<SubtitleFormat>;
+
+/**
  * @generated from enum chill.v4.IndexerStatus
  */
 export enum IndexerStatus {
@@ -2364,6 +2726,17 @@ export declare const UserService: GenService<{
     methodKind: "unary";
     input: typeof GetFolderRequestSchema;
     output: typeof GetFolderResponseSchema;
+  },
+  /**
+   * Resolve media with the same regular user bearer as other UserService RPCs.
+   * Read-only: never initiate a transfer or conversion.
+   *
+   * @generated from rpc chill.v4.UserService.ResolvePlayback
+   */
+  resolvePlayback: {
+    methodKind: "unary";
+    input: typeof ResolvePlaybackRequestSchema;
+    output: typeof ResolvePlaybackResponseSchema;
   },
   /**
    * @generated from rpc chill.v4.UserService.GetUserProfile

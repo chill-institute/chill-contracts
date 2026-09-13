@@ -1,6 +1,8 @@
 package consumer_test
 
 import (
+	"google.golang.org/protobuf/encoding/protojson"
+	"math"
 	"net/http"
 	"testing"
 
@@ -70,6 +72,38 @@ func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {
 		}
 		if !proto.Equal(original, decoded) || (decoded.Sort == nil) != (sort == nil) {
 			t.Fatalf("sort presence changed: original=%v decoded=%v", original, decoded)
+		}
+	}
+}
+
+func TestPlaybackContractsPreserveIDsAndStates(t *testing.T) {
+	request := &chillv4.ResolvePlaybackRequest{FileId: math.MaxInt64}
+	encoded, err := protojson.Marshal(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded chillv4.ResolvePlaybackRequest
+	if err := protojson.Unmarshal(encoded, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if decoded.GetFileId() != math.MaxInt64 {
+		t.Fatal("file ID lost precision")
+	}
+	for _, payload := range []string{
+		`{"ready":{"media":{"url":"https://example.com/movie.mp4","expiryUnknown":true}}}`,
+		`{"ready":{"media":{"url":"https://example.com/movie.mp4","expiresAt":"2030-01-01T00:00:00Z"}}}`,
+		`{"pending":{"reason":"PENDING_REASON_PROCESSING"}}`,
+		`{"unavailable":{"reason":"UNAVAILABLE_REASON_NOT_FOUND"}}`,
+	} {
+		var response chillv4.ResolvePlaybackResponse
+		if err := protojson.Unmarshal([]byte(payload), &response); err != nil {
+			t.Fatal(err)
+		}
+		if response.GetResult() == nil {
+			t.Fatal("missing playback result")
+		}
+		if ready := response.GetReady(); ready != nil && ready.GetMedia().GetExpiry() == nil {
+			t.Fatal("missing media expiry state")
 		}
 	}
 }

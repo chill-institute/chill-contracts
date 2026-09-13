@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { create, fromBinary, fromJson, toBinary, toJson } from "@bufbuild/protobuf";
 import {
+  ResolvePlaybackRequestSchema,
+  ResolvePlaybackResponseSchema,
   AddTransferRequestSchema,
   CatalogOriginSchema,
   CatalogSettingsSchema,
@@ -67,6 +69,27 @@ for (const sort of [
   ]) {
     assert.equal(decoded.sort, sort);
   }
+}
+
+const largeId = "9223372036854775807";
+const request = fromJson(ResolvePlaybackRequestSchema, { fileId: largeId });
+if (toJson(ResolvePlaybackRequestSchema, request).fileId !== largeId) {
+  throw new Error("playback file ID lost int64 precision");
+}
+for (const result of [
+  { ready: { media: { url: "https://example.com/movie.mp4", expiryUnknown: true } } },
+  { ready: { media: { url: "https://example.com/movie.mp4", expiresAt: "2030-01-01T00:00:00Z" } } },
+  { pending: { reason: "PENDING_REASON_PROCESSING" } },
+  { unavailable: { reason: "UNAVAILABLE_REASON_NOT_FOUND" } },
+]) {
+  const parsed = fromJson(ResolvePlaybackResponseSchema, result);
+  const encoded = toJson(ResolvePlaybackResponseSchema, parsed);
+  if (JSON.stringify(encoded) !== JSON.stringify(result)) {
+    throw new Error("Playback result or expiry state changed on JSON round trip");
+  }
+}
+if (!UserService.method.resolvePlayback) {
+  throw new Error("UserService playback method is missing");
 }
 
 console.log("ts consumer import smoke passed");

@@ -43,3 +43,27 @@ resets a preference; sending `UNSPECIFIED` explicitly is invalid.
 
 The deprecated `movies_sort` and `tv_shows_sort` fields remain in the wire contract;
 new consumers use `sort`.
+
+## Playback resolution
+
+`UserService.ResolvePlayback` uses the same regular chill bearer token as the
+other user RPCs. Reuse `UserService.GetFolder` for browsing; no separate library
+service, delegated credential or client-specific authorization is introduced.
+Schema availability does not establish that Engine implements resolution yet.
+
+Resolution checks the authenticated user's current access to the requested
+file and returns ready, pending or unavailable. Missing and inaccessible files
+share the not-found result. Invalid credentials use `unauthenticated`;
+transport/provider outages remain RPC errors. Resolution never starts transfers
+or conversion. Pending describes existing provider work; a later explicit
+request can observe readiness changes.
+
+Ready contains a direct HTTPS media URL usable without forwarding provider
+credentials, known format information, and optional subtitles. Unspecified
+format values mean unknown; each client decides compatibility. Media/subtitle
+URLs declare known or explicitly unknown expiry. Provider int64 file IDs retain
+precision in generated clients and JSON strings.
+
+Personalized responses require `Cache-Control: no-store`. Bearer tokens and
+signed URLs must stay out of logs, traces and shared caches. Protobuf does not
+enforce these semantics; Engine and its consumers must validate them.
