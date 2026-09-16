@@ -568,6 +568,11 @@ export declare const ReleaseInfoSchema: GenMessage<ReleaseInfo>;
  */
 export declare type SearchResult = Message<"chill.v4.SearchResult"> & {
   /**
+   * Opaque release identity, stable across requests and unique within one
+   * response. The same release served by several indexers carries the same id
+   * with a different link, so merged per-indexer results must key rows on id
+   * plus link.
+   *
    * @generated from field: string id = 1;
    */
   id: string;

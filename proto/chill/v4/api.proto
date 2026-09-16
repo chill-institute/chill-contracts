@@ -603,6 +603,10 @@ message ReleaseInfo {
 }
 
 message SearchResult {
+  // Opaque release identity, stable across requests and unique within one
+  // response. The same release served by several indexers carries the same id
+  // with a different link, so merged per-indexer results must key rows on id
+  // plus link.
   string id = 1;
   string title = 2;
   string indexer = 3;

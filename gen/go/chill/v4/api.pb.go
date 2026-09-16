@@ -2193,18 +2193,22 @@ func (x *ReleaseInfo) GetExcess() string {
 }
 
 type SearchResult struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Indexer       string                 `protobuf:"bytes,3,opt,name=indexer,proto3" json:"indexer,omitempty"`
-	Link          string                 `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
-	ImdbId        *string                `protobuf:"bytes,5,opt,name=imdb_id,json=imdbId,proto3,oneof" json:"imdb_id,omitempty"`
-	Peers         int64                  `protobuf:"varint,6,opt,name=peers,proto3" json:"peers,omitempty"`
-	Seeders       int64                  `protobuf:"varint,7,opt,name=seeders,proto3" json:"seeders,omitempty"`
-	Size          int64                  `protobuf:"varint,8,opt,name=size,proto3" json:"size,omitempty"`
-	Source        string                 `protobuf:"bytes,9,opt,name=source,proto3" json:"source,omitempty"`
-	UploadedAt    string                 `protobuf:"bytes,10,opt,name=uploaded_at,json=uploadedAt,proto3" json:"uploaded_at,omitempty"`
-	ReleaseInfo   *ReleaseInfo           `protobuf:"bytes,11,opt,name=release_info,json=releaseInfo,proto3,oneof" json:"release_info,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Opaque release identity, stable across requests and unique within one
+	// response. The same release served by several indexers carries the same id
+	// with a different link, so merged per-indexer results must key rows on id
+	// plus link.
+	Id            string       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title         string       `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Indexer       string       `protobuf:"bytes,3,opt,name=indexer,proto3" json:"indexer,omitempty"`
+	Link          string       `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
+	ImdbId        *string      `protobuf:"bytes,5,opt,name=imdb_id,json=imdbId,proto3,oneof" json:"imdb_id,omitempty"`
+	Peers         int64        `protobuf:"varint,6,opt,name=peers,proto3" json:"peers,omitempty"`
+	Seeders       int64        `protobuf:"varint,7,opt,name=seeders,proto3" json:"seeders,omitempty"`
+	Size          int64        `protobuf:"varint,8,opt,name=size,proto3" json:"size,omitempty"`
+	Source        string       `protobuf:"bytes,9,opt,name=source,proto3" json:"source,omitempty"`
+	UploadedAt    string       `protobuf:"bytes,10,opt,name=uploaded_at,json=uploadedAt,proto3" json:"uploaded_at,omitempty"`
+	ReleaseInfo   *ReleaseInfo `protobuf:"bytes,11,opt,name=release_info,json=releaseInfo,proto3,oneof" json:"release_info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
