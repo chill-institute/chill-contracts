@@ -966,6 +966,11 @@ definitions:
     type: string
     enum:
       - PENDING_REASON_PROCESSING
+  v4PlaybackDelivery:
+    type: string
+    enum:
+      - PLAYBACK_DELIVERY_ORIGINAL
+      - PLAYBACK_DELIVERY_HLS
   v4PlaybackFormat:
     type: object
     properties:
@@ -1102,6 +1107,11 @@ definitions:
         description: |-
           Positive provider file ID. Check current access for the authenticated user
           before resolving any URL; never trust a previous folder listing.
+      delivery:
+        $ref: '#/definitions/v4PlaybackDelivery'
+        description: |-
+          Unspecified preserves original-file delivery for existing clients.
+          HLS requires an available provider playlist; never starts conversion.
   v4ResolvePlaybackResponse:
     type: object
     properties:

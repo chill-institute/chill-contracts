@@ -424,6 +424,15 @@ message ResolvePlaybackRequest {
   // Positive provider file ID. Check current access for the authenticated user
   // before resolving any URL; never trust a previous folder listing.
   int64 file_id = 1;
+  // Unspecified preserves original-file delivery for existing clients.
+  // HLS requires an available provider playlist; never starts conversion.
+  PlaybackDelivery delivery = 2;
+}
+
+enum PlaybackDelivery {
+  PLAYBACK_DELIVERY_UNSPECIFIED = 0;
+  PLAYBACK_DELIVERY_ORIGINAL = 1;
+  PLAYBACK_DELIVERY_HLS = 2;
 }
 
 message ResolvePlaybackResponse {

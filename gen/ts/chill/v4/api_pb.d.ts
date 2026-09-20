@@ -22,6 +22,14 @@ export declare type ResolvePlaybackRequest = Message<"chill.v4.ResolvePlaybackRe
    * @generated from field: int64 file_id = 1;
    */
   fileId: bigint;
+
+  /**
+   * Unspecified preserves original-file delivery for existing clients.
+   * HLS requires an available provider playlist; never starts conversion.
+   *
+   * @generated from field: chill.v4.PlaybackDelivery delivery = 2;
+   */
+  delivery: PlaybackDelivery;
 };
 
 /**
@@ -2025,6 +2033,31 @@ export declare type UserProfile = Message<"chill.v4.UserProfile"> & {
  * Use `create(UserProfileSchema)` to create a new message.
  */
 export declare const UserProfileSchema: GenMessage<UserProfile>;
+
+/**
+ * @generated from enum chill.v4.PlaybackDelivery
+ */
+export enum PlaybackDelivery {
+  /**
+   * @generated from enum value: PLAYBACK_DELIVERY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: PLAYBACK_DELIVERY_ORIGINAL = 1;
+   */
+  ORIGINAL = 1,
+
+  /**
+   * @generated from enum value: PLAYBACK_DELIVERY_HLS = 2;
+   */
+  HLS = 2,
+}
+
+/**
+ * Describes the enum chill.v4.PlaybackDelivery.
+ */
+export declare const PlaybackDeliverySchema: GenEnum<PlaybackDelivery>;
 
 /**
  * @generated from enum chill.v4.PendingReason
