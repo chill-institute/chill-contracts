@@ -3,7 +3,7 @@ module example.com/chill-contracts-consumer-go
 go 1.26.6
 
 require (
-	github.com/chill-institute/chill-contracts/v2 v2.5.0
+	github.com/chill-institute/chill-contracts/v2 v2.6.0
 	google.golang.org/protobuf v1.36.12
 )
 
