@@ -47,9 +47,8 @@ new consumers use `sort`.
 ## Playback resolution
 
 `UserService.ResolvePlayback` uses the same regular chill bearer token as the
-other user RPCs. Reuse `UserService.GetFolder` for browsing; no separate library
-service, delegated credential or client-specific authorization is introduced.
-Schema availability does not establish that Engine implements resolution yet.
+other user RPCs. Browse with `UserService.GetFolder`; playback has no separate
+library service, delegated credential or client-specific authorization.
 
 Resolution checks the authenticated user's current access to the requested
 file and returns ready, pending or unavailable. Missing and inaccessible files
