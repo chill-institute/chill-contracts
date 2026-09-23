@@ -3,6 +3,7 @@ actionlint = "1.7.12"
 buf = "1.73.0"
 go = "1.27.1"
 node = "24.21.0"
+pnpm = "12.4.2"
 zizmor = "1.30.1"
 
 [env]
@@ -35,7 +36,8 @@ run = "cd testdata/consumers/go && go test ./..."
 [tasks.verify-consumers-ts]
 description = "Import the published TypeScript surface from a downstream package"
 run = [
-  "cd testdata/consumers/ts && corepack pnpm install --ignore-workspace --force --lockfile=false --lockfile-dir .",
+  "test \"pnpm@$(mise current pnpm)\" = \"$(node -p 'require(\"./package.json\").packageManager')\" || { echo 'mise pnpm differs from package.json packageManager' >&2; exit 1; }",
+  "cd testdata/consumers/ts && pnpm install --ignore-workspace --force --lockfile=false --lockfile-dir .",
   "cd testdata/consumers/ts && node ./smoke.mjs"
 ]
 
