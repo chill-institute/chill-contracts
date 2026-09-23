@@ -57,6 +57,11 @@ transport/provider outages remain RPC errors. Resolution never starts transfers
 or conversion. Pending describes existing provider work; a later explicit
 request can observe readiness changes.
 
+`delivery` selects the media form. Unspecified and `PLAYBACK_DELIVERY_ORIGINAL`
+return the original file, so existing clients keep their behavior.
+`PLAYBACK_DELIVERY_HLS` returns an HLS playlist only when the provider already
+has one; it never requests conversion.
+
 Ready contains a direct HTTPS media URL usable without forwarding provider
 credentials, known format information, and optional subtitles. Unspecified
 format values mean unknown; each client decides compatibility. Media/subtitle
