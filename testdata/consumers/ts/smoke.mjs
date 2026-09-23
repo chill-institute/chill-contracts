@@ -16,44 +16,19 @@ import {
   UserService,
 } from "@chill-institute/contracts/chill/v4/api_pb";
 
-if (UserService.typeName !== "chill.v4.UserService") {
-  throw new Error(`unexpected service type name: ${UserService.typeName}`);
-}
-
-if (SearchResultDisplayBehavior.FASTEST !== 2) {
-  throw new Error("unexpected enum export value for FASTEST display behavior");
-}
-
-if (ReleaseInfoSchema.typeName !== "chill.v4.ReleaseInfo") {
-  throw new Error(`unexpected release info type name: ${ReleaseInfoSchema.typeName}`);
-}
-
-if (SearchResultSchema.typeName !== "chill.v4.SearchResult") {
-  throw new Error(`unexpected search result type name: ${SearchResultSchema.typeName}`);
-}
-
-if (UserSettingsSchema.typeName !== "chill.v4.UserSettings") {
-  throw new Error(`unexpected user settings type name: ${UserSettingsSchema.typeName}`);
-}
-
-if (SearchSettingsSchema.typeName !== "chill.v4.SearchSettings") {
-  throw new Error(`unexpected search settings type name: ${SearchSettingsSchema.typeName}`);
-}
-
-if (CatalogSettingsSchema.typeName !== "chill.v4.CatalogSettings") {
-  throw new Error(`unexpected catalog settings type name: ${CatalogSettingsSchema.typeName}`);
-}
-
-if (DownloadSettingsSchema.typeName !== "chill.v4.DownloadSettings") {
-  throw new Error(`unexpected download settings type name: ${DownloadSettingsSchema.typeName}`);
-}
-
-if (CatalogOriginSchema.typeName !== "chill.v4.CatalogOrigin") {
-  throw new Error(`unexpected catalog origin type name: ${CatalogOriginSchema.typeName}`);
-}
-
-if (AddTransferRequestSchema.typeName !== "chill.v4.AddTransferRequest") {
-  throw new Error(`unexpected add transfer request type name: ${AddTransferRequestSchema.typeName}`);
+assert.equal(UserService.typeName, "chill.v4.UserService");
+assert.equal(SearchResultDisplayBehavior.FASTEST, 2);
+for (const [schema, typeName] of [
+  [ReleaseInfoSchema, "chill.v4.ReleaseInfo"],
+  [SearchResultSchema, "chill.v4.SearchResult"],
+  [UserSettingsSchema, "chill.v4.UserSettings"],
+  [SearchSettingsSchema, "chill.v4.SearchSettings"],
+  [CatalogSettingsSchema, "chill.v4.CatalogSettings"],
+  [DownloadSettingsSchema, "chill.v4.DownloadSettings"],
+  [CatalogOriginSchema, "chill.v4.CatalogOrigin"],
+  [AddTransferRequestSchema, "chill.v4.AddTransferRequest"],
+]) {
+  assert.equal(schema.typeName, typeName);
 }
 
 for (const sort of [
@@ -73,9 +48,7 @@ for (const sort of [
 
 const largeId = "9223372036854775807";
 const request = fromJson(ResolvePlaybackRequestSchema, { fileId: largeId });
-if (toJson(ResolvePlaybackRequestSchema, request).fileId !== largeId) {
-  throw new Error("playback file ID lost int64 precision");
-}
+assert.equal(toJson(ResolvePlaybackRequestSchema, request).fileId, largeId);
 for (const result of [
   { ready: { media: { url: "https://example.com/movie.mp4", expiryUnknown: true } } },
   { ready: { media: { url: "https://example.com/movie.mp4", expiresAt: "2030-01-01T00:00:00Z" } } },
@@ -83,13 +56,8 @@ for (const result of [
   { unavailable: { reason: "UNAVAILABLE_REASON_NOT_FOUND" } },
 ]) {
   const parsed = fromJson(ResolvePlaybackResponseSchema, result);
-  const encoded = toJson(ResolvePlaybackResponseSchema, parsed);
-  if (JSON.stringify(encoded) !== JSON.stringify(result)) {
-    throw new Error("Playback result or expiry state changed on JSON round trip");
-  }
+  assert.deepEqual(toJson(ResolvePlaybackResponseSchema, parsed), result);
 }
-if (!UserService.method.resolvePlayback) {
-  throw new Error("UserService playback method is missing");
-}
+assert.ok(UserService.method.resolvePlayback);
 
 console.log("ts consumer import smoke passed");

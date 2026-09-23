@@ -12,11 +12,6 @@ import (
 )
 
 func TestGeneratedContractsCompileForConsumer(t *testing.T) {
-	request := &chillv4.GetUserProfileRequest{}
-	if request == nil {
-		t.Fatal("expected generated request type")
-	}
-
 	folderID := int64(123)
 	settings := &chillv4.UserSettings{
 		Search: &chillv4.SearchSettings{
@@ -48,10 +43,7 @@ func TestGeneratedContractsCompileForConsumer(t *testing.T) {
 		t.Fatal("expected transfer request to expose catalog origin")
 	}
 
-	client := chillv4connect.NewUserServiceClient(http.DefaultClient, "https://example.com")
-	if client == nil {
-		t.Fatal("expected generated connect client")
-	}
+	var _ chillv4connect.UserServiceClient = chillv4connect.NewUserServiceClient(http.DefaultClient, "https://example.com")
 }
 
 func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {
