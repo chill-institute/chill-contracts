@@ -1,11 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>chill-institute/renovate-config"],
-  "packageRules": [
-    {
-      "matchPackageNames": ["pnpm"],
-      "groupName": "pnpm",
-      "separateMajorMinor": false
-    }
-  ]
+  "extends": ["github>chill-institute/renovate-config"]
 }
