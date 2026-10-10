@@ -5,20 +5,11 @@
 package chillv4connect
 
 import (
-	connect "connectrpc.com/connect"
+	connect "connectrpc.com/connect/v2"
 	context "context"
-	errors "errors"
-	v4 "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4"
-	http "net/http"
-	strings "strings"
+	v4 "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4"
+	sync "sync"
 )
-
-// This is a compile-time assertion to ensure that this generated file and the connect package are
-// compatible. If you get a compiler error that this constant is not defined, this code was
-// generated with a version of connect newer than the one compiled into your binary. You can fix the
-// problem by either regenerating this code with an older version of connect or updating the connect
-// version compiled into your binary.
-const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// CoreServiceName is the fully-qualified name of the CoreService service.
@@ -27,705 +18,849 @@ const (
 	UserServiceName = "chill.v4.UserService"
 )
 
-// These constants are the fully-qualified names of the RPCs defined in this package. They're
-// exposed at runtime as Spec.Procedure and as the final two segments of the HTTP route.
+// These constants are the procedure names of the RPCs defined in this package. They're exposed at
+// runtime as Spec.Procedure and as the final two segments of the HTTP route.
 //
 // Note that these are different from the fully-qualified method names used by
 // google.golang.org/protobuf/reflect/protoreflect. To convert from these constants to
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// CoreServiceHealthCheckProcedure is the fully-qualified name of the CoreService's HealthCheck RPC.
+	// CoreServiceHealthCheckProcedure is the procedure name of the CoreService's HealthCheck RPC.
 	CoreServiceHealthCheckProcedure = "/chill.v4.CoreService/HealthCheck"
-	// CoreServiceGetIndexersProcedure is the fully-qualified name of the CoreService's GetIndexers RPC.
+	// CoreServiceGetIndexersProcedure is the procedure name of the CoreService's GetIndexers RPC.
 	CoreServiceGetIndexersProcedure = "/chill.v4.CoreService/GetIndexers"
-	// CoreServiceSearchProcedure is the fully-qualified name of the CoreService's Search RPC.
+	// CoreServiceSearchProcedure is the procedure name of the CoreService's Search RPC.
 	CoreServiceSearchProcedure = "/chill.v4.CoreService/Search"
-	// CoreServiceGetMoviesBySourceProcedure is the fully-qualified name of the CoreService's
+	// CoreServiceGetMoviesBySourceProcedure is the procedure name of the CoreService's
 	// GetMoviesBySource RPC.
 	CoreServiceGetMoviesBySourceProcedure = "/chill.v4.CoreService/GetMoviesBySource"
-	// CoreServiceGetTVShowsBySourceProcedure is the fully-qualified name of the CoreService's
+	// CoreServiceGetTVShowsBySourceProcedure is the procedure name of the CoreService's
 	// GetTVShowsBySource RPC.
 	CoreServiceGetTVShowsBySourceProcedure = "/chill.v4.CoreService/GetTVShowsBySource"
-	// UserServiceGetIndexersProcedure is the fully-qualified name of the UserService's GetIndexers RPC.
+	// UserServiceGetIndexersProcedure is the procedure name of the UserService's GetIndexers RPC.
 	UserServiceGetIndexersProcedure = "/chill.v4.UserService/GetIndexers"
-	// UserServiceSearchProcedure is the fully-qualified name of the UserService's Search RPC.
+	// UserServiceSearchProcedure is the procedure name of the UserService's Search RPC.
 	UserServiceSearchProcedure = "/chill.v4.UserService/Search"
-	// UserServiceGetMoviesProcedure is the fully-qualified name of the UserService's GetMovies RPC.
+	// UserServiceGetMoviesProcedure is the procedure name of the UserService's GetMovies RPC.
 	UserServiceGetMoviesProcedure = "/chill.v4.UserService/GetMovies"
-	// UserServiceGetTVShowsProcedure is the fully-qualified name of the UserService's GetTVShows RPC.
+	// UserServiceGetTVShowsProcedure is the procedure name of the UserService's GetTVShows RPC.
 	UserServiceGetTVShowsProcedure = "/chill.v4.UserService/GetTVShows"
-	// UserServiceGetTVShowDetailProcedure is the fully-qualified name of the UserService's
-	// GetTVShowDetail RPC.
+	// UserServiceGetTVShowDetailProcedure is the procedure name of the UserService's GetTVShowDetail
+	// RPC.
 	UserServiceGetTVShowDetailProcedure = "/chill.v4.UserService/GetTVShowDetail"
-	// UserServiceGetTVShowSeasonProcedure is the fully-qualified name of the UserService's
-	// GetTVShowSeason RPC.
+	// UserServiceGetTVShowSeasonProcedure is the procedure name of the UserService's GetTVShowSeason
+	// RPC.
 	UserServiceGetTVShowSeasonProcedure = "/chill.v4.UserService/GetTVShowSeason"
-	// UserServiceGetTVShowEpisodeDownloadProcedure is the fully-qualified name of the UserService's
+	// UserServiceGetTVShowEpisodeDownloadProcedure is the procedure name of the UserService's
 	// GetTVShowEpisodeDownload RPC.
 	UserServiceGetTVShowEpisodeDownloadProcedure = "/chill.v4.UserService/GetTVShowEpisodeDownload"
-	// UserServiceGetTVShowSeasonDownloadsProcedure is the fully-qualified name of the UserService's
+	// UserServiceGetTVShowSeasonDownloadsProcedure is the procedure name of the UserService's
 	// GetTVShowSeasonDownloads RPC.
 	UserServiceGetTVShowSeasonDownloadsProcedure = "/chill.v4.UserService/GetTVShowSeasonDownloads"
-	// UserServiceGetUserSettingsProcedure is the fully-qualified name of the UserService's
-	// GetUserSettings RPC.
+	// UserServiceGetUserSettingsProcedure is the procedure name of the UserService's GetUserSettings
+	// RPC.
 	UserServiceGetUserSettingsProcedure = "/chill.v4.UserService/GetUserSettings"
-	// UserServiceSaveUserSettingsProcedure is the fully-qualified name of the UserService's
-	// SaveUserSettings RPC.
+	// UserServiceSaveUserSettingsProcedure is the procedure name of the UserService's SaveUserSettings
+	// RPC.
 	UserServiceSaveUserSettingsProcedure = "/chill.v4.UserService/SaveUserSettings"
-	// UserServiceAddTransferProcedure is the fully-qualified name of the UserService's AddTransfer RPC.
+	// UserServiceAddTransferProcedure is the procedure name of the UserService's AddTransfer RPC.
 	UserServiceAddTransferProcedure = "/chill.v4.UserService/AddTransfer"
-	// UserServiceGetTransferProcedure is the fully-qualified name of the UserService's GetTransfer RPC.
+	// UserServiceGetTransferProcedure is the procedure name of the UserService's GetTransfer RPC.
 	UserServiceGetTransferProcedure = "/chill.v4.UserService/GetTransfer"
-	// UserServiceGetDownloadFolderProcedure is the fully-qualified name of the UserService's
+	// UserServiceGetDownloadFolderProcedure is the procedure name of the UserService's
 	// GetDownloadFolder RPC.
 	UserServiceGetDownloadFolderProcedure = "/chill.v4.UserService/GetDownloadFolder"
-	// UserServiceGetFolderProcedure is the fully-qualified name of the UserService's GetFolder RPC.
+	// UserServiceGetFolderProcedure is the procedure name of the UserService's GetFolder RPC.
 	UserServiceGetFolderProcedure = "/chill.v4.UserService/GetFolder"
-	// UserServiceResolvePlaybackProcedure is the fully-qualified name of the UserService's
-	// ResolvePlayback RPC.
+	// UserServiceResolvePlaybackProcedure is the procedure name of the UserService's ResolvePlayback
+	// RPC.
 	UserServiceResolvePlaybackProcedure = "/chill.v4.UserService/ResolvePlayback"
-	// UserServiceGetUserProfileProcedure is the fully-qualified name of the UserService's
-	// GetUserProfile RPC.
+	// UserServiceGetUserProfileProcedure is the procedure name of the UserService's GetUserProfile RPC.
 	UserServiceGetUserProfileProcedure = "/chill.v4.UserService/GetUserProfile"
+)
+
+var (
+	coreServiceHealthCheckSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods().ByName("HealthCheck"),
+			Procedure:  CoreServiceHealthCheckProcedure,
+		}
+	})
+	coreServiceGetIndexersSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods().ByName("GetIndexers"),
+			Procedure:  CoreServiceGetIndexersProcedure,
+		}
+	})
+	coreServiceSearchSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods().ByName("Search"),
+			Procedure:  CoreServiceSearchProcedure,
+		}
+	})
+	coreServiceGetMoviesBySourceSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods().ByName("GetMoviesBySource"),
+			Procedure:  CoreServiceGetMoviesBySourceProcedure,
+		}
+	})
+	coreServiceGetTVShowsBySourceSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods().ByName("GetTVShowsBySource"),
+			Procedure:  CoreServiceGetTVShowsBySourceProcedure,
+		}
+	})
 )
 
 // CoreServiceClient is a client for the chill.v4.CoreService service.
 type CoreServiceClient interface {
-	HealthCheck(context.Context, *connect.Request[v4.HealthCheckRequest]) (*connect.Response[v4.HealthResponse], error)
-	GetIndexers(context.Context, *connect.Request[v4.CoreGetIndexersRequest]) (*connect.Response[v4.CoreGetIndexersResponse], error)
-	Search(context.Context, *connect.Request[v4.CoreSearchRequest]) (*connect.Response[v4.SearchResponse], error)
-	GetMoviesBySource(context.Context, *connect.Request[v4.GetMoviesBySourceRequest]) (*connect.Response[v4.GetMoviesBySourceResponse], error)
-	GetTVShowsBySource(context.Context, *connect.Request[v4.GetTVShowsBySourceRequest]) (*connect.Response[v4.GetTVShowsBySourceResponse], error)
+	HealthCheck(context.Context, *v4.HealthCheckRequest) (*v4.HealthResponse, error)
+	GetIndexers(context.Context, *v4.CoreGetIndexersRequest) (*v4.CoreGetIndexersResponse, error)
+	Search(context.Context, *v4.CoreSearchRequest) (*v4.SearchResponse, error)
+	GetMoviesBySource(context.Context, *v4.GetMoviesBySourceRequest) (*v4.GetMoviesBySourceResponse, error)
+	GetTVShowsBySource(context.Context, *v4.GetTVShowsBySourceRequest) (*v4.GetTVShowsBySourceResponse, error)
 }
 
-// NewCoreServiceClient constructs a client for the chill.v4.CoreService service. By default, it
-// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
-// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
-// connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewCoreServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) CoreServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	coreServiceMethods := v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods()
-	return &coreServiceClient{
-		healthCheck: connect.NewClient[v4.HealthCheckRequest, v4.HealthResponse](
-			httpClient,
-			baseURL+CoreServiceHealthCheckProcedure,
-			connect.WithSchema(coreServiceMethods.ByName("HealthCheck")),
-			connect.WithClientOptions(opts...),
-		),
-		getIndexers: connect.NewClient[v4.CoreGetIndexersRequest, v4.CoreGetIndexersResponse](
-			httpClient,
-			baseURL+CoreServiceGetIndexersProcedure,
-			connect.WithSchema(coreServiceMethods.ByName("GetIndexers")),
-			connect.WithClientOptions(opts...),
-		),
-		search: connect.NewClient[v4.CoreSearchRequest, v4.SearchResponse](
-			httpClient,
-			baseURL+CoreServiceSearchProcedure,
-			connect.WithSchema(coreServiceMethods.ByName("Search")),
-			connect.WithClientOptions(opts...),
-		),
-		getMoviesBySource: connect.NewClient[v4.GetMoviesBySourceRequest, v4.GetMoviesBySourceResponse](
-			httpClient,
-			baseURL+CoreServiceGetMoviesBySourceProcedure,
-			connect.WithSchema(coreServiceMethods.ByName("GetMoviesBySource")),
-			connect.WithClientOptions(opts...),
-		),
-		getTVShowsBySource: connect.NewClient[v4.GetTVShowsBySourceRequest, v4.GetTVShowsBySourceResponse](
-			httpClient,
-			baseURL+CoreServiceGetTVShowsBySourceProcedure,
-			connect.WithSchema(coreServiceMethods.ByName("GetTVShowsBySource")),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// coreServiceClient implements CoreServiceClient.
-type coreServiceClient struct {
-	healthCheck        *connect.Client[v4.HealthCheckRequest, v4.HealthResponse]
-	getIndexers        *connect.Client[v4.CoreGetIndexersRequest, v4.CoreGetIndexersResponse]
-	search             *connect.Client[v4.CoreSearchRequest, v4.SearchResponse]
-	getMoviesBySource  *connect.Client[v4.GetMoviesBySourceRequest, v4.GetMoviesBySourceResponse]
-	getTVShowsBySource *connect.Client[v4.GetTVShowsBySourceRequest, v4.GetTVShowsBySourceResponse]
-}
-
-// HealthCheck calls chill.v4.CoreService.HealthCheck.
-func (c *coreServiceClient) HealthCheck(ctx context.Context, req *connect.Request[v4.HealthCheckRequest]) (*connect.Response[v4.HealthResponse], error) {
-	return c.healthCheck.CallUnary(ctx, req)
-}
-
-// GetIndexers calls chill.v4.CoreService.GetIndexers.
-func (c *coreServiceClient) GetIndexers(ctx context.Context, req *connect.Request[v4.CoreGetIndexersRequest]) (*connect.Response[v4.CoreGetIndexersResponse], error) {
-	return c.getIndexers.CallUnary(ctx, req)
-}
-
-// Search calls chill.v4.CoreService.Search.
-func (c *coreServiceClient) Search(ctx context.Context, req *connect.Request[v4.CoreSearchRequest]) (*connect.Response[v4.SearchResponse], error) {
-	return c.search.CallUnary(ctx, req)
-}
-
-// GetMoviesBySource calls chill.v4.CoreService.GetMoviesBySource.
-func (c *coreServiceClient) GetMoviesBySource(ctx context.Context, req *connect.Request[v4.GetMoviesBySourceRequest]) (*connect.Response[v4.GetMoviesBySourceResponse], error) {
-	return c.getMoviesBySource.CallUnary(ctx, req)
-}
-
-// GetTVShowsBySource calls chill.v4.CoreService.GetTVShowsBySource.
-func (c *coreServiceClient) GetTVShowsBySource(ctx context.Context, req *connect.Request[v4.GetTVShowsBySourceRequest]) (*connect.Response[v4.GetTVShowsBySourceResponse], error) {
-	return c.getTVShowsBySource.CallUnary(ctx, req)
+// NewCoreServiceClient constructs a client for the chill.v4.CoreService service. Multiple service
+// clients may share a single connect.Client.
+func NewCoreServiceClient(client *connect.Client) CoreServiceClient {
+	return &coreServiceClient{client: client}
 }
 
 // CoreServiceHandler is an implementation of the chill.v4.CoreService service.
 type CoreServiceHandler interface {
-	HealthCheck(context.Context, *connect.Request[v4.HealthCheckRequest]) (*connect.Response[v4.HealthResponse], error)
-	GetIndexers(context.Context, *connect.Request[v4.CoreGetIndexersRequest]) (*connect.Response[v4.CoreGetIndexersResponse], error)
-	Search(context.Context, *connect.Request[v4.CoreSearchRequest]) (*connect.Response[v4.SearchResponse], error)
-	GetMoviesBySource(context.Context, *connect.Request[v4.GetMoviesBySourceRequest]) (*connect.Response[v4.GetMoviesBySourceResponse], error)
-	GetTVShowsBySource(context.Context, *connect.Request[v4.GetTVShowsBySourceRequest]) (*connect.Response[v4.GetTVShowsBySourceResponse], error)
+	HealthCheck(context.Context, *v4.HealthCheckRequest) (*v4.HealthResponse, error)
+	GetIndexers(context.Context, *v4.CoreGetIndexersRequest) (*v4.CoreGetIndexersResponse, error)
+	Search(context.Context, *v4.CoreSearchRequest) (*v4.SearchResponse, error)
+	GetMoviesBySource(context.Context, *v4.GetMoviesBySourceRequest) (*v4.GetMoviesBySourceResponse, error)
+	GetTVShowsBySource(context.Context, *v4.GetTVShowsBySourceRequest) (*v4.GetTVShowsBySourceResponse, error)
 }
 
-// NewCoreServiceHandler builds an HTTP handler from the service implementation. It returns the path
-// on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewCoreServiceHandler(svc CoreServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	coreServiceMethods := v4.File_chill_v4_api_proto.Services().ByName("CoreService").Methods()
-	coreServiceHealthCheckHandler := connect.NewUnaryHandler(
-		CoreServiceHealthCheckProcedure,
-		svc.HealthCheck,
-		connect.WithSchema(coreServiceMethods.ByName("HealthCheck")),
-		connect.WithHandlerOptions(opts...),
+// RegisterCoreServiceHandler registers svc as the chill.v4.CoreService implementation on server.
+func RegisterCoreServiceHandler(server *connect.Server, svc CoreServiceHandler) {
+	adapter := coreServiceHandler{svc: svc}
+	server.Register(
+		connect.Method{Spec: coreServiceHealthCheckSpec(), Handler: adapter.healthCheck},
+		connect.Method{Spec: coreServiceGetIndexersSpec(), Handler: adapter.getIndexers},
+		connect.Method{Spec: coreServiceSearchSpec(), Handler: adapter.search},
+		connect.Method{Spec: coreServiceGetMoviesBySourceSpec(), Handler: adapter.getMoviesBySource},
+		connect.Method{Spec: coreServiceGetTVShowsBySourceSpec(), Handler: adapter.getTVShowsBySource},
 	)
-	coreServiceGetIndexersHandler := connect.NewUnaryHandler(
-		CoreServiceGetIndexersProcedure,
-		svc.GetIndexers,
-		connect.WithSchema(coreServiceMethods.ByName("GetIndexers")),
-		connect.WithHandlerOptions(opts...),
-	)
-	coreServiceSearchHandler := connect.NewUnaryHandler(
-		CoreServiceSearchProcedure,
-		svc.Search,
-		connect.WithSchema(coreServiceMethods.ByName("Search")),
-		connect.WithHandlerOptions(opts...),
-	)
-	coreServiceGetMoviesBySourceHandler := connect.NewUnaryHandler(
-		CoreServiceGetMoviesBySourceProcedure,
-		svc.GetMoviesBySource,
-		connect.WithSchema(coreServiceMethods.ByName("GetMoviesBySource")),
-		connect.WithHandlerOptions(opts...),
-	)
-	coreServiceGetTVShowsBySourceHandler := connect.NewUnaryHandler(
-		CoreServiceGetTVShowsBySourceProcedure,
-		svc.GetTVShowsBySource,
-		connect.WithSchema(coreServiceMethods.ByName("GetTVShowsBySource")),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/chill.v4.CoreService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case CoreServiceHealthCheckProcedure:
-			coreServiceHealthCheckHandler.ServeHTTP(w, r)
-		case CoreServiceGetIndexersProcedure:
-			coreServiceGetIndexersHandler.ServeHTTP(w, r)
-		case CoreServiceSearchProcedure:
-			coreServiceSearchHandler.ServeHTTP(w, r)
-		case CoreServiceGetMoviesBySourceProcedure:
-			coreServiceGetMoviesBySourceHandler.ServeHTTP(w, r)
-		case CoreServiceGetTVShowsBySourceProcedure:
-			coreServiceGetTVShowsBySourceHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
 }
 
 // UnimplementedCoreServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedCoreServiceHandler struct{}
 
-func (UnimplementedCoreServiceHandler) HealthCheck(context.Context, *connect.Request[v4.HealthCheckRequest]) (*connect.Response[v4.HealthResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.CoreService.HealthCheck is not implemented"))
+func (UnimplementedCoreServiceHandler) HealthCheck(context.Context, *v4.HealthCheckRequest) (*v4.HealthResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.CoreService.HealthCheck is not implemented")
 }
 
-func (UnimplementedCoreServiceHandler) GetIndexers(context.Context, *connect.Request[v4.CoreGetIndexersRequest]) (*connect.Response[v4.CoreGetIndexersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.CoreService.GetIndexers is not implemented"))
+func (UnimplementedCoreServiceHandler) GetIndexers(context.Context, *v4.CoreGetIndexersRequest) (*v4.CoreGetIndexersResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.CoreService.GetIndexers is not implemented")
 }
 
-func (UnimplementedCoreServiceHandler) Search(context.Context, *connect.Request[v4.CoreSearchRequest]) (*connect.Response[v4.SearchResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.CoreService.Search is not implemented"))
+func (UnimplementedCoreServiceHandler) Search(context.Context, *v4.CoreSearchRequest) (*v4.SearchResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.CoreService.Search is not implemented")
 }
 
-func (UnimplementedCoreServiceHandler) GetMoviesBySource(context.Context, *connect.Request[v4.GetMoviesBySourceRequest]) (*connect.Response[v4.GetMoviesBySourceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.CoreService.GetMoviesBySource is not implemented"))
+func (UnimplementedCoreServiceHandler) GetMoviesBySource(context.Context, *v4.GetMoviesBySourceRequest) (*v4.GetMoviesBySourceResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.CoreService.GetMoviesBySource is not implemented")
 }
 
-func (UnimplementedCoreServiceHandler) GetTVShowsBySource(context.Context, *connect.Request[v4.GetTVShowsBySourceRequest]) (*connect.Response[v4.GetTVShowsBySourceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.CoreService.GetTVShowsBySource is not implemented"))
+func (UnimplementedCoreServiceHandler) GetTVShowsBySource(context.Context, *v4.GetTVShowsBySourceRequest) (*v4.GetTVShowsBySourceResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.CoreService.GetTVShowsBySource is not implemented")
 }
+
+type coreServiceClient struct {
+	client *connect.Client
+}
+
+func (c *coreServiceClient) HealthCheck(ctx context.Context, req *v4.HealthCheckRequest) (*v4.HealthResponse, error) {
+	var res v4.HealthResponse
+	if err := c.client.CallUnary(ctx, coreServiceHealthCheckSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *coreServiceClient) GetIndexers(ctx context.Context, req *v4.CoreGetIndexersRequest) (*v4.CoreGetIndexersResponse, error) {
+	var res v4.CoreGetIndexersResponse
+	if err := c.client.CallUnary(ctx, coreServiceGetIndexersSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *coreServiceClient) Search(ctx context.Context, req *v4.CoreSearchRequest) (*v4.SearchResponse, error) {
+	var res v4.SearchResponse
+	if err := c.client.CallUnary(ctx, coreServiceSearchSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *coreServiceClient) GetMoviesBySource(ctx context.Context, req *v4.GetMoviesBySourceRequest) (*v4.GetMoviesBySourceResponse, error) {
+	var res v4.GetMoviesBySourceResponse
+	if err := c.client.CallUnary(ctx, coreServiceGetMoviesBySourceSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *coreServiceClient) GetTVShowsBySource(ctx context.Context, req *v4.GetTVShowsBySourceRequest) (*v4.GetTVShowsBySourceResponse, error) {
+	var res v4.GetTVShowsBySourceResponse
+	if err := c.client.CallUnary(ctx, coreServiceGetTVShowsBySourceSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+type coreServiceHandler struct{ svc CoreServiceHandler }
+
+func (h coreServiceHandler) healthCheck(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.HealthCheckRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.HealthCheck(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h coreServiceHandler) getIndexers(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.CoreGetIndexersRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetIndexers(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h coreServiceHandler) search(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.CoreSearchRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.Search(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h coreServiceHandler) getMoviesBySource(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetMoviesBySourceRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetMoviesBySource(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h coreServiceHandler) getTVShowsBySource(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTVShowsBySourceRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTVShowsBySource(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+var (
+	userServiceGetIndexersSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetIndexers"),
+			Procedure:  UserServiceGetIndexersProcedure,
+		}
+	})
+	userServiceSearchSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("Search"),
+			Procedure:  UserServiceSearchProcedure,
+		}
+	})
+	userServiceGetMoviesSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetMovies"),
+			Procedure:  UserServiceGetMoviesProcedure,
+		}
+	})
+	userServiceGetTVShowsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetTVShows"),
+			Procedure:  UserServiceGetTVShowsProcedure,
+		}
+	})
+	userServiceGetTVShowDetailSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetTVShowDetail"),
+			Procedure:  UserServiceGetTVShowDetailProcedure,
+		}
+	})
+	userServiceGetTVShowSeasonSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetTVShowSeason"),
+			Procedure:  UserServiceGetTVShowSeasonProcedure,
+		}
+	})
+	userServiceGetTVShowEpisodeDownloadSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetTVShowEpisodeDownload"),
+			Procedure:  UserServiceGetTVShowEpisodeDownloadProcedure,
+		}
+	})
+	userServiceGetTVShowSeasonDownloadsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetTVShowSeasonDownloads"),
+			Procedure:  UserServiceGetTVShowSeasonDownloadsProcedure,
+		}
+	})
+	userServiceGetUserSettingsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetUserSettings"),
+			Procedure:  UserServiceGetUserSettingsProcedure,
+		}
+	})
+	userServiceSaveUserSettingsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("SaveUserSettings"),
+			Procedure:  UserServiceSaveUserSettingsProcedure,
+		}
+	})
+	userServiceAddTransferSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("AddTransfer"),
+			Procedure:  UserServiceAddTransferProcedure,
+		}
+	})
+	userServiceGetTransferSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetTransfer"),
+			Procedure:  UserServiceGetTransferProcedure,
+		}
+	})
+	userServiceGetDownloadFolderSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetDownloadFolder"),
+			Procedure:  UserServiceGetDownloadFolderProcedure,
+		}
+	})
+	userServiceGetFolderSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetFolder"),
+			Procedure:  UserServiceGetFolderProcedure,
+		}
+	})
+	userServiceResolvePlaybackSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("ResolvePlayback"),
+			Procedure:        UserServiceResolvePlaybackProcedure,
+			IdempotencyLevel: connect.IdempotencyNoSideEffects,
+		}
+	})
+	userServiceGetUserProfileSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetUserProfile"),
+			Procedure:  UserServiceGetUserProfileProcedure,
+		}
+	})
+)
 
 // UserServiceClient is a client for the chill.v4.UserService service.
 type UserServiceClient interface {
-	GetIndexers(context.Context, *connect.Request[v4.UserGetIndexersRequest]) (*connect.Response[v4.UserGetIndexersResponse], error)
-	Search(context.Context, *connect.Request[v4.UserSearchRequest]) (*connect.Response[v4.SearchResponse], error)
-	GetMovies(context.Context, *connect.Request[v4.GetMoviesRequest]) (*connect.Response[v4.GetMoviesResponse], error)
-	GetTVShows(context.Context, *connect.Request[v4.GetTVShowsRequest]) (*connect.Response[v4.GetTVShowsResponse], error)
-	GetTVShowDetail(context.Context, *connect.Request[v4.GetTVShowDetailRequest]) (*connect.Response[v4.GetTVShowDetailResponse], error)
-	GetTVShowSeason(context.Context, *connect.Request[v4.GetTVShowSeasonRequest]) (*connect.Response[v4.GetTVShowSeasonResponse], error)
-	GetTVShowEpisodeDownload(context.Context, *connect.Request[v4.GetTVShowEpisodeDownloadRequest]) (*connect.Response[v4.GetTVShowEpisodeDownloadResponse], error)
-	GetTVShowSeasonDownloads(context.Context, *connect.Request[v4.GetTVShowSeasonDownloadsRequest]) (*connect.Response[v4.GetTVShowSeasonDownloadsResponse], error)
-	GetUserSettings(context.Context, *connect.Request[v4.GetUserSettingsRequest]) (*connect.Response[v4.UserSettings], error)
-	SaveUserSettings(context.Context, *connect.Request[v4.SaveUserSettingsRequest]) (*connect.Response[v4.UserSettings], error)
-	AddTransfer(context.Context, *connect.Request[v4.AddTransferRequest]) (*connect.Response[v4.AddTransferResponse], error)
-	GetTransfer(context.Context, *connect.Request[v4.GetTransferRequest]) (*connect.Response[v4.GetTransferResponse], error)
-	GetDownloadFolder(context.Context, *connect.Request[v4.GetDownloadFolderRequest]) (*connect.Response[v4.GetDownloadFolderResponse], error)
-	GetFolder(context.Context, *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error)
+	GetIndexers(context.Context, *v4.UserGetIndexersRequest) (*v4.UserGetIndexersResponse, error)
+	Search(context.Context, *v4.UserSearchRequest) (*v4.SearchResponse, error)
+	GetMovies(context.Context, *v4.GetMoviesRequest) (*v4.GetMoviesResponse, error)
+	GetTVShows(context.Context, *v4.GetTVShowsRequest) (*v4.GetTVShowsResponse, error)
+	GetTVShowDetail(context.Context, *v4.GetTVShowDetailRequest) (*v4.GetTVShowDetailResponse, error)
+	GetTVShowSeason(context.Context, *v4.GetTVShowSeasonRequest) (*v4.GetTVShowSeasonResponse, error)
+	GetTVShowEpisodeDownload(context.Context, *v4.GetTVShowEpisodeDownloadRequest) (*v4.GetTVShowEpisodeDownloadResponse, error)
+	GetTVShowSeasonDownloads(context.Context, *v4.GetTVShowSeasonDownloadsRequest) (*v4.GetTVShowSeasonDownloadsResponse, error)
+	GetUserSettings(context.Context, *v4.GetUserSettingsRequest) (*v4.UserSettings, error)
+	SaveUserSettings(context.Context, *v4.SaveUserSettingsRequest) (*v4.UserSettings, error)
+	AddTransfer(context.Context, *v4.AddTransferRequest) (*v4.AddTransferResponse, error)
+	GetTransfer(context.Context, *v4.GetTransferRequest) (*v4.GetTransferResponse, error)
+	GetDownloadFolder(context.Context, *v4.GetDownloadFolderRequest) (*v4.GetDownloadFolderResponse, error)
+	GetFolder(context.Context, *v4.GetFolderRequest) (*v4.GetFolderResponse, error)
 	// Resolve media with the same regular user bearer as other UserService RPCs.
 	// Read-only: never initiate a transfer or conversion.
-	ResolvePlayback(context.Context, *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error)
-	GetUserProfile(context.Context, *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error)
+	ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error)
+	GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error)
 }
 
-// NewUserServiceClient constructs a client for the chill.v4.UserService service. By default, it
-// uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses, and sends
-// uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the connect.WithGRPC() or
-// connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) UserServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	userServiceMethods := v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods()
-	return &userServiceClient{
-		getIndexers: connect.NewClient[v4.UserGetIndexersRequest, v4.UserGetIndexersResponse](
-			httpClient,
-			baseURL+UserServiceGetIndexersProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetIndexers")),
-			connect.WithClientOptions(opts...),
-		),
-		search: connect.NewClient[v4.UserSearchRequest, v4.SearchResponse](
-			httpClient,
-			baseURL+UserServiceSearchProcedure,
-			connect.WithSchema(userServiceMethods.ByName("Search")),
-			connect.WithClientOptions(opts...),
-		),
-		getMovies: connect.NewClient[v4.GetMoviesRequest, v4.GetMoviesResponse](
-			httpClient,
-			baseURL+UserServiceGetMoviesProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetMovies")),
-			connect.WithClientOptions(opts...),
-		),
-		getTVShows: connect.NewClient[v4.GetTVShowsRequest, v4.GetTVShowsResponse](
-			httpClient,
-			baseURL+UserServiceGetTVShowsProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetTVShows")),
-			connect.WithClientOptions(opts...),
-		),
-		getTVShowDetail: connect.NewClient[v4.GetTVShowDetailRequest, v4.GetTVShowDetailResponse](
-			httpClient,
-			baseURL+UserServiceGetTVShowDetailProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetTVShowDetail")),
-			connect.WithClientOptions(opts...),
-		),
-		getTVShowSeason: connect.NewClient[v4.GetTVShowSeasonRequest, v4.GetTVShowSeasonResponse](
-			httpClient,
-			baseURL+UserServiceGetTVShowSeasonProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetTVShowSeason")),
-			connect.WithClientOptions(opts...),
-		),
-		getTVShowEpisodeDownload: connect.NewClient[v4.GetTVShowEpisodeDownloadRequest, v4.GetTVShowEpisodeDownloadResponse](
-			httpClient,
-			baseURL+UserServiceGetTVShowEpisodeDownloadProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetTVShowEpisodeDownload")),
-			connect.WithClientOptions(opts...),
-		),
-		getTVShowSeasonDownloads: connect.NewClient[v4.GetTVShowSeasonDownloadsRequest, v4.GetTVShowSeasonDownloadsResponse](
-			httpClient,
-			baseURL+UserServiceGetTVShowSeasonDownloadsProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetTVShowSeasonDownloads")),
-			connect.WithClientOptions(opts...),
-		),
-		getUserSettings: connect.NewClient[v4.GetUserSettingsRequest, v4.UserSettings](
-			httpClient,
-			baseURL+UserServiceGetUserSettingsProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetUserSettings")),
-			connect.WithClientOptions(opts...),
-		),
-		saveUserSettings: connect.NewClient[v4.SaveUserSettingsRequest, v4.UserSettings](
-			httpClient,
-			baseURL+UserServiceSaveUserSettingsProcedure,
-			connect.WithSchema(userServiceMethods.ByName("SaveUserSettings")),
-			connect.WithClientOptions(opts...),
-		),
-		addTransfer: connect.NewClient[v4.AddTransferRequest, v4.AddTransferResponse](
-			httpClient,
-			baseURL+UserServiceAddTransferProcedure,
-			connect.WithSchema(userServiceMethods.ByName("AddTransfer")),
-			connect.WithClientOptions(opts...),
-		),
-		getTransfer: connect.NewClient[v4.GetTransferRequest, v4.GetTransferResponse](
-			httpClient,
-			baseURL+UserServiceGetTransferProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetTransfer")),
-			connect.WithClientOptions(opts...),
-		),
-		getDownloadFolder: connect.NewClient[v4.GetDownloadFolderRequest, v4.GetDownloadFolderResponse](
-			httpClient,
-			baseURL+UserServiceGetDownloadFolderProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetDownloadFolder")),
-			connect.WithClientOptions(opts...),
-		),
-		getFolder: connect.NewClient[v4.GetFolderRequest, v4.GetFolderResponse](
-			httpClient,
-			baseURL+UserServiceGetFolderProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetFolder")),
-			connect.WithClientOptions(opts...),
-		),
-		resolvePlayback: connect.NewClient[v4.ResolvePlaybackRequest, v4.ResolvePlaybackResponse](
-			httpClient,
-			baseURL+UserServiceResolvePlaybackProcedure,
-			connect.WithSchema(userServiceMethods.ByName("ResolvePlayback")),
-			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-			connect.WithClientOptions(opts...),
-		),
-		getUserProfile: connect.NewClient[v4.GetUserProfileRequest, v4.UserProfile](
-			httpClient,
-			baseURL+UserServiceGetUserProfileProcedure,
-			connect.WithSchema(userServiceMethods.ByName("GetUserProfile")),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// userServiceClient implements UserServiceClient.
-type userServiceClient struct {
-	getIndexers              *connect.Client[v4.UserGetIndexersRequest, v4.UserGetIndexersResponse]
-	search                   *connect.Client[v4.UserSearchRequest, v4.SearchResponse]
-	getMovies                *connect.Client[v4.GetMoviesRequest, v4.GetMoviesResponse]
-	getTVShows               *connect.Client[v4.GetTVShowsRequest, v4.GetTVShowsResponse]
-	getTVShowDetail          *connect.Client[v4.GetTVShowDetailRequest, v4.GetTVShowDetailResponse]
-	getTVShowSeason          *connect.Client[v4.GetTVShowSeasonRequest, v4.GetTVShowSeasonResponse]
-	getTVShowEpisodeDownload *connect.Client[v4.GetTVShowEpisodeDownloadRequest, v4.GetTVShowEpisodeDownloadResponse]
-	getTVShowSeasonDownloads *connect.Client[v4.GetTVShowSeasonDownloadsRequest, v4.GetTVShowSeasonDownloadsResponse]
-	getUserSettings          *connect.Client[v4.GetUserSettingsRequest, v4.UserSettings]
-	saveUserSettings         *connect.Client[v4.SaveUserSettingsRequest, v4.UserSettings]
-	addTransfer              *connect.Client[v4.AddTransferRequest, v4.AddTransferResponse]
-	getTransfer              *connect.Client[v4.GetTransferRequest, v4.GetTransferResponse]
-	getDownloadFolder        *connect.Client[v4.GetDownloadFolderRequest, v4.GetDownloadFolderResponse]
-	getFolder                *connect.Client[v4.GetFolderRequest, v4.GetFolderResponse]
-	resolvePlayback          *connect.Client[v4.ResolvePlaybackRequest, v4.ResolvePlaybackResponse]
-	getUserProfile           *connect.Client[v4.GetUserProfileRequest, v4.UserProfile]
-}
-
-// GetIndexers calls chill.v4.UserService.GetIndexers.
-func (c *userServiceClient) GetIndexers(ctx context.Context, req *connect.Request[v4.UserGetIndexersRequest]) (*connect.Response[v4.UserGetIndexersResponse], error) {
-	return c.getIndexers.CallUnary(ctx, req)
-}
-
-// Search calls chill.v4.UserService.Search.
-func (c *userServiceClient) Search(ctx context.Context, req *connect.Request[v4.UserSearchRequest]) (*connect.Response[v4.SearchResponse], error) {
-	return c.search.CallUnary(ctx, req)
-}
-
-// GetMovies calls chill.v4.UserService.GetMovies.
-func (c *userServiceClient) GetMovies(ctx context.Context, req *connect.Request[v4.GetMoviesRequest]) (*connect.Response[v4.GetMoviesResponse], error) {
-	return c.getMovies.CallUnary(ctx, req)
-}
-
-// GetTVShows calls chill.v4.UserService.GetTVShows.
-func (c *userServiceClient) GetTVShows(ctx context.Context, req *connect.Request[v4.GetTVShowsRequest]) (*connect.Response[v4.GetTVShowsResponse], error) {
-	return c.getTVShows.CallUnary(ctx, req)
-}
-
-// GetTVShowDetail calls chill.v4.UserService.GetTVShowDetail.
-func (c *userServiceClient) GetTVShowDetail(ctx context.Context, req *connect.Request[v4.GetTVShowDetailRequest]) (*connect.Response[v4.GetTVShowDetailResponse], error) {
-	return c.getTVShowDetail.CallUnary(ctx, req)
-}
-
-// GetTVShowSeason calls chill.v4.UserService.GetTVShowSeason.
-func (c *userServiceClient) GetTVShowSeason(ctx context.Context, req *connect.Request[v4.GetTVShowSeasonRequest]) (*connect.Response[v4.GetTVShowSeasonResponse], error) {
-	return c.getTVShowSeason.CallUnary(ctx, req)
-}
-
-// GetTVShowEpisodeDownload calls chill.v4.UserService.GetTVShowEpisodeDownload.
-func (c *userServiceClient) GetTVShowEpisodeDownload(ctx context.Context, req *connect.Request[v4.GetTVShowEpisodeDownloadRequest]) (*connect.Response[v4.GetTVShowEpisodeDownloadResponse], error) {
-	return c.getTVShowEpisodeDownload.CallUnary(ctx, req)
-}
-
-// GetTVShowSeasonDownloads calls chill.v4.UserService.GetTVShowSeasonDownloads.
-func (c *userServiceClient) GetTVShowSeasonDownloads(ctx context.Context, req *connect.Request[v4.GetTVShowSeasonDownloadsRequest]) (*connect.Response[v4.GetTVShowSeasonDownloadsResponse], error) {
-	return c.getTVShowSeasonDownloads.CallUnary(ctx, req)
-}
-
-// GetUserSettings calls chill.v4.UserService.GetUserSettings.
-func (c *userServiceClient) GetUserSettings(ctx context.Context, req *connect.Request[v4.GetUserSettingsRequest]) (*connect.Response[v4.UserSettings], error) {
-	return c.getUserSettings.CallUnary(ctx, req)
-}
-
-// SaveUserSettings calls chill.v4.UserService.SaveUserSettings.
-func (c *userServiceClient) SaveUserSettings(ctx context.Context, req *connect.Request[v4.SaveUserSettingsRequest]) (*connect.Response[v4.UserSettings], error) {
-	return c.saveUserSettings.CallUnary(ctx, req)
-}
-
-// AddTransfer calls chill.v4.UserService.AddTransfer.
-func (c *userServiceClient) AddTransfer(ctx context.Context, req *connect.Request[v4.AddTransferRequest]) (*connect.Response[v4.AddTransferResponse], error) {
-	return c.addTransfer.CallUnary(ctx, req)
-}
-
-// GetTransfer calls chill.v4.UserService.GetTransfer.
-func (c *userServiceClient) GetTransfer(ctx context.Context, req *connect.Request[v4.GetTransferRequest]) (*connect.Response[v4.GetTransferResponse], error) {
-	return c.getTransfer.CallUnary(ctx, req)
-}
-
-// GetDownloadFolder calls chill.v4.UserService.GetDownloadFolder.
-func (c *userServiceClient) GetDownloadFolder(ctx context.Context, req *connect.Request[v4.GetDownloadFolderRequest]) (*connect.Response[v4.GetDownloadFolderResponse], error) {
-	return c.getDownloadFolder.CallUnary(ctx, req)
-}
-
-// GetFolder calls chill.v4.UserService.GetFolder.
-func (c *userServiceClient) GetFolder(ctx context.Context, req *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error) {
-	return c.getFolder.CallUnary(ctx, req)
-}
-
-// ResolvePlayback calls chill.v4.UserService.ResolvePlayback.
-func (c *userServiceClient) ResolvePlayback(ctx context.Context, req *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error) {
-	return c.resolvePlayback.CallUnary(ctx, req)
-}
-
-// GetUserProfile calls chill.v4.UserService.GetUserProfile.
-func (c *userServiceClient) GetUserProfile(ctx context.Context, req *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error) {
-	return c.getUserProfile.CallUnary(ctx, req)
+// NewUserServiceClient constructs a client for the chill.v4.UserService service. Multiple service
+// clients may share a single connect.Client.
+func NewUserServiceClient(client *connect.Client) UserServiceClient {
+	return &userServiceClient{client: client}
 }
 
 // UserServiceHandler is an implementation of the chill.v4.UserService service.
 type UserServiceHandler interface {
-	GetIndexers(context.Context, *connect.Request[v4.UserGetIndexersRequest]) (*connect.Response[v4.UserGetIndexersResponse], error)
-	Search(context.Context, *connect.Request[v4.UserSearchRequest]) (*connect.Response[v4.SearchResponse], error)
-	GetMovies(context.Context, *connect.Request[v4.GetMoviesRequest]) (*connect.Response[v4.GetMoviesResponse], error)
-	GetTVShows(context.Context, *connect.Request[v4.GetTVShowsRequest]) (*connect.Response[v4.GetTVShowsResponse], error)
-	GetTVShowDetail(context.Context, *connect.Request[v4.GetTVShowDetailRequest]) (*connect.Response[v4.GetTVShowDetailResponse], error)
-	GetTVShowSeason(context.Context, *connect.Request[v4.GetTVShowSeasonRequest]) (*connect.Response[v4.GetTVShowSeasonResponse], error)
-	GetTVShowEpisodeDownload(context.Context, *connect.Request[v4.GetTVShowEpisodeDownloadRequest]) (*connect.Response[v4.GetTVShowEpisodeDownloadResponse], error)
-	GetTVShowSeasonDownloads(context.Context, *connect.Request[v4.GetTVShowSeasonDownloadsRequest]) (*connect.Response[v4.GetTVShowSeasonDownloadsResponse], error)
-	GetUserSettings(context.Context, *connect.Request[v4.GetUserSettingsRequest]) (*connect.Response[v4.UserSettings], error)
-	SaveUserSettings(context.Context, *connect.Request[v4.SaveUserSettingsRequest]) (*connect.Response[v4.UserSettings], error)
-	AddTransfer(context.Context, *connect.Request[v4.AddTransferRequest]) (*connect.Response[v4.AddTransferResponse], error)
-	GetTransfer(context.Context, *connect.Request[v4.GetTransferRequest]) (*connect.Response[v4.GetTransferResponse], error)
-	GetDownloadFolder(context.Context, *connect.Request[v4.GetDownloadFolderRequest]) (*connect.Response[v4.GetDownloadFolderResponse], error)
-	GetFolder(context.Context, *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error)
+	GetIndexers(context.Context, *v4.UserGetIndexersRequest) (*v4.UserGetIndexersResponse, error)
+	Search(context.Context, *v4.UserSearchRequest) (*v4.SearchResponse, error)
+	GetMovies(context.Context, *v4.GetMoviesRequest) (*v4.GetMoviesResponse, error)
+	GetTVShows(context.Context, *v4.GetTVShowsRequest) (*v4.GetTVShowsResponse, error)
+	GetTVShowDetail(context.Context, *v4.GetTVShowDetailRequest) (*v4.GetTVShowDetailResponse, error)
+	GetTVShowSeason(context.Context, *v4.GetTVShowSeasonRequest) (*v4.GetTVShowSeasonResponse, error)
+	GetTVShowEpisodeDownload(context.Context, *v4.GetTVShowEpisodeDownloadRequest) (*v4.GetTVShowEpisodeDownloadResponse, error)
+	GetTVShowSeasonDownloads(context.Context, *v4.GetTVShowSeasonDownloadsRequest) (*v4.GetTVShowSeasonDownloadsResponse, error)
+	GetUserSettings(context.Context, *v4.GetUserSettingsRequest) (*v4.UserSettings, error)
+	SaveUserSettings(context.Context, *v4.SaveUserSettingsRequest) (*v4.UserSettings, error)
+	AddTransfer(context.Context, *v4.AddTransferRequest) (*v4.AddTransferResponse, error)
+	GetTransfer(context.Context, *v4.GetTransferRequest) (*v4.GetTransferResponse, error)
+	GetDownloadFolder(context.Context, *v4.GetDownloadFolderRequest) (*v4.GetDownloadFolderResponse, error)
+	GetFolder(context.Context, *v4.GetFolderRequest) (*v4.GetFolderResponse, error)
 	// Resolve media with the same regular user bearer as other UserService RPCs.
 	// Read-only: never initiate a transfer or conversion.
-	ResolvePlayback(context.Context, *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error)
-	GetUserProfile(context.Context, *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error)
+	ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error)
+	GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error)
 }
 
-// NewUserServiceHandler builds an HTTP handler from the service implementation. It returns the path
-// on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	userServiceMethods := v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods()
-	userServiceGetIndexersHandler := connect.NewUnaryHandler(
-		UserServiceGetIndexersProcedure,
-		svc.GetIndexers,
-		connect.WithSchema(userServiceMethods.ByName("GetIndexers")),
-		connect.WithHandlerOptions(opts...),
+// RegisterUserServiceHandler registers svc as the chill.v4.UserService implementation on server.
+func RegisterUserServiceHandler(server *connect.Server, svc UserServiceHandler) {
+	adapter := userServiceHandler{svc: svc}
+	server.Register(
+		connect.Method{Spec: userServiceGetIndexersSpec(), Handler: adapter.getIndexers},
+		connect.Method{Spec: userServiceSearchSpec(), Handler: adapter.search},
+		connect.Method{Spec: userServiceGetMoviesSpec(), Handler: adapter.getMovies},
+		connect.Method{Spec: userServiceGetTVShowsSpec(), Handler: adapter.getTVShows},
+		connect.Method{Spec: userServiceGetTVShowDetailSpec(), Handler: adapter.getTVShowDetail},
+		connect.Method{Spec: userServiceGetTVShowSeasonSpec(), Handler: adapter.getTVShowSeason},
+		connect.Method{Spec: userServiceGetTVShowEpisodeDownloadSpec(), Handler: adapter.getTVShowEpisodeDownload},
+		connect.Method{Spec: userServiceGetTVShowSeasonDownloadsSpec(), Handler: adapter.getTVShowSeasonDownloads},
+		connect.Method{Spec: userServiceGetUserSettingsSpec(), Handler: adapter.getUserSettings},
+		connect.Method{Spec: userServiceSaveUserSettingsSpec(), Handler: adapter.saveUserSettings},
+		connect.Method{Spec: userServiceAddTransferSpec(), Handler: adapter.addTransfer},
+		connect.Method{Spec: userServiceGetTransferSpec(), Handler: adapter.getTransfer},
+		connect.Method{Spec: userServiceGetDownloadFolderSpec(), Handler: adapter.getDownloadFolder},
+		connect.Method{Spec: userServiceGetFolderSpec(), Handler: adapter.getFolder},
+		connect.Method{Spec: userServiceResolvePlaybackSpec(), Handler: adapter.resolvePlayback},
+		connect.Method{Spec: userServiceGetUserProfileSpec(), Handler: adapter.getUserProfile},
 	)
-	userServiceSearchHandler := connect.NewUnaryHandler(
-		UserServiceSearchProcedure,
-		svc.Search,
-		connect.WithSchema(userServiceMethods.ByName("Search")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetMoviesHandler := connect.NewUnaryHandler(
-		UserServiceGetMoviesProcedure,
-		svc.GetMovies,
-		connect.WithSchema(userServiceMethods.ByName("GetMovies")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetTVShowsHandler := connect.NewUnaryHandler(
-		UserServiceGetTVShowsProcedure,
-		svc.GetTVShows,
-		connect.WithSchema(userServiceMethods.ByName("GetTVShows")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetTVShowDetailHandler := connect.NewUnaryHandler(
-		UserServiceGetTVShowDetailProcedure,
-		svc.GetTVShowDetail,
-		connect.WithSchema(userServiceMethods.ByName("GetTVShowDetail")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetTVShowSeasonHandler := connect.NewUnaryHandler(
-		UserServiceGetTVShowSeasonProcedure,
-		svc.GetTVShowSeason,
-		connect.WithSchema(userServiceMethods.ByName("GetTVShowSeason")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetTVShowEpisodeDownloadHandler := connect.NewUnaryHandler(
-		UserServiceGetTVShowEpisodeDownloadProcedure,
-		svc.GetTVShowEpisodeDownload,
-		connect.WithSchema(userServiceMethods.ByName("GetTVShowEpisodeDownload")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetTVShowSeasonDownloadsHandler := connect.NewUnaryHandler(
-		UserServiceGetTVShowSeasonDownloadsProcedure,
-		svc.GetTVShowSeasonDownloads,
-		connect.WithSchema(userServiceMethods.ByName("GetTVShowSeasonDownloads")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetUserSettingsHandler := connect.NewUnaryHandler(
-		UserServiceGetUserSettingsProcedure,
-		svc.GetUserSettings,
-		connect.WithSchema(userServiceMethods.ByName("GetUserSettings")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceSaveUserSettingsHandler := connect.NewUnaryHandler(
-		UserServiceSaveUserSettingsProcedure,
-		svc.SaveUserSettings,
-		connect.WithSchema(userServiceMethods.ByName("SaveUserSettings")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceAddTransferHandler := connect.NewUnaryHandler(
-		UserServiceAddTransferProcedure,
-		svc.AddTransfer,
-		connect.WithSchema(userServiceMethods.ByName("AddTransfer")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetTransferHandler := connect.NewUnaryHandler(
-		UserServiceGetTransferProcedure,
-		svc.GetTransfer,
-		connect.WithSchema(userServiceMethods.ByName("GetTransfer")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetDownloadFolderHandler := connect.NewUnaryHandler(
-		UserServiceGetDownloadFolderProcedure,
-		svc.GetDownloadFolder,
-		connect.WithSchema(userServiceMethods.ByName("GetDownloadFolder")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetFolderHandler := connect.NewUnaryHandler(
-		UserServiceGetFolderProcedure,
-		svc.GetFolder,
-		connect.WithSchema(userServiceMethods.ByName("GetFolder")),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceResolvePlaybackHandler := connect.NewUnaryHandler(
-		UserServiceResolvePlaybackProcedure,
-		svc.ResolvePlayback,
-		connect.WithSchema(userServiceMethods.ByName("ResolvePlayback")),
-		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-		connect.WithHandlerOptions(opts...),
-	)
-	userServiceGetUserProfileHandler := connect.NewUnaryHandler(
-		UserServiceGetUserProfileProcedure,
-		svc.GetUserProfile,
-		connect.WithSchema(userServiceMethods.ByName("GetUserProfile")),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/chill.v4.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case UserServiceGetIndexersProcedure:
-			userServiceGetIndexersHandler.ServeHTTP(w, r)
-		case UserServiceSearchProcedure:
-			userServiceSearchHandler.ServeHTTP(w, r)
-		case UserServiceGetMoviesProcedure:
-			userServiceGetMoviesHandler.ServeHTTP(w, r)
-		case UserServiceGetTVShowsProcedure:
-			userServiceGetTVShowsHandler.ServeHTTP(w, r)
-		case UserServiceGetTVShowDetailProcedure:
-			userServiceGetTVShowDetailHandler.ServeHTTP(w, r)
-		case UserServiceGetTVShowSeasonProcedure:
-			userServiceGetTVShowSeasonHandler.ServeHTTP(w, r)
-		case UserServiceGetTVShowEpisodeDownloadProcedure:
-			userServiceGetTVShowEpisodeDownloadHandler.ServeHTTP(w, r)
-		case UserServiceGetTVShowSeasonDownloadsProcedure:
-			userServiceGetTVShowSeasonDownloadsHandler.ServeHTTP(w, r)
-		case UserServiceGetUserSettingsProcedure:
-			userServiceGetUserSettingsHandler.ServeHTTP(w, r)
-		case UserServiceSaveUserSettingsProcedure:
-			userServiceSaveUserSettingsHandler.ServeHTTP(w, r)
-		case UserServiceAddTransferProcedure:
-			userServiceAddTransferHandler.ServeHTTP(w, r)
-		case UserServiceGetTransferProcedure:
-			userServiceGetTransferHandler.ServeHTTP(w, r)
-		case UserServiceGetDownloadFolderProcedure:
-			userServiceGetDownloadFolderHandler.ServeHTTP(w, r)
-		case UserServiceGetFolderProcedure:
-			userServiceGetFolderHandler.ServeHTTP(w, r)
-		case UserServiceResolvePlaybackProcedure:
-			userServiceResolvePlaybackHandler.ServeHTTP(w, r)
-		case UserServiceGetUserProfileProcedure:
-			userServiceGetUserProfileHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
 }
 
 // UnimplementedUserServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedUserServiceHandler struct{}
 
-func (UnimplementedUserServiceHandler) GetIndexers(context.Context, *connect.Request[v4.UserGetIndexersRequest]) (*connect.Response[v4.UserGetIndexersResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetIndexers is not implemented"))
+func (UnimplementedUserServiceHandler) GetIndexers(context.Context, *v4.UserGetIndexersRequest) (*v4.UserGetIndexersResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetIndexers is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) Search(context.Context, *connect.Request[v4.UserSearchRequest]) (*connect.Response[v4.SearchResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.Search is not implemented"))
+func (UnimplementedUserServiceHandler) Search(context.Context, *v4.UserSearchRequest) (*v4.SearchResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.Search is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetMovies(context.Context, *connect.Request[v4.GetMoviesRequest]) (*connect.Response[v4.GetMoviesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetMovies is not implemented"))
+func (UnimplementedUserServiceHandler) GetMovies(context.Context, *v4.GetMoviesRequest) (*v4.GetMoviesResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetMovies is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetTVShows(context.Context, *connect.Request[v4.GetTVShowsRequest]) (*connect.Response[v4.GetTVShowsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetTVShows is not implemented"))
+func (UnimplementedUserServiceHandler) GetTVShows(context.Context, *v4.GetTVShowsRequest) (*v4.GetTVShowsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetTVShows is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetTVShowDetail(context.Context, *connect.Request[v4.GetTVShowDetailRequest]) (*connect.Response[v4.GetTVShowDetailResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetTVShowDetail is not implemented"))
+func (UnimplementedUserServiceHandler) GetTVShowDetail(context.Context, *v4.GetTVShowDetailRequest) (*v4.GetTVShowDetailResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetTVShowDetail is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetTVShowSeason(context.Context, *connect.Request[v4.GetTVShowSeasonRequest]) (*connect.Response[v4.GetTVShowSeasonResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetTVShowSeason is not implemented"))
+func (UnimplementedUserServiceHandler) GetTVShowSeason(context.Context, *v4.GetTVShowSeasonRequest) (*v4.GetTVShowSeasonResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetTVShowSeason is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetTVShowEpisodeDownload(context.Context, *connect.Request[v4.GetTVShowEpisodeDownloadRequest]) (*connect.Response[v4.GetTVShowEpisodeDownloadResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetTVShowEpisodeDownload is not implemented"))
+func (UnimplementedUserServiceHandler) GetTVShowEpisodeDownload(context.Context, *v4.GetTVShowEpisodeDownloadRequest) (*v4.GetTVShowEpisodeDownloadResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetTVShowEpisodeDownload is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetTVShowSeasonDownloads(context.Context, *connect.Request[v4.GetTVShowSeasonDownloadsRequest]) (*connect.Response[v4.GetTVShowSeasonDownloadsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetTVShowSeasonDownloads is not implemented"))
+func (UnimplementedUserServiceHandler) GetTVShowSeasonDownloads(context.Context, *v4.GetTVShowSeasonDownloadsRequest) (*v4.GetTVShowSeasonDownloadsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetTVShowSeasonDownloads is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetUserSettings(context.Context, *connect.Request[v4.GetUserSettingsRequest]) (*connect.Response[v4.UserSettings], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetUserSettings is not implemented"))
+func (UnimplementedUserServiceHandler) GetUserSettings(context.Context, *v4.GetUserSettingsRequest) (*v4.UserSettings, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetUserSettings is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) SaveUserSettings(context.Context, *connect.Request[v4.SaveUserSettingsRequest]) (*connect.Response[v4.UserSettings], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.SaveUserSettings is not implemented"))
+func (UnimplementedUserServiceHandler) SaveUserSettings(context.Context, *v4.SaveUserSettingsRequest) (*v4.UserSettings, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.SaveUserSettings is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) AddTransfer(context.Context, *connect.Request[v4.AddTransferRequest]) (*connect.Response[v4.AddTransferResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.AddTransfer is not implemented"))
+func (UnimplementedUserServiceHandler) AddTransfer(context.Context, *v4.AddTransferRequest) (*v4.AddTransferResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.AddTransfer is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetTransfer(context.Context, *connect.Request[v4.GetTransferRequest]) (*connect.Response[v4.GetTransferResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetTransfer is not implemented"))
+func (UnimplementedUserServiceHandler) GetTransfer(context.Context, *v4.GetTransferRequest) (*v4.GetTransferResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetTransfer is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetDownloadFolder(context.Context, *connect.Request[v4.GetDownloadFolderRequest]) (*connect.Response[v4.GetDownloadFolderResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetDownloadFolder is not implemented"))
+func (UnimplementedUserServiceHandler) GetDownloadFolder(context.Context, *v4.GetDownloadFolderRequest) (*v4.GetDownloadFolderResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetDownloadFolder is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetFolder(context.Context, *connect.Request[v4.GetFolderRequest]) (*connect.Response[v4.GetFolderResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetFolder is not implemented"))
+func (UnimplementedUserServiceHandler) GetFolder(context.Context, *v4.GetFolderRequest) (*v4.GetFolderResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetFolder is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) ResolvePlayback(context.Context, *connect.Request[v4.ResolvePlaybackRequest]) (*connect.Response[v4.ResolvePlaybackResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.ResolvePlayback is not implemented"))
+func (UnimplementedUserServiceHandler) ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.ResolvePlayback is not implemented")
 }
 
-func (UnimplementedUserServiceHandler) GetUserProfile(context.Context, *connect.Request[v4.GetUserProfileRequest]) (*connect.Response[v4.UserProfile], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("chill.v4.UserService.GetUserProfile is not implemented"))
+func (UnimplementedUserServiceHandler) GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetUserProfile is not implemented")
+}
+
+type userServiceClient struct {
+	client *connect.Client
+}
+
+func (c *userServiceClient) GetIndexers(ctx context.Context, req *v4.UserGetIndexersRequest) (*v4.UserGetIndexersResponse, error) {
+	var res v4.UserGetIndexersResponse
+	if err := c.client.CallUnary(ctx, userServiceGetIndexersSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) Search(ctx context.Context, req *v4.UserSearchRequest) (*v4.SearchResponse, error) {
+	var res v4.SearchResponse
+	if err := c.client.CallUnary(ctx, userServiceSearchSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetMovies(ctx context.Context, req *v4.GetMoviesRequest) (*v4.GetMoviesResponse, error) {
+	var res v4.GetMoviesResponse
+	if err := c.client.CallUnary(ctx, userServiceGetMoviesSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetTVShows(ctx context.Context, req *v4.GetTVShowsRequest) (*v4.GetTVShowsResponse, error) {
+	var res v4.GetTVShowsResponse
+	if err := c.client.CallUnary(ctx, userServiceGetTVShowsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetTVShowDetail(ctx context.Context, req *v4.GetTVShowDetailRequest) (*v4.GetTVShowDetailResponse, error) {
+	var res v4.GetTVShowDetailResponse
+	if err := c.client.CallUnary(ctx, userServiceGetTVShowDetailSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetTVShowSeason(ctx context.Context, req *v4.GetTVShowSeasonRequest) (*v4.GetTVShowSeasonResponse, error) {
+	var res v4.GetTVShowSeasonResponse
+	if err := c.client.CallUnary(ctx, userServiceGetTVShowSeasonSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetTVShowEpisodeDownload(ctx context.Context, req *v4.GetTVShowEpisodeDownloadRequest) (*v4.GetTVShowEpisodeDownloadResponse, error) {
+	var res v4.GetTVShowEpisodeDownloadResponse
+	if err := c.client.CallUnary(ctx, userServiceGetTVShowEpisodeDownloadSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetTVShowSeasonDownloads(ctx context.Context, req *v4.GetTVShowSeasonDownloadsRequest) (*v4.GetTVShowSeasonDownloadsResponse, error) {
+	var res v4.GetTVShowSeasonDownloadsResponse
+	if err := c.client.CallUnary(ctx, userServiceGetTVShowSeasonDownloadsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetUserSettings(ctx context.Context, req *v4.GetUserSettingsRequest) (*v4.UserSettings, error) {
+	var res v4.UserSettings
+	if err := c.client.CallUnary(ctx, userServiceGetUserSettingsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) SaveUserSettings(ctx context.Context, req *v4.SaveUserSettingsRequest) (*v4.UserSettings, error) {
+	var res v4.UserSettings
+	if err := c.client.CallUnary(ctx, userServiceSaveUserSettingsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) AddTransfer(ctx context.Context, req *v4.AddTransferRequest) (*v4.AddTransferResponse, error) {
+	var res v4.AddTransferResponse
+	if err := c.client.CallUnary(ctx, userServiceAddTransferSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetTransfer(ctx context.Context, req *v4.GetTransferRequest) (*v4.GetTransferResponse, error) {
+	var res v4.GetTransferResponse
+	if err := c.client.CallUnary(ctx, userServiceGetTransferSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetDownloadFolder(ctx context.Context, req *v4.GetDownloadFolderRequest) (*v4.GetDownloadFolderResponse, error) {
+	var res v4.GetDownloadFolderResponse
+	if err := c.client.CallUnary(ctx, userServiceGetDownloadFolderSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetFolder(ctx context.Context, req *v4.GetFolderRequest) (*v4.GetFolderResponse, error) {
+	var res v4.GetFolderResponse
+	if err := c.client.CallUnary(ctx, userServiceGetFolderSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) ResolvePlayback(ctx context.Context, req *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error) {
+	var res v4.ResolvePlaybackResponse
+	if err := c.client.CallUnary(ctx, userServiceResolvePlaybackSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetUserProfile(ctx context.Context, req *v4.GetUserProfileRequest) (*v4.UserProfile, error) {
+	var res v4.UserProfile
+	if err := c.client.CallUnary(ctx, userServiceGetUserProfileSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+type userServiceHandler struct{ svc UserServiceHandler }
+
+func (h userServiceHandler) getIndexers(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.UserGetIndexersRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetIndexers(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) search(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.UserSearchRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.Search(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getMovies(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetMoviesRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetMovies(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getTVShows(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTVShowsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTVShows(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getTVShowDetail(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTVShowDetailRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTVShowDetail(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getTVShowSeason(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTVShowSeasonRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTVShowSeason(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getTVShowEpisodeDownload(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTVShowEpisodeDownloadRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTVShowEpisodeDownload(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getTVShowSeasonDownloads(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTVShowSeasonDownloadsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTVShowSeasonDownloads(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getUserSettings(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetUserSettingsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetUserSettings(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) saveUserSettings(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.SaveUserSettingsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.SaveUserSettings(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) addTransfer(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.AddTransferRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.AddTransfer(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getTransfer(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetTransferRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetTransfer(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getDownloadFolder(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetDownloadFolderRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetDownloadFolder(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getFolder(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetFolderRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetFolder(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) resolvePlayback(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.ResolvePlaybackRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ResolvePlayback(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getUserProfile(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetUserProfileRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetUserProfile(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
 }

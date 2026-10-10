@@ -15,7 +15,7 @@ npm install @chill-institute/contracts
 Go consumers:
 
 ```bash
-go get github.com/chill-institute/chill-contracts/v2
+go get github.com/chill-institute/chill-contracts/v3
 ```
 
 ## Docs

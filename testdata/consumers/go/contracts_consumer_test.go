@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"testing"
 
-	chillv4 "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4"
-	chillv4connect "github.com/chill-institute/chill-contracts/v2/gen/go/chill/v4/chillv4connect"
+	"connectrpc.com/connect/v2"
+	"connectrpc.com/connect/v2/connecthttp"
+	chillv4 "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4"
+	chillv4connect "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4/chillv4connect"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -43,7 +45,7 @@ func TestGeneratedContractsCompileForConsumer(t *testing.T) {
 		t.Fatal("expected transfer request to expose catalog origin")
 	}
 
-	var _ chillv4connect.UserServiceClient = chillv4connect.NewUserServiceClient(http.DefaultClient, "https://example.com")
+	var _ chillv4connect.UserServiceClient = chillv4connect.NewUserServiceClient(connect.NewClient(connecthttp.NewTransport(http.DefaultClient, "https://example.com")))
 }
 
 func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {

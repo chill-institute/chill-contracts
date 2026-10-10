@@ -46,6 +46,6 @@ graph TD
 
 Pull requests run `mise run verify`. Merges to `main` are reverified before
 semantic-release publishes the npm package and immutable GitHub release. The
-release tag is also the Go module version and must resolve under the `/v2`
+release tag is also the Go module version and must resolve under the `/v3`
 module path. The release commit is created through GitHub with bot attribution
 and verification.

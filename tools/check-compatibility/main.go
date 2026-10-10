@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/chill-institute/chill-contracts/v2/internal/workflowpolicy"
+	"github.com/chill-institute/chill-contracts/v3/internal/workflowpolicy"
 )
 
 func main() {
