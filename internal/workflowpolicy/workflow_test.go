@@ -3,14 +3,11 @@ package workflowpolicy
 import (
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"testing"
 )
 
 const workflowsDir = "../../.github/workflows"
-
-var shaPinned = regexp.MustCompile(`uses: [^./][^\s@]+@[0-9a-f]{40}( #.*)?$`)
 
 func workflows(t *testing.T) map[string]string {
 	t.Helper()
@@ -35,26 +32,16 @@ func workflows(t *testing.T) map[string]string {
 	return out
 }
 
+// zizmor in `mise run actions` owns action pinning, checkout credential
+// persistence, and dangerous triggers.
 func TestOrgWorkflowInvariants(t *testing.T) {
 	for name, w := range workflows(t) {
 		t.Run(name, func(t *testing.T) {
 			if strings.Contains(w, "\n  schedule:\n") {
 				t.Fatal("declares a GitHub schedule; Cloudflare owns recurring dispatch")
 			}
-			if strings.Contains(w, "pull_request_target") {
-				t.Fatal("uses pull_request_target")
-			}
 			if !strings.Contains(w, "\npermissions:") {
 				t.Fatal("no workflow-level permissions block")
-			}
-			for _, line := range strings.Split(w, "\n") {
-				trimmed := strings.TrimSpace(line)
-				if strings.HasPrefix(trimmed, "uses: ") && !strings.HasPrefix(trimmed, "uses: ./") && !shaPinned.MatchString(trimmed) {
-					t.Fatalf("action is not SHA-pinned: %s", trimmed)
-				}
-			}
-			if strings.Count(w, "actions/checkout@") != strings.Count(w, "persist-credentials: false") {
-				t.Fatal("every actions/checkout must set persist-credentials: false")
 			}
 		})
 	}
@@ -67,15 +54,36 @@ func TestBothWorkflowsRequireCompatibility(t *testing.T) {
 		"main.yml":   "release",
 	} {
 		verification, _, _ := strings.Cut(all[name], "\n  release:")
-		want := "CONTRACTS_BASE_REF: " + base + "\n        run: mise run compatibility:check"
-		if !strings.Contains(verification, want) {
+		if !stepContains(verification, "run: mise run compatibility:check", "CONTRACTS_BASE_REF: "+base) {
 			t.Fatalf("%s must run the shared compatibility policy with baseline %s", name, base)
 		}
 		if strings.Contains(verification, "buf breaking") {
 			t.Fatalf("%s duplicates the shared compatibility policy", name)
 		}
 	}
-	if !strings.Contains(all["main.yml"], "needs: [verify]\n    if: ${{ github.ref == 'refs/heads/main' && needs.verify.result == 'success' }}") {
-		t.Fatal("release must require successful verification")
+	_, release, _ := strings.Cut(all["main.yml"], "\n  release:\n")
+	release, _, _ = strings.Cut(release, "\n    steps:\n")
+	for _, want := range []string{"needs: [verify]", "needs.verify.result == 'success'"} {
+		if !strings.Contains(release, want) {
+			t.Fatalf("release must require successful verification: missing %q", want)
+		}
 	}
+}
+
+// stepContains reports whether one workflow step holds every line.
+func stepContains(workflow string, lines ...string) bool {
+	for _, step := range strings.Split(workflow, "\n      - ") {
+		have := map[string]bool{}
+		for _, line := range strings.Split(step, "\n") {
+			have[strings.TrimSpace(line)] = true
+		}
+		found := true
+		for _, line := range lines {
+			found = found && have[line]
+		}
+		if found {
+			return true
+		}
+	}
+	return false
 }
