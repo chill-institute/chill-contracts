@@ -17,7 +17,7 @@ func workflows(t *testing.T) map[string]string {
 	}
 	out := map[string]string{}
 	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".yml") {
+		if e.IsDir() || (!strings.HasSuffix(e.Name(), ".yml") && !strings.HasSuffix(e.Name(), ".yaml")) {
 			continue
 		}
 		b, err := os.ReadFile(filepath.Join(workflowsDir, e.Name()))
