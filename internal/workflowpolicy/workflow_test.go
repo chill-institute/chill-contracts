@@ -32,8 +32,7 @@ func workflows(t *testing.T) map[string]string {
 	return out
 }
 
-// zizmor in `mise run actions` owns action pinning, checkout credential
-// persistence, and dangerous triggers.
+// The workflow scanner owns action pinning and dangerous triggers.
 func TestOrgWorkflowInvariants(t *testing.T) {
 	for name, w := range workflows(t) {
 		t.Run(name, func(t *testing.T) {
