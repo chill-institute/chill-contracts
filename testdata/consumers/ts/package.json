@@ -2,12 +2,12 @@
   "name": "contracts-consumer-ts",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.7.0",
+  "packageManager": "pnpm@12.11.2",
   "scripts": {
     "smoke": "node ./smoke.mjs"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "2.15.0",
+    "@bufbuild/protobuf": "2.16.0",
     "@chill-institute/contracts": "file:../../.."
   }
 }
