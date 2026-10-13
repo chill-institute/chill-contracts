@@ -1357,6 +1357,14 @@ export declare type TVShowDownload = Message<"chill.v4.TVShowDownload"> & {
    * @generated from field: optional int32 episode_number = 10;
    */
   episodeNumber?: number | undefined;
+
+  /**
+   * Opaque release identity, the same value Search returns as SearchResult.id
+   * for the same release. Clients must not parse it.
+   *
+   * @generated from field: string id = 11;
+   */
+  id: string;
 };
 
 /**
@@ -1926,6 +1934,14 @@ export declare type GetFolderRequest = Message<"chill.v4.GetFolderRequest"> & {
    * @generated from field: int64 id = 1;
    */
   id: bigint;
+
+  /**
+   * When true, VIDEO entries in the response carry release facts parsed from
+   * their names. Off by default.
+   *
+   * @generated from field: bool include_release_info = 2;
+   */
+  includeReleaseInfo: boolean;
 };
 
 /**
@@ -1962,6 +1978,14 @@ export declare type UserFile = Message<"chill.v4.UserFile"> & {
    * @generated from field: string created_at = 5;
    */
   createdAt: string;
+
+  /**
+   * Set only for VIDEO entries when the request asked for release info and the
+   * name yields release facts.
+   *
+   * @generated from field: optional chill.v4.ReleaseInfo release_info = 6;
+   */
+  releaseInfo?: ReleaseInfo | undefined;
 };
 
 /**

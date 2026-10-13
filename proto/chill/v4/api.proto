@@ -839,6 +839,9 @@ message TVShowDownload {
   string indexer = 8;
   int32 season_number = 9;
   optional int32 episode_number = 10;
+  // Opaque release identity, the same value Search returns as SearchResult.id
+  // for the same release. Clients must not parse it.
+  string id = 11;
 }
 
 message GetTVShowEpisodeDownloadRequest {
@@ -1038,6 +1041,9 @@ message GetDownloadFolderResponse {
 
 message GetFolderRequest {
   int64 id = 1;
+  // When true, VIDEO entries in the response carry release facts parsed from
+  // their names. Off by default.
+  bool include_release_info = 2;
 }
 
 message UserFile {
@@ -1046,6 +1052,9 @@ message UserFile {
   string file_type = 3;
   bool is_shared = 4;
   string created_at = 5;
+  // Set only for VIDEO entries when the request asked for release info and the
+  // name yields release facts.
+  optional ReleaseInfo release_info = 6;
 }
 
 message GetFolderResponse {
