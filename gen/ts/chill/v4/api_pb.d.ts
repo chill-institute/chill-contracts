@@ -1980,8 +1980,8 @@ export declare type UserFile = Message<"chill.v4.UserFile"> & {
   createdAt: string;
 
   /**
-   * Set only for VIDEO entries when the request asked for release info and the
-   * name yields release facts.
+   * Set only for VIDEO entries whose name yields release facts, when GetFolder
+   * asked for release info and on every FindOwnedVideos result.
    *
    * @generated from field: optional chill.v4.ReleaseInfo release_info = 6;
    */
@@ -2014,6 +2014,63 @@ export declare type GetFolderResponse = Message<"chill.v4.GetFolderResponse"> & 
  * Use `create(GetFolderResponseSchema)` to create a new message.
  */
 export declare const GetFolderResponseSchema: GenMessage<GetFolderResponse>;
+
+/**
+ * @generated from message chill.v4.FindOwnedVideosRequest
+ */
+export declare type FindOwnedVideosRequest = Message<"chill.v4.FindOwnedVideosRequest"> & {
+  /**
+   * Expected title. An empty title after normalization returns no videos.
+   *
+   * @generated from field: string title = 1;
+   */
+  title: string;
+
+  /**
+   * Release year. A movie without one returns no videos. An episode with one
+   * matches only filenames whose year is absent or equal.
+   *
+   * @generated from field: int32 year = 2;
+   */
+  year: number;
+
+  /**
+   * Set season and episode together to find an episode; omit both for a movie.
+   * Setting only one is invalid. A season or episode below 1 returns no videos.
+   *
+   * @generated from field: optional int32 season = 3;
+   */
+  season?: number | undefined;
+
+  /**
+   * @generated from field: optional int32 episode = 4;
+   */
+  episode?: number | undefined;
+};
+
+/**
+ * Describes the message chill.v4.FindOwnedVideosRequest.
+ * Use `create(FindOwnedVideosRequestSchema)` to create a new message.
+ */
+export declare const FindOwnedVideosRequestSchema: GenMessage<FindOwnedVideosRequest>;
+
+/**
+ * @generated from message chill.v4.FindOwnedVideosResponse
+ */
+export declare type FindOwnedVideosResponse = Message<"chill.v4.FindOwnedVideosResponse"> & {
+  /**
+   * At most 10 VIDEO entries in provider order, each with release_info.
+   *
+   * @generated from field: repeated chill.v4.UserFile videos = 1;
+   */
+  videos: UserFile[];
+};
+
+/**
+ * Describes the message chill.v4.FindOwnedVideosResponse.
+ * Use `create(FindOwnedVideosResponseSchema)` to create a new message.
+ */
+export declare const FindOwnedVideosResponseSchema: GenMessage<FindOwnedVideosResponse>;
 
 /**
  * @generated from message chill.v4.GetUserProfileRequest
@@ -2788,6 +2845,18 @@ export declare const UserService: GenService<{
     methodKind: "unary";
     input: typeof GetFolderRequestSchema;
     output: typeof GetFolderResponseSchema;
+  },
+  /**
+   * Return the authenticated user's own provider videos whose filenames match a
+   * movie or an episode. Read-only: never moves, renames, deletes, or converts
+   * files. Matches use filenames only and may be incomplete. At most 10.
+   *
+   * @generated from rpc chill.v4.UserService.FindOwnedVideos
+   */
+  findOwnedVideos: {
+    methodKind: "unary";
+    input: typeof FindOwnedVideosRequestSchema;
+    output: typeof FindOwnedVideosResponseSchema;
   },
   /**
    * Resolve media with the same regular user bearer as other UserService RPCs.

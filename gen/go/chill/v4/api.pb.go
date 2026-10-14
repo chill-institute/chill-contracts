@@ -5226,8 +5226,8 @@ type UserFile struct {
 	FileType  string                 `protobuf:"bytes,3,opt,name=file_type,json=fileType,proto3" json:"file_type,omitempty"`
 	IsShared  bool                   `protobuf:"varint,4,opt,name=is_shared,json=isShared,proto3" json:"is_shared,omitempty"`
 	CreatedAt string                 `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// Set only for VIDEO entries when the request asked for release info and the
-	// name yields release facts.
+	// Set only for VIDEO entries whose name yields release facts, when GetFolder
+	// asked for release info and on every FindOwnedVideos result.
 	ReleaseInfo   *ReleaseInfo `protobuf:"bytes,6,opt,name=release_info,json=releaseInfo,proto3,oneof" json:"release_info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -5357,6 +5357,124 @@ func (x *GetFolderResponse) GetFiles() []*UserFile {
 	return nil
 }
 
+type FindOwnedVideosRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Expected title. An empty title after normalization returns no videos.
+	Title string `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	// Release year. A movie without one returns no videos. An episode with one
+	// matches only filenames whose year is absent or equal.
+	Year int32 `protobuf:"varint,2,opt,name=year,proto3" json:"year,omitempty"`
+	// Set season and episode together to find an episode; omit both for a movie.
+	// Setting only one is invalid. A season or episode below 1 returns no videos.
+	Season        *int32 `protobuf:"varint,3,opt,name=season,proto3,oneof" json:"season,omitempty"`
+	Episode       *int32 `protobuf:"varint,4,opt,name=episode,proto3,oneof" json:"episode,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FindOwnedVideosRequest) Reset() {
+	*x = FindOwnedVideosRequest{}
+	mi := &file_chill_v4_api_proto_msgTypes[62]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FindOwnedVideosRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindOwnedVideosRequest) ProtoMessage() {}
+
+func (x *FindOwnedVideosRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[62]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindOwnedVideosRequest.ProtoReflect.Descriptor instead.
+func (*FindOwnedVideosRequest) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{62}
+}
+
+func (x *FindOwnedVideosRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *FindOwnedVideosRequest) GetYear() int32 {
+	if x != nil {
+		return x.Year
+	}
+	return 0
+}
+
+func (x *FindOwnedVideosRequest) GetSeason() int32 {
+	if x != nil && x.Season != nil {
+		return *x.Season
+	}
+	return 0
+}
+
+func (x *FindOwnedVideosRequest) GetEpisode() int32 {
+	if x != nil && x.Episode != nil {
+		return *x.Episode
+	}
+	return 0
+}
+
+type FindOwnedVideosResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// At most 10 VIDEO entries in provider order, each with release_info.
+	Videos        []*UserFile `protobuf:"bytes,1,rep,name=videos,proto3" json:"videos,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FindOwnedVideosResponse) Reset() {
+	*x = FindOwnedVideosResponse{}
+	mi := &file_chill_v4_api_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FindOwnedVideosResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindOwnedVideosResponse) ProtoMessage() {}
+
+func (x *FindOwnedVideosResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindOwnedVideosResponse.ProtoReflect.Descriptor instead.
+func (*FindOwnedVideosResponse) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{63}
+}
+
+func (x *FindOwnedVideosResponse) GetVideos() []*UserFile {
+	if x != nil {
+		return x.Videos
+	}
+	return nil
+}
+
 type GetUserProfileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -5365,7 +5483,7 @@ type GetUserProfileRequest struct {
 
 func (x *GetUserProfileRequest) Reset() {
 	*x = GetUserProfileRequest{}
-	mi := &file_chill_v4_api_proto_msgTypes[62]
+	mi := &file_chill_v4_api_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5377,7 +5495,7 @@ func (x *GetUserProfileRequest) String() string {
 func (*GetUserProfileRequest) ProtoMessage() {}
 
 func (x *GetUserProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[62]
+	mi := &file_chill_v4_api_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5390,7 +5508,7 @@ func (x *GetUserProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetUserProfileRequest) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{62}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{64}
 }
 
 type UserProfile struct {
@@ -5405,7 +5523,7 @@ type UserProfile struct {
 
 func (x *UserProfile) Reset() {
 	*x = UserProfile{}
-	mi := &file_chill_v4_api_proto_msgTypes[63]
+	mi := &file_chill_v4_api_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5417,7 +5535,7 @@ func (x *UserProfile) String() string {
 func (*UserProfile) ProtoMessage() {}
 
 func (x *UserProfile) ProtoReflect() protoreflect.Message {
-	mi := &file_chill_v4_api_proto_msgTypes[63]
+	mi := &file_chill_v4_api_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5430,7 +5548,7 @@ func (x *UserProfile) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserProfile.ProtoReflect.Descriptor instead.
 func (*UserProfile) Descriptor() ([]byte, []int) {
-	return file_chill_v4_api_proto_rawDescGZIP(), []int{63}
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *UserProfile) GetUserId() string {
@@ -5846,7 +5964,17 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\r_release_info\"i\n" +
 	"\x11GetFolderResponse\x12*\n" +
 	"\x06parent\x18\x01 \x01(\v2\x12.chill.v4.UserFileR\x06parent\x12(\n" +
-	"\x05files\x18\x02 \x03(\v2\x12.chill.v4.UserFileR\x05files\"\x17\n" +
+	"\x05files\x18\x02 \x03(\v2\x12.chill.v4.UserFileR\x05files\"\x95\x01\n" +
+	"\x16FindOwnedVideosRequest\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
+	"\x04year\x18\x02 \x01(\x05R\x04year\x12\x1b\n" +
+	"\x06season\x18\x03 \x01(\x05H\x00R\x06season\x88\x01\x01\x12\x1d\n" +
+	"\aepisode\x18\x04 \x01(\x05H\x01R\aepisode\x88\x01\x01B\t\n" +
+	"\a_seasonB\n" +
+	"\n" +
+	"\b_episode\"E\n" +
+	"\x17FindOwnedVideosResponse\x12*\n" +
+	"\x06videos\x18\x01 \x03(\v2\x12.chill.v4.UserFileR\x06videos\"\x17\n" +
 	"\x15GetUserProfileRequest\"w\n" +
 	"\vUserProfile\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
@@ -5981,7 +6109,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"ApiKeyAuth\x12\x00r\x1f\n" +
 	"\x1d\n" +
-	"\tX-API-Key\x12\fCore API key\x18\x01(\x012\xd4\x15\n" +
+	"\tX-API-Key\x12\fCore API key\x18\x01(\x012\x85\x17\n" +
 	"\vUserService\x12\xaa\x01\n" +
 	"\vGetIndexers\x12 .chill.v4.UserGetIndexersRequest\x1a!.chill.v4.UserGetIndexersResponse\"V\x92ASb\x10\n" +
 	"\x0e\n" +
@@ -6067,6 +6195,12 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"BearerAuth\x12\x00r?\n" +
 	"=\n" +
+	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x12\xae\x01\n" +
+	"\x0fFindOwnedVideos\x12 .chill.v4.FindOwnedVideosRequest\x1a!.chill.v4.FindOwnedVideosResponse\"V\x92ASb\x10\n" +
+	"\x0e\n" +
+	"\n" +
+	"BearerAuth\x12\x00r?\n" +
+	"=\n" +
 	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x12\xb1\x01\n" +
 	"\x0fResolvePlayback\x12 .chill.v4.ResolvePlaybackRequest\x1a!.chill.v4.ResolvePlaybackResponse\"Y\x92ASb\x10\n" +
 	"\x0e\n" +
@@ -6102,7 +6236,7 @@ func file_chill_v4_api_proto_rawDescGZIP() []byte {
 }
 
 var file_chill_v4_api_proto_enumTypes = make([]protoimpl.EnumInfo, 19)
-var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
+var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 66)
 var file_chill_v4_api_proto_goTypes = []any{
 	(PlaybackDelivery)(0),                    // 0: chill.v4.PlaybackDelivery
 	(PendingReason)(0),                       // 1: chill.v4.PendingReason
@@ -6185,9 +6319,11 @@ var file_chill_v4_api_proto_goTypes = []any{
 	(*GetFolderRequest)(nil),                 // 78: chill.v4.GetFolderRequest
 	(*UserFile)(nil),                         // 79: chill.v4.UserFile
 	(*GetFolderResponse)(nil),                // 80: chill.v4.GetFolderResponse
-	(*GetUserProfileRequest)(nil),            // 81: chill.v4.GetUserProfileRequest
-	(*UserProfile)(nil),                      // 82: chill.v4.UserProfile
-	(*timestamppb.Timestamp)(nil),            // 83: google.protobuf.Timestamp
+	(*FindOwnedVideosRequest)(nil),           // 81: chill.v4.FindOwnedVideosRequest
+	(*FindOwnedVideosResponse)(nil),          // 82: chill.v4.FindOwnedVideosResponse
+	(*GetUserProfileRequest)(nil),            // 83: chill.v4.GetUserProfileRequest
+	(*UserProfile)(nil),                      // 84: chill.v4.UserProfile
+	(*timestamppb.Timestamp)(nil),            // 85: google.protobuf.Timestamp
 }
 var file_chill_v4_api_proto_depIdxs = []int32{
 	0,  // 0: chill.v4.ResolvePlaybackRequest.delivery:type_name -> chill.v4.PlaybackDelivery
@@ -6199,7 +6335,7 @@ var file_chill_v4_api_proto_depIdxs = []int32{
 	26, // 6: chill.v4.PlaybackReady.subtitles:type_name -> chill.v4.Subtitle
 	1,  // 7: chill.v4.PlaybackPending.reason:type_name -> chill.v4.PendingReason
 	2,  // 8: chill.v4.PlaybackUnavailable.reason:type_name -> chill.v4.UnavailableReason
-	83, // 9: chill.v4.PlaybackUrl.expires_at:type_name -> google.protobuf.Timestamp
+	85, // 9: chill.v4.PlaybackUrl.expires_at:type_name -> google.protobuf.Timestamp
 	3,  // 10: chill.v4.PlaybackFormat.container:type_name -> chill.v4.Container
 	4,  // 11: chill.v4.PlaybackFormat.video_codec:type_name -> chill.v4.VideoCodec
 	5,  // 12: chill.v4.PlaybackFormat.audio_codec:type_name -> chill.v4.AudioCodec
@@ -6260,53 +6396,56 @@ var file_chill_v4_api_proto_depIdxs = []int32{
 	36, // 67: chill.v4.UserFile.release_info:type_name -> chill.v4.ReleaseInfo
 	79, // 68: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
 	79, // 69: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
-	27, // 70: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
-	29, // 71: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
-	35, // 72: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
-	41, // 73: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
-	47, // 74: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
-	32, // 75: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
-	40, // 76: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
-	44, // 77: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
-	49, // 78: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
-	54, // 79: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
-	56, // 80: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
-	59, // 81: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
-	61, // 82: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
-	64, // 83: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
-	69, // 84: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
-	71, // 85: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
-	73, // 86: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
-	76, // 87: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
-	78, // 88: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
-	19, // 89: chill.v4.UserService.ResolvePlayback:input_type -> chill.v4.ResolvePlaybackRequest
-	81, // 90: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
-	28, // 91: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
-	31, // 92: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
-	38, // 93: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
-	43, // 94: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
-	48, // 95: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
-	33, // 96: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
-	38, // 97: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
-	45, // 98: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
-	50, // 99: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
-	55, // 100: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
-	57, // 101: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
-	60, // 102: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
-	62, // 103: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
-	65, // 104: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
-	65, // 105: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
-	72, // 106: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
-	74, // 107: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
-	77, // 108: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
-	80, // 109: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
-	20, // 110: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
-	82, // 111: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
-	91, // [91:112] is the sub-list for method output_type
-	70, // [70:91] is the sub-list for method input_type
-	70, // [70:70] is the sub-list for extension type_name
-	70, // [70:70] is the sub-list for extension extendee
-	0,  // [0:70] is the sub-list for field type_name
+	79, // 70: chill.v4.FindOwnedVideosResponse.videos:type_name -> chill.v4.UserFile
+	27, // 71: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
+	29, // 72: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
+	35, // 73: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
+	41, // 74: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
+	47, // 75: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
+	32, // 76: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
+	40, // 77: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
+	44, // 78: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
+	49, // 79: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
+	54, // 80: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
+	56, // 81: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
+	59, // 82: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
+	61, // 83: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
+	64, // 84: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
+	69, // 85: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
+	71, // 86: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
+	73, // 87: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
+	76, // 88: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
+	78, // 89: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
+	81, // 90: chill.v4.UserService.FindOwnedVideos:input_type -> chill.v4.FindOwnedVideosRequest
+	19, // 91: chill.v4.UserService.ResolvePlayback:input_type -> chill.v4.ResolvePlaybackRequest
+	83, // 92: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
+	28, // 93: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
+	31, // 94: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
+	38, // 95: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
+	43, // 96: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
+	48, // 97: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
+	33, // 98: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
+	38, // 99: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
+	45, // 100: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
+	50, // 101: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
+	55, // 102: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
+	57, // 103: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
+	60, // 104: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
+	62, // 105: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
+	65, // 106: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
+	65, // 107: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
+	72, // 108: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
+	74, // 109: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
+	77, // 110: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
+	80, // 111: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
+	82, // 112: chill.v4.UserService.FindOwnedVideos:output_type -> chill.v4.FindOwnedVideosResponse
+	20, // 113: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
+	84, // 114: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
+	93, // [93:115] is the sub-list for method output_type
+	71, // [71:93] is the sub-list for method input_type
+	71, // [71:71] is the sub-list for extension type_name
+	71, // [71:71] is the sub-list for extension extendee
+	0,  // [0:71] is the sub-list for field type_name
 }
 
 func init() { file_chill_v4_api_proto_init() }
@@ -6340,13 +6479,14 @@ func file_chill_v4_api_proto_init() {
 	}
 	file_chill_v4_api_proto_msgTypes[56].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[60].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[62].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chill_v4_api_proto_rawDesc), len(file_chill_v4_api_proto_rawDesc)),
 			NumEnums:      19,
-			NumMessages:   64,
+			NumMessages:   66,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

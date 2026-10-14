@@ -379,6 +379,27 @@ service UserService {
       }
     };
   }
+  // Return the authenticated user's own provider videos whose filenames match a
+  // movie or an episode. Read-only: never moves, renames, deletes, or converts
+  // files. Matches use filenames only and may be incomplete. At most 10.
+  rpc FindOwnedVideos(FindOwnedVideosRequest) returns (FindOwnedVideosResponse) {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
   // Resolve media with the same regular user bearer as other UserService RPCs.
   // Read-only: never initiate a transfer or conversion.
   rpc ResolvePlayback(ResolvePlaybackRequest) returns (ResolvePlaybackResponse) {
@@ -1052,14 +1073,31 @@ message UserFile {
   string file_type = 3;
   bool is_shared = 4;
   string created_at = 5;
-  // Set only for VIDEO entries when the request asked for release info and the
-  // name yields release facts.
+  // Set only for VIDEO entries whose name yields release facts, when GetFolder
+  // asked for release info and on every FindOwnedVideos result.
   optional ReleaseInfo release_info = 6;
 }
 
 message GetFolderResponse {
   UserFile parent = 1;
   repeated UserFile files = 2;
+}
+
+message FindOwnedVideosRequest {
+  // Expected title. An empty title after normalization returns no videos.
+  string title = 1;
+  // Release year. A movie without one returns no videos. An episode with one
+  // matches only filenames whose year is absent or equal.
+  int32 year = 2;
+  // Set season and episode together to find an episode; omit both for a movie.
+  // Setting only one is invalid. A season or episode below 1 returns no videos.
+  optional int32 season = 3;
+  optional int32 episode = 4;
+}
+
+message FindOwnedVideosResponse {
+  // At most 10 VIDEO entries in provider order, each with release_info.
+  repeated UserFile videos = 1;
 }
 
 message GetUserProfileRequest {}

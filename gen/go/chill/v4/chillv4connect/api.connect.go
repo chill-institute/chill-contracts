@@ -73,6 +73,9 @@ const (
 	UserServiceGetDownloadFolderProcedure = "/chill.v4.UserService/GetDownloadFolder"
 	// UserServiceGetFolderProcedure is the procedure name of the UserService's GetFolder RPC.
 	UserServiceGetFolderProcedure = "/chill.v4.UserService/GetFolder"
+	// UserServiceFindOwnedVideosProcedure is the procedure name of the UserService's FindOwnedVideos
+	// RPC.
+	UserServiceFindOwnedVideosProcedure = "/chill.v4.UserService/FindOwnedVideos"
 	// UserServiceResolvePlaybackProcedure is the procedure name of the UserService's ResolvePlayback
 	// RPC.
 	UserServiceResolvePlaybackProcedure = "/chill.v4.UserService/ResolvePlayback"
@@ -382,6 +385,13 @@ var (
 			Procedure:  UserServiceGetFolderProcedure,
 		}
 	})
+	userServiceFindOwnedVideosSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("FindOwnedVideos"),
+			Procedure:  UserServiceFindOwnedVideosProcedure,
+		}
+	})
 	userServiceResolvePlaybackSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType:       connect.StreamTypeUnary,
@@ -415,6 +425,10 @@ type UserServiceClient interface {
 	GetTransfer(context.Context, *v4.GetTransferRequest) (*v4.GetTransferResponse, error)
 	GetDownloadFolder(context.Context, *v4.GetDownloadFolderRequest) (*v4.GetDownloadFolderResponse, error)
 	GetFolder(context.Context, *v4.GetFolderRequest) (*v4.GetFolderResponse, error)
+	// Return the authenticated user's own provider videos whose filenames match a
+	// movie or an episode. Read-only: never moves, renames, deletes, or converts
+	// files. Matches use filenames only and may be incomplete. At most 10.
+	FindOwnedVideos(context.Context, *v4.FindOwnedVideosRequest) (*v4.FindOwnedVideosResponse, error)
 	// Resolve media with the same regular user bearer as other UserService RPCs.
 	// Read-only: never initiate a transfer or conversion.
 	ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error)
@@ -443,6 +457,10 @@ type UserServiceHandler interface {
 	GetTransfer(context.Context, *v4.GetTransferRequest) (*v4.GetTransferResponse, error)
 	GetDownloadFolder(context.Context, *v4.GetDownloadFolderRequest) (*v4.GetDownloadFolderResponse, error)
 	GetFolder(context.Context, *v4.GetFolderRequest) (*v4.GetFolderResponse, error)
+	// Return the authenticated user's own provider videos whose filenames match a
+	// movie or an episode. Read-only: never moves, renames, deletes, or converts
+	// files. Matches use filenames only and may be incomplete. At most 10.
+	FindOwnedVideos(context.Context, *v4.FindOwnedVideosRequest) (*v4.FindOwnedVideosResponse, error)
 	// Resolve media with the same regular user bearer as other UserService RPCs.
 	// Read-only: never initiate a transfer or conversion.
 	ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error)
@@ -467,6 +485,7 @@ func RegisterUserServiceHandler(server *connect.Server, svc UserServiceHandler) 
 		connect.Method{Spec: userServiceGetTransferSpec(), Handler: adapter.getTransfer},
 		connect.Method{Spec: userServiceGetDownloadFolderSpec(), Handler: adapter.getDownloadFolder},
 		connect.Method{Spec: userServiceGetFolderSpec(), Handler: adapter.getFolder},
+		connect.Method{Spec: userServiceFindOwnedVideosSpec(), Handler: adapter.findOwnedVideos},
 		connect.Method{Spec: userServiceResolvePlaybackSpec(), Handler: adapter.resolvePlayback},
 		connect.Method{Spec: userServiceGetUserProfileSpec(), Handler: adapter.getUserProfile},
 	)
@@ -529,6 +548,10 @@ func (UnimplementedUserServiceHandler) GetDownloadFolder(context.Context, *v4.Ge
 
 func (UnimplementedUserServiceHandler) GetFolder(context.Context, *v4.GetFolderRequest) (*v4.GetFolderResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetFolder is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) FindOwnedVideos(context.Context, *v4.FindOwnedVideosRequest) (*v4.FindOwnedVideosResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.FindOwnedVideos is not implemented")
 }
 
 func (UnimplementedUserServiceHandler) ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error) {
@@ -650,6 +673,14 @@ func (c *userServiceClient) GetDownloadFolder(ctx context.Context, req *v4.GetDo
 func (c *userServiceClient) GetFolder(ctx context.Context, req *v4.GetFolderRequest) (*v4.GetFolderResponse, error) {
 	var res v4.GetFolderResponse
 	if err := c.client.CallUnary(ctx, userServiceGetFolderSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) FindOwnedVideos(ctx context.Context, req *v4.FindOwnedVideosRequest) (*v4.FindOwnedVideosResponse, error) {
+	var res v4.FindOwnedVideosResponse
+	if err := c.client.CallUnary(ctx, userServiceFindOwnedVideosSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -835,6 +866,18 @@ func (h userServiceHandler) getFolder(ctx context.Context, _ connect.Spec, strea
 		return err
 	}
 	res, err := h.svc.GetFolder(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) findOwnedVideos(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.FindOwnedVideosRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.FindOwnedVideos(ctx, &req)
 	if err != nil {
 		return err
 	}

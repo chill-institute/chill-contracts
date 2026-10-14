@@ -173,6 +173,37 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/FindOwnedVideos:
+    post:
+      summary: |-
+        Return the authenticated user's own provider videos whose filenames match a
+        movie or an episode. Read-only: never moves, renames, deletes, or converts
+        files. Matches use filenames only and may be incomplete. At most 10.
+      operationId: UserService_FindOwnedVideos
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4FindOwnedVideosResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4FindOwnedVideosRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
   /chill.v4.UserService/GetDownloadFolder:
     post:
       operationId: UserService_GetDownloadFolder
@@ -684,6 +715,36 @@ definitions:
       folderId:
         type: string
         format: int64
+  v4FindOwnedVideosRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        description: Expected title. An empty title after normalization returns no videos.
+      year:
+        type: integer
+        format: int32
+        description: |-
+          Release year. A movie without one returns no videos. An episode with one
+          matches only filenames whose year is absent or equal.
+      season:
+        type: integer
+        format: int32
+        description: |-
+          Set season and episode together to find an episode; omit both for a movie.
+          Setting only one is invalid. A season or episode below 1 returns no videos.
+      episode:
+        type: integer
+        format: int32
+  v4FindOwnedVideosResponse:
+    type: object
+    properties:
+      videos:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4UserFile'
+        description: At most 10 VIDEO entries in provider order, each with release_info.
   v4GetDownloadFolderRequest:
     type: object
   v4GetDownloadFolderResponse:
@@ -1511,8 +1572,8 @@ definitions:
       releaseInfo:
         $ref: '#/definitions/v4ReleaseInfo'
         description: |-
-          Set only for VIDEO entries when the request asked for release info and the
-          name yields release facts.
+          Set only for VIDEO entries whose name yields release facts, when GetFolder
+          asked for release info and on every FindOwnedVideos result.
   v4UserGetIndexersRequest:
     type: object
   v4UserGetIndexersResponse:
