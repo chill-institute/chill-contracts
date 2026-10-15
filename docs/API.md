@@ -60,7 +60,15 @@ request can observe readiness changes.
 `delivery` selects the media form. Unspecified and `PLAYBACK_DELIVERY_ORIGINAL`
 return the original file, so existing clients keep their behavior.
 `PLAYBACK_DELIVERY_HLS` returns an HLS playlist only when the provider already
-has one; it never requests conversion.
+has one; it never requests conversion. A video the provider streams only once
+converted answers unavailable with `UNAVAILABLE_REASON_CONVERSION_REQUIRED`.
+
+`UserService.StartPlaybackConversion` requests that conversion for a video the
+authenticated user owns and is the only playback call that changes provider
+state. It is idempotent: pending means the provider accepted, queued or
+finished it, and a later `ResolvePlayback` observes readiness. Unavailable means
+the file is missing or the provider cannot convert it. Call it when a user
+chooses to play, not to list or preview.
 
 Ready contains a direct HTTPS media URL usable without forwarding provider
 credentials, known format information, and optional subtitles. Unspecified
