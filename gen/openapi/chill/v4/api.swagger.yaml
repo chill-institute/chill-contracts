@@ -612,6 +612,38 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/StartPlaybackConversion:
+    post:
+      summary: |-
+        Request the provider's streamable version of a video the authenticated
+        user owns, after ResolvePlayback answered conversion_required for HLS.
+        Idempotent: repeating it while the provider converts changes nothing.
+        Never moves, renames, deletes, or transfers files.
+      operationId: UserService_StartPlaybackConversion
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4StartPlaybackConversionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4StartPlaybackConversionRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
 definitions:
   protobufAny:
     type: object
@@ -1177,7 +1209,8 @@ definitions:
         $ref: '#/definitions/v4PlaybackDelivery'
         description: |-
           Unspecified preserves original-file delivery for existing clients.
-          HLS requires an available provider playlist; never starts conversion.
+          HLS requires an available provider playlist; never starts conversion. A
+          file the provider must convert first answers conversion_required.
   v4ResolvePlaybackResponse:
     type: object
     properties:
@@ -1296,6 +1329,20 @@ definitions:
     enum:
       - SORT_DIRECTION_ASC
       - SORT_DIRECTION_DESC
+  v4StartPlaybackConversionRequest:
+    type: object
+    properties:
+      fileId:
+        type: string
+        format: int64
+        description: Positive provider file ID. Check current access for the authenticated user.
+  v4StartPlaybackConversionResponse:
+    type: object
+    properties:
+      pending:
+        $ref: '#/definitions/v4PlaybackPending'
+      unavailable:
+        $ref: '#/definitions/v4PlaybackUnavailable'
   v4Subtitle:
     type: object
     properties:
@@ -1554,7 +1601,11 @@ definitions:
       - UNAVAILABLE_REASON_NOT_FOUND
       - UNAVAILABLE_REASON_UNSUPPORTED_FORMAT
       - UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE
-    description: ' - UNAVAILABLE_REASON_NOT_FOUND: Missing files and files inaccessible to the user are indistinguishable.'
+      - UNAVAILABLE_REASON_CONVERSION_REQUIRED
+    description: |2-
+       - UNAVAILABLE_REASON_NOT_FOUND: Missing files and files inaccessible to the user are indistinguishable.
+       - UNAVAILABLE_REASON_CONVERSION_REQUIRED: HLS only: the provider streams the file once converted; request that with
+      StartPlaybackConversion.
   v4UserFile:
     type: object
     properties:

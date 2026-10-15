@@ -79,6 +79,9 @@ const (
 	// UserServiceResolvePlaybackProcedure is the procedure name of the UserService's ResolvePlayback
 	// RPC.
 	UserServiceResolvePlaybackProcedure = "/chill.v4.UserService/ResolvePlayback"
+	// UserServiceStartPlaybackConversionProcedure is the procedure name of the UserService's
+	// StartPlaybackConversion RPC.
+	UserServiceStartPlaybackConversionProcedure = "/chill.v4.UserService/StartPlaybackConversion"
 	// UserServiceGetUserProfileProcedure is the procedure name of the UserService's GetUserProfile RPC.
 	UserServiceGetUserProfileProcedure = "/chill.v4.UserService/GetUserProfile"
 )
@@ -400,6 +403,14 @@ var (
 			IdempotencyLevel: connect.IdempotencyNoSideEffects,
 		}
 	})
+	userServiceStartPlaybackConversionSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("StartPlaybackConversion"),
+			Procedure:        UserServiceStartPlaybackConversionProcedure,
+			IdempotencyLevel: connect.IdempotencyIdempotent,
+		}
+	})
 	userServiceGetUserProfileSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
@@ -432,6 +443,11 @@ type UserServiceClient interface {
 	// Resolve media with the same regular user bearer as other UserService RPCs.
 	// Read-only: never initiate a transfer or conversion.
 	ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error)
+	// Request the provider's streamable version of a video the authenticated
+	// user owns, after ResolvePlayback answered conversion_required for HLS.
+	// Idempotent: repeating it while the provider converts changes nothing.
+	// Never moves, renames, deletes, or transfers files.
+	StartPlaybackConversion(context.Context, *v4.StartPlaybackConversionRequest) (*v4.StartPlaybackConversionResponse, error)
 	GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error)
 }
 
@@ -464,6 +480,11 @@ type UserServiceHandler interface {
 	// Resolve media with the same regular user bearer as other UserService RPCs.
 	// Read-only: never initiate a transfer or conversion.
 	ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error)
+	// Request the provider's streamable version of a video the authenticated
+	// user owns, after ResolvePlayback answered conversion_required for HLS.
+	// Idempotent: repeating it while the provider converts changes nothing.
+	// Never moves, renames, deletes, or transfers files.
+	StartPlaybackConversion(context.Context, *v4.StartPlaybackConversionRequest) (*v4.StartPlaybackConversionResponse, error)
 	GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error)
 }
 
@@ -487,6 +508,7 @@ func RegisterUserServiceHandler(server *connect.Server, svc UserServiceHandler) 
 		connect.Method{Spec: userServiceGetFolderSpec(), Handler: adapter.getFolder},
 		connect.Method{Spec: userServiceFindOwnedVideosSpec(), Handler: adapter.findOwnedVideos},
 		connect.Method{Spec: userServiceResolvePlaybackSpec(), Handler: adapter.resolvePlayback},
+		connect.Method{Spec: userServiceStartPlaybackConversionSpec(), Handler: adapter.startPlaybackConversion},
 		connect.Method{Spec: userServiceGetUserProfileSpec(), Handler: adapter.getUserProfile},
 	)
 }
@@ -556,6 +578,10 @@ func (UnimplementedUserServiceHandler) FindOwnedVideos(context.Context, *v4.Find
 
 func (UnimplementedUserServiceHandler) ResolvePlayback(context.Context, *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.ResolvePlayback is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) StartPlaybackConversion(context.Context, *v4.StartPlaybackConversionRequest) (*v4.StartPlaybackConversionResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.StartPlaybackConversion is not implemented")
 }
 
 func (UnimplementedUserServiceHandler) GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error) {
@@ -689,6 +715,14 @@ func (c *userServiceClient) FindOwnedVideos(ctx context.Context, req *v4.FindOwn
 func (c *userServiceClient) ResolvePlayback(ctx context.Context, req *v4.ResolvePlaybackRequest) (*v4.ResolvePlaybackResponse, error) {
 	var res v4.ResolvePlaybackResponse
 	if err := c.client.CallUnary(ctx, userServiceResolvePlaybackSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) StartPlaybackConversion(ctx context.Context, req *v4.StartPlaybackConversionRequest) (*v4.StartPlaybackConversionResponse, error) {
+	var res v4.StartPlaybackConversionResponse
+	if err := c.client.CallUnary(ctx, userServiceStartPlaybackConversionSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -890,6 +924,18 @@ func (h userServiceHandler) resolvePlayback(ctx context.Context, _ connect.Spec,
 		return err
 	}
 	res, err := h.svc.ResolvePlayback(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) startPlaybackConversion(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.StartPlaybackConversionRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.StartPlaybackConversion(ctx, &req)
 	if err != nil {
 		return err
 	}

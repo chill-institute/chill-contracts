@@ -25,7 +25,8 @@ export declare type ResolvePlaybackRequest = Message<"chill.v4.ResolvePlaybackRe
 
   /**
    * Unspecified preserves original-file delivery for existing clients.
-   * HLS requires an available provider playlist; never starts conversion.
+   * HLS requires an available provider playlist; never starts conversion. A
+   * file the provider must convert first answers conversion_required.
    *
    * @generated from field: chill.v4.PlaybackDelivery delivery = 2;
    */
@@ -126,6 +127,56 @@ export declare type PlaybackPending = Message<"chill.v4.PlaybackPending"> & {
  * Use `create(PlaybackPendingSchema)` to create a new message.
  */
 export declare const PlaybackPendingSchema: GenMessage<PlaybackPending>;
+
+/**
+ * @generated from message chill.v4.StartPlaybackConversionRequest
+ */
+export declare type StartPlaybackConversionRequest = Message<"chill.v4.StartPlaybackConversionRequest"> & {
+  /**
+   * Positive provider file ID. Check current access for the authenticated user.
+   *
+   * @generated from field: int64 file_id = 1;
+   */
+  fileId: bigint;
+};
+
+/**
+ * Describes the message chill.v4.StartPlaybackConversionRequest.
+ * Use `create(StartPlaybackConversionRequestSchema)` to create a new message.
+ */
+export declare const StartPlaybackConversionRequestSchema: GenMessage<StartPlaybackConversionRequest>;
+
+/**
+ * @generated from message chill.v4.StartPlaybackConversionResponse
+ */
+export declare type StartPlaybackConversionResponse = Message<"chill.v4.StartPlaybackConversionResponse"> & {
+  /**
+   * Exactly one result is required. Pending means the provider accepted,
+   * queued, or finished the conversion; resolve playback again to observe it.
+   * Unavailable means the provider cannot convert the file or it is missing.
+   *
+   * @generated from oneof chill.v4.StartPlaybackConversionResponse.result
+   */
+  result: {
+    /**
+     * @generated from field: chill.v4.PlaybackPending pending = 1;
+     */
+    value: PlaybackPending;
+    case: "pending";
+  } | {
+    /**
+     * @generated from field: chill.v4.PlaybackUnavailable unavailable = 2;
+     */
+    value: PlaybackUnavailable;
+    case: "unavailable";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message chill.v4.StartPlaybackConversionResponse.
+ * Use `create(StartPlaybackConversionResponseSchema)` to create a new message.
+ */
+export declare const StartPlaybackConversionResponseSchema: GenMessage<StartPlaybackConversionResponse>;
 
 /**
  * @generated from message chill.v4.PlaybackUnavailable
@@ -2185,6 +2236,14 @@ export enum UnavailableReason {
    * @generated from enum value: UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE = 3;
    */
   NO_PLAYABLE_SOURCE = 3,
+
+  /**
+   * HLS only: the provider streams the file once converted; request that with
+   * StartPlaybackConversion.
+   *
+   * @generated from enum value: UNAVAILABLE_REASON_CONVERSION_REQUIRED = 4;
+   */
+  CONVERSION_REQUIRED = 4,
 }
 
 /**
@@ -2868,6 +2927,19 @@ export declare const UserService: GenService<{
     methodKind: "unary";
     input: typeof ResolvePlaybackRequestSchema;
     output: typeof ResolvePlaybackResponseSchema;
+  },
+  /**
+   * Request the provider's streamable version of a video the authenticated
+   * user owns, after ResolvePlayback answered conversion_required for HLS.
+   * Idempotent: repeating it while the provider converts changes nothing.
+   * Never moves, renames, deletes, or transfers files.
+   *
+   * @generated from rpc chill.v4.UserService.StartPlaybackConversion
+   */
+  startPlaybackConversion: {
+    methodKind: "unary";
+    input: typeof StartPlaybackConversionRequestSchema;
+    output: typeof StartPlaybackConversionResponseSchema;
   },
   /**
    * @generated from rpc chill.v4.UserService.GetUserProfile

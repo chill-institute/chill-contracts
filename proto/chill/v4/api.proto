@@ -421,6 +421,29 @@ service UserService {
       }
     };
   }
+  // Request the provider's streamable version of a video the authenticated
+  // user owns, after ResolvePlayback answered conversion_required for HLS.
+  // Idempotent: repeating it while the provider converts changes nothing.
+  // Never moves, renames, deletes, or transfers files.
+  rpc StartPlaybackConversion(StartPlaybackConversionRequest) returns (StartPlaybackConversionResponse) {
+    option idempotency_level = IDEMPOTENT;
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
   rpc GetUserProfile(GetUserProfileRequest) returns (UserProfile) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
@@ -446,7 +469,8 @@ message ResolvePlaybackRequest {
   // before resolving any URL; never trust a previous folder listing.
   int64 file_id = 1;
   // Unspecified preserves original-file delivery for existing clients.
-  // HLS requires an available provider playlist; never starts conversion.
+  // HLS requires an available provider playlist; never starts conversion. A
+  // file the provider must convert first answers conversion_required.
   PlaybackDelivery delivery = 2;
 }
 
@@ -488,6 +512,21 @@ enum PendingReason {
   PENDING_REASON_PROCESSING = 1;
 }
 
+message StartPlaybackConversionRequest {
+  // Positive provider file ID. Check current access for the authenticated user.
+  int64 file_id = 1;
+}
+
+message StartPlaybackConversionResponse {
+  // Exactly one result is required. Pending means the provider accepted,
+  // queued, or finished the conversion; resolve playback again to observe it.
+  // Unavailable means the provider cannot convert the file or it is missing.
+  oneof result {
+    PlaybackPending pending = 1;
+    PlaybackUnavailable unavailable = 2;
+  }
+}
+
 message PlaybackUnavailable {
   UnavailableReason reason = 1;
 }
@@ -498,6 +537,9 @@ enum UnavailableReason {
   UNAVAILABLE_REASON_NOT_FOUND = 1;
   UNAVAILABLE_REASON_UNSUPPORTED_FORMAT = 2;
   UNAVAILABLE_REASON_NO_PLAYABLE_SOURCE = 3;
+  // HLS only: the provider streams the file once converted; request that with
+  // StartPlaybackConversion.
+  UNAVAILABLE_REASON_CONVERSION_REQUIRED = 4;
 }
 
 message PlaybackUrl {
