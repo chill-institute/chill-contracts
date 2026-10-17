@@ -1316,6 +1316,13 @@ definitions:
         $ref: '#/definitions/v4SortBy'
       sortDirection:
         $ref: '#/definitions/v4SortDirection'
+      exactSearch:
+        type: boolean
+        description: |-
+          When true and the query names one episode, such as "s01e05", results keep
+          only releases of exactly that season and episode; multi-episode releases
+          and season packs are dropped. Omission on save preserves the stored
+          preference; missing stored values default to false.
   v4SortBy:
     type: string
     enum:

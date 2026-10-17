@@ -1640,6 +1640,16 @@ export declare type SearchSettings = Message<"chill.v4.SearchSettings"> & {
    * @generated from field: chill.v4.SortDirection sort_direction = 11;
    */
   sortDirection: SortDirection;
+
+  /**
+   * When true and the query names one episode, such as "s01e05", results keep
+   * only releases of exactly that season and episode; multi-episode releases
+   * and season packs are dropped. Omission on save preserves the stored
+   * preference; missing stored values default to false.
+   *
+   * @generated from field: optional bool exact_search = 12;
+   */
+  exactSearch?: boolean | undefined;
 };
 
 /**

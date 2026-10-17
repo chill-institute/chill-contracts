@@ -4450,8 +4450,13 @@ type SearchSettings struct {
 	SearchResultTitleBehavior   SearchResultTitleBehavior   `protobuf:"varint,9,opt,name=search_result_title_behavior,json=searchResultTitleBehavior,proto3,enum=chill.v4.SearchResultTitleBehavior" json:"search_result_title_behavior,omitempty"`
 	SortBy                      SortBy                      `protobuf:"varint,10,opt,name=sort_by,json=sortBy,proto3,enum=chill.v4.SortBy" json:"sort_by,omitempty"`
 	SortDirection               SortDirection               `protobuf:"varint,11,opt,name=sort_direction,json=sortDirection,proto3,enum=chill.v4.SortDirection" json:"sort_direction,omitempty"`
-	unknownFields               protoimpl.UnknownFields
-	sizeCache                   protoimpl.SizeCache
+	// When true and the query names one episode, such as "s01e05", results keep
+	// only releases of exactly that season and episode; multi-episode releases
+	// and season packs are dropped. Omission on save preserves the stored
+	// preference; missing stored values default to false.
+	ExactSearch   *bool `protobuf:"varint,12,opt,name=exact_search,json=exactSearch,proto3,oneof" json:"exact_search,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SearchSettings) Reset() {
@@ -4559,6 +4564,13 @@ func (x *SearchSettings) GetSortDirection() SortDirection {
 		return x.SortDirection
 	}
 	return SortDirection_SORT_DIRECTION_UNSPECIFIED
+}
+
+func (x *SearchSettings) GetExactSearch() bool {
+	if x != nil && x.ExactSearch != nil {
+		return *x.ExactSearch
+	}
+	return false
 }
 
 type CatalogSettings struct {
@@ -6011,7 +6023,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\x06search\x18\x13 \x01(\v2\x18.chill.v4.SearchSettingsR\x06search\x123\n" +
 	"\acatalog\x18\x14 \x01(\v2\x19.chill.v4.CatalogSettingsR\acatalog\x126\n" +
 	"\bdownload\x18\x15 \x01(\v2\x1a.chill.v4.DownloadSettingsR\bdownload:#\x92A \n" +
-	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadJ\x04\b\x01\x10\x13R\rcodec_filtersR\x14disabled_indexer_idsR\x12download_folder_idR\x14filter_nasty_resultsR\x1efilter_results_with_no_seedersR\rother_filtersR\x16remember_quick_filtersR\x12resolution_filtersR\x1esearch_result_display_behaviorR\x1csearch_result_title_behaviorR\vshow_moviesR\asort_byR\x0esort_directionR\x11card_display_typeR\rmovies_sourceR\rshow_tv_showsR\x0ftv_shows_source\"\xee\x05\n" +
+	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadJ\x04\b\x01\x10\x13R\rcodec_filtersR\x14disabled_indexer_idsR\x12download_folder_idR\x14filter_nasty_resultsR\x1efilter_results_with_no_seedersR\rother_filtersR\x16remember_quick_filtersR\x12resolution_filtersR\x1esearch_result_display_behaviorR\x1csearch_result_title_behaviorR\vshow_moviesR\asort_byR\x0esort_directionR\x11card_display_typeR\rmovies_sourceR\rshow_tv_showsR\x0ftv_shows_source\"\xa7\x06\n" +
 	"\x0eSearchSettings\x12:\n" +
 	"\rcodec_filters\x18\x01 \x03(\x0e2\x15.chill.v4.CodecFilterR\fcodecFilters\x120\n" +
 	"\x14disabled_indexer_ids\x18\x02 \x03(\tR\x12disabledIndexerIds\x120\n" +
@@ -6024,7 +6036,9 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\x1csearch_result_title_behavior\x18\t \x01(\x0e2#.chill.v4.SearchResultTitleBehaviorR\x19searchResultTitleBehavior\x12)\n" +
 	"\asort_by\x18\n" +
 	" \x01(\x0e2\x10.chill.v4.SortByR\x06sortBy\x12>\n" +
-	"\x0esort_direction\x18\v \x01(\x0e2\x17.chill.v4.SortDirectionR\rsortDirection\"\xef\x02\n" +
+	"\x0esort_direction\x18\v \x01(\x0e2\x17.chill.v4.SortDirectionR\rsortDirection\x12&\n" +
+	"\fexact_search\x18\f \x01(\bH\x00R\vexactSearch\x88\x01\x01B\x0f\n" +
+	"\r_exact_search\"\xef\x02\n" +
 	"\x0fCatalogSettings\x12;\n" +
 	"\rmovies_source\x18\x01 \x01(\x0e2\x16.chill.v4.MoviesSourceR\fmoviesSource\x12?\n" +
 	"\x0ftv_shows_source\x18\x02 \x01(\x0e2\x17.chill.v4.TVShowsSourceR\rtvShowsSource\x12?\n" +
@@ -6631,6 +6645,7 @@ func file_chill_v4_api_proto_init() {
 	file_chill_v4_api_proto_msgTypes[43].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[45].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[46].OneofWrappers = []any{}
+	file_chill_v4_api_proto_msgTypes[49].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[50].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[51].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[53].OneofWrappers = []any{
