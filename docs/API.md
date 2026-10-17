@@ -78,4 +78,4 @@ precision in generated clients and JSON strings.
 
 Personalized responses require `Cache-Control: no-store`. Bearer tokens and
 signed URLs must stay out of logs, traces and shared caches. Protobuf does not
-enforce these semantics; Engine and its consumers must validate them.
+enforce these semantics; the API and its consumers must validate them.

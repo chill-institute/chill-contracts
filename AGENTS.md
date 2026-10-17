@@ -4,8 +4,14 @@
 
 ## Work
 
-- `mise install`
-- `mise run generate` regenerates Go, TypeScript, and OpenAPI output.
+```bash
+mise install
+mise run hooks
+mise run generate
+mise run verify
+```
+
+`mise run generate` regenerates Go, TypeScript, and OpenAPI output.
 
 ## Conventions
 
@@ -14,9 +20,7 @@
 - Commit schema and generated output together.
 - Keep application behavior in consumers; this repo owns only schemas and
   generated artifacts.
-- Only `feat` (minor), `fix`, `perf`, `refactor`, `revert` (patch) and breaking
-  (major) commits release from `main`; `docs`, `test`, `build`, `ci`, `chore`
-  and `deps` do not. The rule set is the commit-analyzer `releaseRules` in
+- Release types come from the commit-analyzer `releaseRules` in
   [`.releaserc.json`](./.releaserc.json), identical in every chill.institute
   package repo; [`smoke.mjs`](./.github/release/smoke.mjs) fails when it drifts.
 

@@ -20,7 +20,7 @@ graph LR
 | --- | --- |
 | `proto/` | Canonical public API schemas |
 | `gen/go/` | Go types and Connect bindings |
-| `gen/ts/` | TypeScript types and Connect bindings |
+| `gen/ts/` | TypeScript types and service descriptors |
 | `gen/openapi/` | OpenAPI output |
 | `testdata/consumers/` | Clean Go and TypeScript compile checks |
 
@@ -40,7 +40,6 @@ graph TD
 
 - This repo owns the public schemas and generated contract artifacts.
 - Consumer repos own the behavior built on those contracts.
-- Compatibility decisions here are consumer-facing and should be treated like API changes.
 
 ## Delivery
 
