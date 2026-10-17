@@ -4,24 +4,13 @@
 
 Schemas and generated clients for the public [chill.institute](https://chill.institute) API.
 
-## Install
-
-TypeScript consumers:
-
 ```bash
 npm install @chill-institute/contracts
-```
-
-Go consumers:
-
-```bash
 go get github.com/chill-institute/chill-contracts/v3
 ```
 
-## Docs
+Depend on releases, not `main`. The schema is
+[`proto/chill/v4/api.proto`](./proto/chill/v4/api.proto); auth and API rules are
+in [docs/api.md](./docs/api.md).
 
-- [API reference](./docs/API.md): generated contract surface
-- [Architecture](./docs/ARCHITECTURE.md): package layout and generation flow
-- [Security](./SECURITY.md): reporting and contract safety notes
-
-[Contributing](./CONTRIBUTING.md) · [MIT License](./LICENSE)
+[Contributing](./CONTRIBUTING.md) · [Security](./SECURITY.md) · [MIT License](./LICENSE)

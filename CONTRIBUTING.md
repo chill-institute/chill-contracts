@@ -1,37 +1,20 @@
 # Contributing
 
-Edit schemas in `proto/` and commit their generated Go, TypeScript, and OpenAPI
-artifacts in the same change.
-
-## Start
+Edit schemas in `proto/`, run `mise run generate`, and commit the regenerated
+`gen/` in the same change.
 
 ```bash
 mise install
 mise run generate
 mise run verify
+CONTRACTS_BASE_REF=origin/main mise run compatibility:check
 ```
 
-`mise run verify` runs the steps in [`tasks.verify`](./mise.toml). CI
-separately rejects uncommitted generated changes.
+Pull requests explain compatibility or migration risk. A source break needs a
+Conventional Commit breaking marker and must keep wire compatibility.
 
-The TypeScript fixture keeps its lockfile directory local so pnpm resolves the
-file dependency independently of the root workspace. Its pnpm bootstrap lockfile
-is ignored; dependency resolution stays lockfile-free. Update both manifests'
-pnpm versions together; Renovate groups these pins.
+The TypeScript consumer fixture resolves without a lockfile; bump its pnpm
+version with the root `packageManager`.
 
-## Review Contract Changes
-
-- Treat every schema change as consumer-facing.
-- Review `gen/go/`, `gen/ts/`, and `gen/openapi/` after generation.
-- Explain compatibility or migration risk in the pull request.
-- Consumers should depend on releases, not `main`.
-- `CONTRACTS_BASE_REF=<git-ref> mise run compatibility:check` checks an explicit
-  baseline. Both CI paths use this policy: pull requests compare with their base
-  commit; main compares with the highest stable release tag reachable before
-  HEAD. A source break requires a Conventional Commit breaking marker in that
-  baseline-to-HEAD range and must still preserve wire compatibility.
-
-## Release
-
-Merges to `main` are released from Conventional Commits. Automation creates the
-tag, npm package, GitHub release, and signed version commit.
+Merges to `main` release from Conventional Commits: tag, npm package, GitHub
+release, and a Go module version under `/v3`.

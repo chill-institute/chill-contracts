@@ -1,47 +1,33 @@
 # Contracts
 
-`contracts` is the public contract boundary for `chill.institute`.
-
-## Work
+Protobuf schemas and generated Go, TypeScript, and OpenAPI artifacts for the
+public `chill.institute` API. Consumers own behavior built on them.
 
 ```bash
 mise install
-mise run hooks
-mise run generate
+mise run generate   # rebuild gen/ from proto/
 mise run verify
 ```
 
-`mise run generate` regenerates Go, TypeScript, and OpenAPI output.
+## Rules
 
-## Conventions
-
-- Treat changes here as consumer-facing API changes.
-- Keep protobuf sources, generated artifacts, and package metadata in sync.
-- Commit schema and generated output together.
-- Keep application behavior in consumers; this repo owns only schemas and
-  generated artifacts.
-- Release types come from the commit-analyzer `releaseRules` in
-  [`.releaserc.json`](./.releaserc.json), identical in every chill.institute
-  package repo; [`smoke.mjs`](./.github/release/smoke.mjs) fails when it drifts.
+- Every schema change is a consumer-facing API change; keep wire compatibility.
+- Edit `proto/`, never `gen/`; commit schema and regenerated `gen/` together.
+- Source breaks need a Conventional Commit breaking marker; release types come
+  from `releaseRules` in [`.releaserc.json`](./.releaserc.json), shared by every
+  chill.institute package repo and checked by [`smoke.mjs`](./.github/release/smoke.mjs).
+- Field-level semantics live in proto comments; cross-cutting API rules in
+  [docs/api.md](./docs/api.md).
 
 ## Proof map
 
-| Change | Check | Runs | Leaves |
-| --- | --- | --- | --- |
-| Docs | `mise run verify` | local, [PR](./.github/workflows/verify.yml) and [main](./.github/workflows/main.yml) `verify` jobs | exit status |
-| Protobuf schemas, `buf*.yaml` | `mise run verify`, then `CONTRACTS_BASE_REF=<git-ref> mise run compatibility:check` | local, [PR](./.github/workflows/verify.yml) against the base commit, [main](./.github/workflows/main.yml) against the preceding release | exit status, regenerated `gen/` diff; CI fails on uncommitted output |
-| Package metadata, generated consumer surface | `mise run verify-consumers` (in `verify`) | local, CI `verify` jobs | exit status; Go compile in `testdata/consumers/go`, JS import and round-trip in `testdata/consumers/ts` |
-| Release rules, locked semantic-release | `npm ci --prefix .github/release --ignore-scripts`, then `node .github/release/smoke.mjs` | local, PR [Verify](./.github/workflows/verify.yml) | exit status |
-| Workflows | `mise run actions` and `go test ./internal/workflowpolicy` (in `verify`) | local, CI `verify` jobs | exit status |
-| Pushed workflow changes | [shared scan](https://github.com/chill-institute/.github/tree/main/.github/actions/scan), last step of the [Main](./.github/workflows/main.yml) `verify` job: Actionlint and Zizmor when the pushed range touches workflows; secrets rely on GitHub secret scanning | CI on push to `main` (pushed range) and Main dispatch (full history) | failed run |
-| Release | [main](./.github/workflows/main.yml) `release` job after `verify` | CI only, `release` Environment | npm package, tag, GitHub release, `[skip ci]` version commit; `gh release verify` and `go mod download` of the tag |
+| Change | Check | Runs |
+| --- | --- | --- |
+| Protobuf, `buf*.yaml` | `mise run verify`, then `CONTRACTS_BASE_REF=<git-ref> mise run compatibility:check` | local; [PR](./.github/workflows/verify.yml) vs base, [main](./.github/workflows/main.yml) vs preceding release; CI fails on uncommitted `gen/` |
+| Package metadata, generated surface | `mise run verify-consumers` (in `verify`) | local, CI |
+| Workflows | `mise run actions`, `go test ./internal/workflowpolicy` (in `verify`) | local, CI |
+| Release rules | `npm ci --prefix .github/release --ignore-scripts && node .github/release/smoke.mjs` | local, PR |
+| Release | [main](./.github/workflows/main.yml) `release` job | CI only: npm package, tag, GitHub release |
 
-Gaps:
-
-- No TypeScript type-check of the consumer fixture. Owner: chill-institute/chill-contracts.
-- No Markdown or link check for docs. Owner: chill-institute/chill-contracts.
-
-## Read More
-
-- public-boundary model and generation flow: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
-- setup, consumer usage, and release flow: [CONTRIBUTING.md](./CONTRIBUTING.md)
+Gaps: the TypeScript consumer fixture is not type-checked; docs have no link
+check.
