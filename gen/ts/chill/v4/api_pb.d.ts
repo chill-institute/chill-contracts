@@ -462,6 +462,10 @@ export declare type CoreSearchRequest = Message<"chill.v4.CoreSearchRequest"> & 
 export declare const CoreSearchRequestSchema: GenMessage<CoreSearchRequest>;
 
 /**
+ * Facts parsed once from a release name with chill-institute/torrentname.
+ * Parsing is deterministic: the same title always yields the same facts.
+ * Clients render these fields and never parse release titles themselves.
+ *
  * @generated from message chill.v4.ReleaseInfo
  */
 export declare type ReleaseInfo = Message<"chill.v4.ReleaseInfo"> & {
@@ -506,6 +510,9 @@ export declare type ReleaseInfo = Message<"chill.v4.ReleaseInfo"> & {
   quality: string;
 
   /**
+   * Release or service tag such as NF or AMZN; unrelated to
+   * SearchResult.source and to indexer tags.
+   *
    * @generated from field: string source = 12;
    */
   source: string;
@@ -637,6 +644,8 @@ export declare type SearchResult = Message<"chill.v4.SearchResult"> & {
   id: string;
 
   /**
+   * Raw indexer title; never replaced by release_info.title.
+   *
    * @generated from field: string title = 2;
    */
   title: string;
@@ -682,6 +691,9 @@ export declare type SearchResult = Message<"chill.v4.SearchResult"> & {
   uploadedAt: string;
 
   /**
+   * Omitted when parsing fails or finds nothing useful; a partial parse is
+   * still returned, and a parse failure never fails the search.
+   *
    * @generated from field: optional chill.v4.ReleaseInfo release_info = 11;
    */
   releaseInfo?: ReleaseInfo | undefined;

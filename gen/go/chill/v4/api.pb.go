@@ -2112,38 +2112,43 @@ func (x *CoreSearchRequest) GetQuery() string {
 	return ""
 }
 
+// Facts parsed once from a release name with chill-institute/torrentname.
+// Parsing is deterministic: the same title always yields the same facts.
+// Clients render these fields and never parse release titles themselves.
 type ReleaseInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	Year          *int32                 `protobuf:"varint,2,opt,name=year,proto3,oneof" json:"year,omitempty"`
-	Season        *int32                 `protobuf:"varint,3,opt,name=season,proto3,oneof" json:"season,omitempty"`
-	Episode       *int32                 `protobuf:"varint,4,opt,name=episode,proto3,oneof" json:"episode,omitempty"`
-	EpisodeEnd    *int32                 `protobuf:"varint,5,opt,name=episode_end,json=episodeEnd,proto3,oneof" json:"episode_end,omitempty"`
-	Part          *int32                 `protobuf:"varint,6,opt,name=part,proto3,oneof" json:"part,omitempty"`
-	Resolution    string                 `protobuf:"bytes,10,opt,name=resolution,proto3" json:"resolution,omitempty"`
-	Quality       string                 `protobuf:"bytes,11,opt,name=quality,proto3" json:"quality,omitempty"`
-	Source        string                 `protobuf:"bytes,12,opt,name=source,proto3" json:"source,omitempty"`
-	Codec         string                 `protobuf:"bytes,13,opt,name=codec,proto3" json:"codec,omitempty"`
-	Hdr           string                 `protobuf:"bytes,14,opt,name=hdr,proto3" json:"hdr,omitempty"`
-	Audio         string                 `protobuf:"bytes,15,opt,name=audio,proto3" json:"audio,omitempty"`
-	Group         string                 `protobuf:"bytes,16,opt,name=group,proto3" json:"group,omitempty"`
-	Container     string                 `protobuf:"bytes,17,opt,name=container,proto3" json:"container,omitempty"`
-	Language      string                 `protobuf:"bytes,18,opt,name=language,proto3" json:"language,omitempty"`
-	Region        string                 `protobuf:"bytes,19,opt,name=region,proto3" json:"region,omitempty"`
-	Size          string                 `protobuf:"bytes,20,opt,name=size,proto3" json:"size,omitempty"`
-	BitDepth      string                 `protobuf:"bytes,21,opt,name=bit_depth,json=bitDepth,proto3" json:"bit_depth,omitempty"`
-	Edition       string                 `protobuf:"bytes,22,opt,name=edition,proto3" json:"edition,omitempty"`
-	Extended      bool                   `protobuf:"varint,30,opt,name=extended,proto3" json:"extended,omitempty"`
-	Hardcoded     bool                   `protobuf:"varint,31,opt,name=hardcoded,proto3" json:"hardcoded,omitempty"`
-	Proper        bool                   `protobuf:"varint,32,opt,name=proper,proto3" json:"proper,omitempty"`
-	Repack        bool                   `protobuf:"varint,33,opt,name=repack,proto3" json:"repack,omitempty"`
-	Remastered    bool                   `protobuf:"varint,34,opt,name=remastered,proto3" json:"remastered,omitempty"`
-	Complete      bool                   `protobuf:"varint,35,opt,name=complete,proto3" json:"complete,omitempty"`
-	ThreeD        bool                   `protobuf:"varint,36,opt,name=three_d,json=threeD,proto3" json:"three_d,omitempty"`
-	Imax          bool                   `protobuf:"varint,37,opt,name=imax,proto3" json:"imax,omitempty"`
-	Unrated       bool                   `protobuf:"varint,38,opt,name=unrated,proto3" json:"unrated,omitempty"`
-	Widescreen    bool                   `protobuf:"varint,39,opt,name=widescreen,proto3" json:"widescreen,omitempty"`
-	Excess        string                 `protobuf:"bytes,50,opt,name=excess,proto3" json:"excess,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	Title      string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Year       *int32                 `protobuf:"varint,2,opt,name=year,proto3,oneof" json:"year,omitempty"`
+	Season     *int32                 `protobuf:"varint,3,opt,name=season,proto3,oneof" json:"season,omitempty"`
+	Episode    *int32                 `protobuf:"varint,4,opt,name=episode,proto3,oneof" json:"episode,omitempty"`
+	EpisodeEnd *int32                 `protobuf:"varint,5,opt,name=episode_end,json=episodeEnd,proto3,oneof" json:"episode_end,omitempty"`
+	Part       *int32                 `protobuf:"varint,6,opt,name=part,proto3,oneof" json:"part,omitempty"`
+	Resolution string                 `protobuf:"bytes,10,opt,name=resolution,proto3" json:"resolution,omitempty"`
+	Quality    string                 `protobuf:"bytes,11,opt,name=quality,proto3" json:"quality,omitempty"`
+	// Release or service tag such as NF or AMZN; unrelated to
+	// SearchResult.source and to indexer tags.
+	Source        string `protobuf:"bytes,12,opt,name=source,proto3" json:"source,omitempty"`
+	Codec         string `protobuf:"bytes,13,opt,name=codec,proto3" json:"codec,omitempty"`
+	Hdr           string `protobuf:"bytes,14,opt,name=hdr,proto3" json:"hdr,omitempty"`
+	Audio         string `protobuf:"bytes,15,opt,name=audio,proto3" json:"audio,omitempty"`
+	Group         string `protobuf:"bytes,16,opt,name=group,proto3" json:"group,omitempty"`
+	Container     string `protobuf:"bytes,17,opt,name=container,proto3" json:"container,omitempty"`
+	Language      string `protobuf:"bytes,18,opt,name=language,proto3" json:"language,omitempty"`
+	Region        string `protobuf:"bytes,19,opt,name=region,proto3" json:"region,omitempty"`
+	Size          string `protobuf:"bytes,20,opt,name=size,proto3" json:"size,omitempty"`
+	BitDepth      string `protobuf:"bytes,21,opt,name=bit_depth,json=bitDepth,proto3" json:"bit_depth,omitempty"`
+	Edition       string `protobuf:"bytes,22,opt,name=edition,proto3" json:"edition,omitempty"`
+	Extended      bool   `protobuf:"varint,30,opt,name=extended,proto3" json:"extended,omitempty"`
+	Hardcoded     bool   `protobuf:"varint,31,opt,name=hardcoded,proto3" json:"hardcoded,omitempty"`
+	Proper        bool   `protobuf:"varint,32,opt,name=proper,proto3" json:"proper,omitempty"`
+	Repack        bool   `protobuf:"varint,33,opt,name=repack,proto3" json:"repack,omitempty"`
+	Remastered    bool   `protobuf:"varint,34,opt,name=remastered,proto3" json:"remastered,omitempty"`
+	Complete      bool   `protobuf:"varint,35,opt,name=complete,proto3" json:"complete,omitempty"`
+	ThreeD        bool   `protobuf:"varint,36,opt,name=three_d,json=threeD,proto3" json:"three_d,omitempty"`
+	Imax          bool   `protobuf:"varint,37,opt,name=imax,proto3" json:"imax,omitempty"`
+	Unrated       bool   `protobuf:"varint,38,opt,name=unrated,proto3" json:"unrated,omitempty"`
+	Widescreen    bool   `protobuf:"varint,39,opt,name=widescreen,proto3" json:"widescreen,omitempty"`
+	Excess        string `protobuf:"bytes,50,opt,name=excess,proto3" json:"excess,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2394,16 +2399,19 @@ type SearchResult struct {
 	// response. The same release served by several indexers carries the same id
 	// with a different link, so merged per-indexer results must key rows on id
 	// plus link.
-	Id            string       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string       `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Indexer       string       `protobuf:"bytes,3,opt,name=indexer,proto3" json:"indexer,omitempty"`
-	Link          string       `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
-	ImdbId        *string      `protobuf:"bytes,5,opt,name=imdb_id,json=imdbId,proto3,oneof" json:"imdb_id,omitempty"`
-	Peers         int64        `protobuf:"varint,6,opt,name=peers,proto3" json:"peers,omitempty"`
-	Seeders       int64        `protobuf:"varint,7,opt,name=seeders,proto3" json:"seeders,omitempty"`
-	Size          int64        `protobuf:"varint,8,opt,name=size,proto3" json:"size,omitempty"`
-	Source        string       `protobuf:"bytes,9,opt,name=source,proto3" json:"source,omitempty"`
-	UploadedAt    string       `protobuf:"bytes,10,opt,name=uploaded_at,json=uploadedAt,proto3" json:"uploaded_at,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Raw indexer title; never replaced by release_info.title.
+	Title      string  `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Indexer    string  `protobuf:"bytes,3,opt,name=indexer,proto3" json:"indexer,omitempty"`
+	Link       string  `protobuf:"bytes,4,opt,name=link,proto3" json:"link,omitempty"`
+	ImdbId     *string `protobuf:"bytes,5,opt,name=imdb_id,json=imdbId,proto3,oneof" json:"imdb_id,omitempty"`
+	Peers      int64   `protobuf:"varint,6,opt,name=peers,proto3" json:"peers,omitempty"`
+	Seeders    int64   `protobuf:"varint,7,opt,name=seeders,proto3" json:"seeders,omitempty"`
+	Size       int64   `protobuf:"varint,8,opt,name=size,proto3" json:"size,omitempty"`
+	Source     string  `protobuf:"bytes,9,opt,name=source,proto3" json:"source,omitempty"`
+	UploadedAt string  `protobuf:"bytes,10,opt,name=uploaded_at,json=uploadedAt,proto3" json:"uploaded_at,omitempty"`
+	// Omitted when parsing fails or finds nothing useful; a partial parse is
+	// still returned, and a parse failure never fails the search.
 	ReleaseInfo   *ReleaseInfo `protobuf:"bytes,11,opt,name=release_info,json=releaseInfo,proto3,oneof" json:"release_info,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

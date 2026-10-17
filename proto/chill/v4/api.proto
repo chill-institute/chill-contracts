@@ -638,6 +638,9 @@ message CoreSearchRequest {
   string query = 1;
 }
 
+// Facts parsed once from a release name with chill-institute/torrentname.
+// Parsing is deterministic: the same title always yields the same facts.
+// Clients render these fields and never parse release titles themselves.
 message ReleaseInfo {
   string title = 1;
   optional int32 year = 2;
@@ -648,6 +651,8 @@ message ReleaseInfo {
 
   string resolution = 10;
   string quality = 11;
+  // Release or service tag such as NF or AMZN; unrelated to
+  // SearchResult.source and to indexer tags.
   string source = 12;
   string codec = 13;
   string hdr = 14;
@@ -680,6 +685,7 @@ message SearchResult {
   // with a different link, so merged per-indexer results must key rows on id
   // plus link.
   string id = 1;
+  // Raw indexer title; never replaced by release_info.title.
   string title = 2;
   string indexer = 3;
   string link = 4;
@@ -689,6 +695,8 @@ message SearchResult {
   int64 size = 8;
   string source = 9;
   string uploaded_at = 10;
+  // Omitted when parsing fails or finds nothing useful; a partial parse is
+  // still returned, and a parse failure never fails the search.
   optional ReleaseInfo release_info = 11;
 }
 

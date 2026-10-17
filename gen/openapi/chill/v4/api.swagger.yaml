@@ -1148,6 +1148,9 @@ definitions:
         type: string
       source:
         type: string
+        description: |-
+          Release or service tag such as NF or AMZN; unrelated to
+          SearchResult.source and to indexer tags.
       codec:
         type: string
       hdr:
@@ -1190,6 +1193,10 @@ definitions:
         type: boolean
       excess:
         type: string
+    description: |-
+      Facts parsed once from a release name with chill-institute/torrentname.
+      Parsing is deterministic: the same title always yields the same facts.
+      Clients render these fields and never parse release titles themselves.
   v4ResolutionFilter:
     type: string
     enum:
@@ -1252,6 +1259,7 @@ definitions:
           plus link.
       title:
         type: string
+        description: Raw indexer title; never replaced by release_info.title.
       indexer:
         type: string
       link:
@@ -1273,6 +1281,9 @@ definitions:
         type: string
       releaseInfo:
         $ref: '#/definitions/v4ReleaseInfo'
+        description: |-
+          Omitted when parsing fails or finds nothing useful; a partial parse is
+          still returned, and a parse failure never fails the search.
   v4SearchResultDisplayBehavior:
     type: string
     enum:
