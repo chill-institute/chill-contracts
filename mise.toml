@@ -37,6 +37,7 @@ run = "cd testdata/consumers/go && go test ./..."
 description = "Import the published TypeScript surface from a downstream package"
 run = [
   "test \"pnpm@$(mise current pnpm)\" = \"$(node -p 'require(\"./package.json\").packageManager')\" || { echo 'mise pnpm differs from package.json packageManager' >&2; exit 1; }",
+  "test \"$(node -p 'require(\"./package.json\").packageManager')\" = \"$(node -p 'require(\"./testdata/consumers/ts/package.json\").packageManager')\" || { echo 'TypeScript consumer packageManager differs from package.json' >&2; exit 1; }",
   "cd testdata/consumers/ts && pnpm install --ignore-workspace --force --lockfile=false --lockfile-dir .",
   "cd testdata/consumers/ts && node ./smoke.mjs"
 ]
