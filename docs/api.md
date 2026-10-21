@@ -16,6 +16,5 @@ Rules the schema cannot enforce:
 
 - Call `StartPlaybackConversion` only when a user chooses to play, never to list
   or preview; it is the only playback call that changes provider state.
-- `ResolvePlayback` and `StartPlaybackConversion` responses send
-  `Cache-Control: no-store`. Bearer tokens and signed URLs stay out of logs,
-  traces, and shared caches.
+- Every `CoreService` and `UserService` response sends `Cache-Control: no-store`.
+  Bearer tokens and signed URLs stay out of logs, traces, and shared caches.
