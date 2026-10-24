@@ -173,6 +173,62 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/CreateBinge:
+    post:
+      summary: 'Curator only: answers permission_denied for other users.'
+      operationId: UserService_CreateBinge
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4CreateBingeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4CreateBingeRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
+  /chill.v4.UserService/DeleteBinge:
+    post:
+      summary: 'Curator only: answers permission_denied for other users.'
+      operationId: UserService_DeleteBinge
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4DeleteBingeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4DeleteBingeRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
   /chill.v4.UserService/FindOwnedVideos:
     post:
       summary: |-
@@ -195,6 +251,33 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/v4FindOwnedVideosRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
+  /chill.v4.UserService/GetBinge:
+    post:
+      operationId: UserService_GetBinge
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4GetBingeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4GetBingeRequest'
         - name: Authorization
           description: 'User auth token. Format: Bearer <token>.'
           in: header
@@ -528,6 +611,36 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/ListBinges:
+    post:
+      summary: |-
+        Binges are curated lists of movies and TV shows written by allowed
+        put.io users. Every authenticated user can read them.
+      operationId: UserService_ListBinges
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4ListBingesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4ListBingesRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
   /chill.v4.UserService/ResolvePlayback:
     post:
       summary: |-
@@ -644,6 +757,34 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/UpdateBinge:
+    post:
+      summary: 'Curator only: answers permission_denied for other users.'
+      operationId: UserService_UpdateBinge
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4UpdateBingeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4UpdateBingeRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
 definitions:
   protobufAny:
     type: object
@@ -682,6 +823,95 @@ definitions:
     type: string
     enum:
       - AUDIO_CODEC_AAC
+  v4Binge:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+        description: At most 120 characters.
+      blurb:
+        type: string
+        description: At most 1000 characters; may be empty.
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4BingeItem'
+        description: Between 1 and 50 entries in curator order.
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  v4BingeItem:
+    type: object
+    properties:
+      imdbId:
+        type: string
+      comment:
+        type: string
+      mediaType:
+        $ref: '#/definitions/v4BingeMediaType'
+      title:
+        type: string
+      year:
+        type: integer
+        format: int32
+      posterUrl:
+        type: string
+      backdropUrl:
+        type: string
+      rating:
+        type: number
+        format: double
+      overview:
+        type: string
+      externalUrl:
+        type: string
+      genres:
+        type: array
+        items:
+          type: string
+    description: |-
+      One resolved binge entry. Title metadata comes from the catalog providers
+      at read time; media_type is UNSPECIFIED when the title cannot be resolved,
+      in which case only imdb_id and comment are set.
+  v4BingeItemInput:
+    type: object
+    properties:
+      imdbId:
+        type: string
+        description: IMDb title ID such as tt0903747. Must resolve to a movie or TV show.
+      comment:
+        type: string
+        description: Optional curator note shown with the title; at most 500 characters.
+    description: A curator's input for one binge entry.
+  v4BingeMediaType:
+    type: string
+    enum:
+      - BINGE_MEDIA_TYPE_MOVIE
+      - BINGE_MEDIA_TYPE_TV_SHOW
+  v4BingeSummary:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      blurb:
+        type: string
+      itemCount:
+        type: integer
+        format: int32
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
   v4CatalogOrigin:
     type: object
     properties:
@@ -741,6 +971,30 @@ definitions:
     properties:
       query:
         type: string
+  v4CreateBingeRequest:
+    type: object
+    properties:
+      title:
+        type: string
+      blurb:
+        type: string
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4BingeItemInput'
+  v4CreateBingeResponse:
+    type: object
+    properties:
+      binge:
+        $ref: '#/definitions/v4Binge'
+  v4DeleteBingeRequest:
+    type: object
+    properties:
+      id:
+        type: string
+  v4DeleteBingeResponse:
+    type: object
   v4DownloadSettings:
     type: object
     properties:
@@ -777,6 +1031,16 @@ definitions:
           type: object
           $ref: '#/definitions/v4UserFile'
         description: At most 10 VIDEO entries in provider order, each with release_info.
+  v4GetBingeRequest:
+    type: object
+    properties:
+      id:
+        type: string
+  v4GetBingeResponse:
+    type: object
+    properties:
+      binge:
+        $ref: '#/definitions/v4Binge'
   v4GetDownloadFolderRequest:
     type: object
   v4GetDownloadFolderResponse:
@@ -1001,6 +1265,23 @@ definitions:
       - INDEXER_STATUS_HEALTHY
       - INDEXER_STATUS_DEGRADED
       - INDEXER_STATUS_DOWN
+  v4ListBingesRequest:
+    type: object
+  v4ListBingesResponse:
+    type: object
+    properties:
+      binges:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4BingeSummary'
+        description: Newest first.
+      canCurate:
+        type: boolean
+        description: True when the authenticated user may create, update, and delete binges.
+      latest:
+        $ref: '#/definitions/v4Binge'
+        description: The newest binge with resolved items; absent when there are none.
   v4Movie:
     type: object
     properties:
@@ -1624,6 +1905,25 @@ definitions:
        - UNAVAILABLE_REASON_NOT_FOUND: Missing files and files inaccessible to the user are indistinguishable.
        - UNAVAILABLE_REASON_CONVERSION_REQUIRED: HLS only: the provider streams the file once converted; request that with
       StartPlaybackConversion.
+  v4UpdateBingeRequest:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      blurb:
+        type: string
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4BingeItemInput'
+  v4UpdateBingeResponse:
+    type: object
+    properties:
+      binge:
+        $ref: '#/definitions/v4Binge'
   v4UserFile:
     type: object
     properties:

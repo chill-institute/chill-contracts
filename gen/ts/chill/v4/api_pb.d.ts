@@ -2189,6 +2189,384 @@ export declare type UserProfile = Message<"chill.v4.UserProfile"> & {
 export declare const UserProfileSchema: GenMessage<UserProfile>;
 
 /**
+ * A curator's input for one binge entry.
+ *
+ * @generated from message chill.v4.BingeItemInput
+ */
+export declare type BingeItemInput = Message<"chill.v4.BingeItemInput"> & {
+  /**
+   * IMDb title ID such as tt0903747. Must resolve to a movie or TV show.
+   *
+   * @generated from field: string imdb_id = 1;
+   */
+  imdbId: string;
+
+  /**
+   * Optional curator note shown with the title; at most 500 characters.
+   *
+   * @generated from field: string comment = 2;
+   */
+  comment: string;
+};
+
+/**
+ * Describes the message chill.v4.BingeItemInput.
+ * Use `create(BingeItemInputSchema)` to create a new message.
+ */
+export declare const BingeItemInputSchema: GenMessage<BingeItemInput>;
+
+/**
+ * One resolved binge entry. Title metadata comes from the catalog providers
+ * at read time; media_type is UNSPECIFIED when the title cannot be resolved,
+ * in which case only imdb_id and comment are set.
+ *
+ * @generated from message chill.v4.BingeItem
+ */
+export declare type BingeItem = Message<"chill.v4.BingeItem"> & {
+  /**
+   * @generated from field: string imdb_id = 1;
+   */
+  imdbId: string;
+
+  /**
+   * @generated from field: string comment = 2;
+   */
+  comment: string;
+
+  /**
+   * @generated from field: chill.v4.BingeMediaType media_type = 3;
+   */
+  mediaType: BingeMediaType;
+
+  /**
+   * @generated from field: string title = 4;
+   */
+  title: string;
+
+  /**
+   * @generated from field: int32 year = 5;
+   */
+  year: number;
+
+  /**
+   * @generated from field: string poster_url = 6;
+   */
+  posterUrl: string;
+
+  /**
+   * @generated from field: string backdrop_url = 7;
+   */
+  backdropUrl: string;
+
+  /**
+   * @generated from field: double rating = 8;
+   */
+  rating: number;
+
+  /**
+   * @generated from field: string overview = 9;
+   */
+  overview: string;
+
+  /**
+   * @generated from field: string external_url = 10;
+   */
+  externalUrl: string;
+
+  /**
+   * @generated from field: repeated string genres = 11;
+   */
+  genres: string[];
+};
+
+/**
+ * Describes the message chill.v4.BingeItem.
+ * Use `create(BingeItemSchema)` to create a new message.
+ */
+export declare const BingeItemSchema: GenMessage<BingeItem>;
+
+/**
+ * @generated from message chill.v4.BingeSummary
+ */
+export declare type BingeSummary = Message<"chill.v4.BingeSummary"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string blurb = 3;
+   */
+  blurb: string;
+
+  /**
+   * @generated from field: int32 item_count = 4;
+   */
+  itemCount: number;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp created_at = 5;
+   */
+  createdAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp updated_at = 6;
+   */
+  updatedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message chill.v4.BingeSummary.
+ * Use `create(BingeSummarySchema)` to create a new message.
+ */
+export declare const BingeSummarySchema: GenMessage<BingeSummary>;
+
+/**
+ * @generated from message chill.v4.Binge
+ */
+export declare type Binge = Message<"chill.v4.Binge"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * At most 120 characters.
+   *
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * At most 1000 characters; may be empty.
+   *
+   * @generated from field: string blurb = 3;
+   */
+  blurb: string;
+
+  /**
+   * Between 1 and 50 entries in curator order.
+   *
+   * @generated from field: repeated chill.v4.BingeItem items = 4;
+   */
+  items: BingeItem[];
+
+  /**
+   * @generated from field: google.protobuf.Timestamp created_at = 5;
+   */
+  createdAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp updated_at = 6;
+   */
+  updatedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message chill.v4.Binge.
+ * Use `create(BingeSchema)` to create a new message.
+ */
+export declare const BingeSchema: GenMessage<Binge>;
+
+/**
+ * @generated from message chill.v4.ListBingesRequest
+ */
+export declare type ListBingesRequest = Message<"chill.v4.ListBingesRequest"> & {
+};
+
+/**
+ * Describes the message chill.v4.ListBingesRequest.
+ * Use `create(ListBingesRequestSchema)` to create a new message.
+ */
+export declare const ListBingesRequestSchema: GenMessage<ListBingesRequest>;
+
+/**
+ * @generated from message chill.v4.ListBingesResponse
+ */
+export declare type ListBingesResponse = Message<"chill.v4.ListBingesResponse"> & {
+  /**
+   * Newest first.
+   *
+   * @generated from field: repeated chill.v4.BingeSummary binges = 1;
+   */
+  binges: BingeSummary[];
+
+  /**
+   * True when the authenticated user may create, update, and delete binges.
+   *
+   * @generated from field: bool can_curate = 2;
+   */
+  canCurate: boolean;
+
+  /**
+   * The newest binge with resolved items; absent when there are none.
+   *
+   * @generated from field: chill.v4.Binge latest = 3;
+   */
+  latest?: Binge | undefined;
+};
+
+/**
+ * Describes the message chill.v4.ListBingesResponse.
+ * Use `create(ListBingesResponseSchema)` to create a new message.
+ */
+export declare const ListBingesResponseSchema: GenMessage<ListBingesResponse>;
+
+/**
+ * @generated from message chill.v4.GetBingeRequest
+ */
+export declare type GetBingeRequest = Message<"chill.v4.GetBingeRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message chill.v4.GetBingeRequest.
+ * Use `create(GetBingeRequestSchema)` to create a new message.
+ */
+export declare const GetBingeRequestSchema: GenMessage<GetBingeRequest>;
+
+/**
+ * @generated from message chill.v4.GetBingeResponse
+ */
+export declare type GetBingeResponse = Message<"chill.v4.GetBingeResponse"> & {
+  /**
+   * @generated from field: chill.v4.Binge binge = 1;
+   */
+  binge?: Binge | undefined;
+};
+
+/**
+ * Describes the message chill.v4.GetBingeResponse.
+ * Use `create(GetBingeResponseSchema)` to create a new message.
+ */
+export declare const GetBingeResponseSchema: GenMessage<GetBingeResponse>;
+
+/**
+ * @generated from message chill.v4.CreateBingeRequest
+ */
+export declare type CreateBingeRequest = Message<"chill.v4.CreateBingeRequest"> & {
+  /**
+   * @generated from field: string title = 1;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string blurb = 2;
+   */
+  blurb: string;
+
+  /**
+   * @generated from field: repeated chill.v4.BingeItemInput items = 3;
+   */
+  items: BingeItemInput[];
+};
+
+/**
+ * Describes the message chill.v4.CreateBingeRequest.
+ * Use `create(CreateBingeRequestSchema)` to create a new message.
+ */
+export declare const CreateBingeRequestSchema: GenMessage<CreateBingeRequest>;
+
+/**
+ * @generated from message chill.v4.CreateBingeResponse
+ */
+export declare type CreateBingeResponse = Message<"chill.v4.CreateBingeResponse"> & {
+  /**
+   * @generated from field: chill.v4.Binge binge = 1;
+   */
+  binge?: Binge | undefined;
+};
+
+/**
+ * Describes the message chill.v4.CreateBingeResponse.
+ * Use `create(CreateBingeResponseSchema)` to create a new message.
+ */
+export declare const CreateBingeResponseSchema: GenMessage<CreateBingeResponse>;
+
+/**
+ * @generated from message chill.v4.UpdateBingeRequest
+ */
+export declare type UpdateBingeRequest = Message<"chill.v4.UpdateBingeRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string blurb = 3;
+   */
+  blurb: string;
+
+  /**
+   * @generated from field: repeated chill.v4.BingeItemInput items = 4;
+   */
+  items: BingeItemInput[];
+};
+
+/**
+ * Describes the message chill.v4.UpdateBingeRequest.
+ * Use `create(UpdateBingeRequestSchema)` to create a new message.
+ */
+export declare const UpdateBingeRequestSchema: GenMessage<UpdateBingeRequest>;
+
+/**
+ * @generated from message chill.v4.UpdateBingeResponse
+ */
+export declare type UpdateBingeResponse = Message<"chill.v4.UpdateBingeResponse"> & {
+  /**
+   * @generated from field: chill.v4.Binge binge = 1;
+   */
+  binge?: Binge | undefined;
+};
+
+/**
+ * Describes the message chill.v4.UpdateBingeResponse.
+ * Use `create(UpdateBingeResponseSchema)` to create a new message.
+ */
+export declare const UpdateBingeResponseSchema: GenMessage<UpdateBingeResponse>;
+
+/**
+ * @generated from message chill.v4.DeleteBingeRequest
+ */
+export declare type DeleteBingeRequest = Message<"chill.v4.DeleteBingeRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message chill.v4.DeleteBingeRequest.
+ * Use `create(DeleteBingeRequestSchema)` to create a new message.
+ */
+export declare const DeleteBingeRequestSchema: GenMessage<DeleteBingeRequest>;
+
+/**
+ * @generated from message chill.v4.DeleteBingeResponse
+ */
+export declare type DeleteBingeResponse = Message<"chill.v4.DeleteBingeResponse"> & {
+};
+
+/**
+ * Describes the message chill.v4.DeleteBingeResponse.
+ * Use `create(DeleteBingeResponseSchema)` to create a new message.
+ */
+export declare const DeleteBingeResponseSchema: GenMessage<DeleteBingeResponse>;
+
+/**
  * @generated from enum chill.v4.PlaybackDelivery
  */
 export enum PlaybackDelivery {
@@ -2766,6 +3144,31 @@ export enum CatalogSort {
 export declare const CatalogSortSchema: GenEnum<CatalogSort>;
 
 /**
+ * @generated from enum chill.v4.BingeMediaType
+ */
+export enum BingeMediaType {
+  /**
+   * @generated from enum value: BINGE_MEDIA_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: BINGE_MEDIA_TYPE_MOVIE = 1;
+   */
+  MOVIE = 1,
+
+  /**
+   * @generated from enum value: BINGE_MEDIA_TYPE_TV_SHOW = 2;
+   */
+  TV_SHOW = 2,
+}
+
+/**
+ * Describes the enum chill.v4.BingeMediaType.
+ */
+export declare const BingeMediaTypeSchema: GenEnum<BingeMediaType>;
+
+/**
  * @generated from service chill.v4.CoreService
  */
 export declare const CoreService: GenService<{
@@ -2970,6 +3373,55 @@ export declare const UserService: GenService<{
     methodKind: "unary";
     input: typeof GetUserProfileRequestSchema;
     output: typeof UserProfileSchema;
+  },
+  /**
+   * Binges are curated lists of movies and TV shows written by allowed
+   * put.io users. Every authenticated user can read them.
+   *
+   * @generated from rpc chill.v4.UserService.ListBinges
+   */
+  listBinges: {
+    methodKind: "unary";
+    input: typeof ListBingesRequestSchema;
+    output: typeof ListBingesResponseSchema;
+  },
+  /**
+   * @generated from rpc chill.v4.UserService.GetBinge
+   */
+  getBinge: {
+    methodKind: "unary";
+    input: typeof GetBingeRequestSchema;
+    output: typeof GetBingeResponseSchema;
+  },
+  /**
+   * Curator only: answers permission_denied for other users.
+   *
+   * @generated from rpc chill.v4.UserService.CreateBinge
+   */
+  createBinge: {
+    methodKind: "unary";
+    input: typeof CreateBingeRequestSchema;
+    output: typeof CreateBingeResponseSchema;
+  },
+  /**
+   * Curator only: answers permission_denied for other users.
+   *
+   * @generated from rpc chill.v4.UserService.UpdateBinge
+   */
+  updateBinge: {
+    methodKind: "unary";
+    input: typeof UpdateBingeRequestSchema;
+    output: typeof UpdateBingeResponseSchema;
+  },
+  /**
+   * Curator only: answers permission_denied for other users.
+   *
+   * @generated from rpc chill.v4.UserService.DeleteBinge
+   */
+  deleteBinge: {
+    methodKind: "unary";
+    input: typeof DeleteBingeRequestSchema;
+    output: typeof DeleteBingeResponseSchema;
   },
 }>;
 

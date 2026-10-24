@@ -462,6 +462,105 @@ service UserService {
       }
     };
   }
+  // Binges are curated lists of movies and TV shows written by allowed
+  // put.io users. Every authenticated user can read them.
+  rpc ListBinges(ListBingesRequest) returns (ListBingesResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+  rpc GetBinge(GetBingeRequest) returns (GetBingeResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+  // Curator only: answers permission_denied for other users.
+  rpc CreateBinge(CreateBingeRequest) returns (CreateBingeResponse) {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+  // Curator only: answers permission_denied for other users.
+  rpc UpdateBinge(UpdateBingeRequest) returns (UpdateBingeResponse) {
+    option idempotency_level = IDEMPOTENT;
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+  // Curator only: answers permission_denied for other users.
+  rpc DeleteBinge(DeleteBingeRequest) returns (DeleteBingeResponse) {
+    option idempotency_level = IDEMPOTENT;
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+      parameters: {
+        headers: {
+          name: "Authorization"
+          description: "User auth token. Format: Bearer <token>."
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
 }
 
 message ResolvePlaybackRequest {
@@ -1163,3 +1262,101 @@ message UserProfile {
   string avatar_url = 3;
   string email = 4;
 }
+
+enum BingeMediaType {
+  BINGE_MEDIA_TYPE_UNSPECIFIED = 0;
+  BINGE_MEDIA_TYPE_MOVIE = 1;
+  BINGE_MEDIA_TYPE_TV_SHOW = 2;
+}
+
+// A curator's input for one binge entry.
+message BingeItemInput {
+  // IMDb title ID such as tt0903747. Must resolve to a movie or TV show.
+  string imdb_id = 1;
+  // Optional curator note shown with the title; at most 500 characters.
+  string comment = 2;
+}
+
+// One resolved binge entry. Title metadata comes from the catalog providers
+// at read time; media_type is UNSPECIFIED when the title cannot be resolved,
+// in which case only imdb_id and comment are set.
+message BingeItem {
+  string imdb_id = 1;
+  string comment = 2;
+  BingeMediaType media_type = 3;
+  string title = 4;
+  int32 year = 5;
+  string poster_url = 6;
+  string backdrop_url = 7;
+  double rating = 8;
+  string overview = 9;
+  string external_url = 10;
+  repeated string genres = 11;
+}
+
+message BingeSummary {
+  string id = 1;
+  string title = 2;
+  string blurb = 3;
+  int32 item_count = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message Binge {
+  string id = 1;
+  // At most 120 characters.
+  string title = 2;
+  // At most 1000 characters; may be empty.
+  string blurb = 3;
+  // Between 1 and 50 entries in curator order.
+  repeated BingeItem items = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message ListBingesRequest {}
+
+message ListBingesResponse {
+  // Newest first.
+  repeated BingeSummary binges = 1;
+  // True when the authenticated user may create, update, and delete binges.
+  bool can_curate = 2;
+  // The newest binge with resolved items; absent when there are none.
+  Binge latest = 3;
+}
+
+message GetBingeRequest {
+  string id = 1;
+}
+
+message GetBingeResponse {
+  Binge binge = 1;
+}
+
+message CreateBingeRequest {
+  string title = 1;
+  string blurb = 2;
+  repeated BingeItemInput items = 3;
+}
+
+message CreateBingeResponse {
+  Binge binge = 1;
+}
+
+message UpdateBingeRequest {
+  string id = 1;
+  string title = 2;
+  string blurb = 3;
+  repeated BingeItemInput items = 4;
+}
+
+message UpdateBingeResponse {
+  Binge binge = 1;
+}
+
+message DeleteBingeRequest {
+  string id = 1;
+}
+
+message DeleteBingeResponse {}

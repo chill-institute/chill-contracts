@@ -84,6 +84,16 @@ const (
 	UserServiceStartPlaybackConversionProcedure = "/chill.v4.UserService/StartPlaybackConversion"
 	// UserServiceGetUserProfileProcedure is the procedure name of the UserService's GetUserProfile RPC.
 	UserServiceGetUserProfileProcedure = "/chill.v4.UserService/GetUserProfile"
+	// UserServiceListBingesProcedure is the procedure name of the UserService's ListBinges RPC.
+	UserServiceListBingesProcedure = "/chill.v4.UserService/ListBinges"
+	// UserServiceGetBingeProcedure is the procedure name of the UserService's GetBinge RPC.
+	UserServiceGetBingeProcedure = "/chill.v4.UserService/GetBinge"
+	// UserServiceCreateBingeProcedure is the procedure name of the UserService's CreateBinge RPC.
+	UserServiceCreateBingeProcedure = "/chill.v4.UserService/CreateBinge"
+	// UserServiceUpdateBingeProcedure is the procedure name of the UserService's UpdateBinge RPC.
+	UserServiceUpdateBingeProcedure = "/chill.v4.UserService/UpdateBinge"
+	// UserServiceDeleteBingeProcedure is the procedure name of the UserService's DeleteBinge RPC.
+	UserServiceDeleteBingeProcedure = "/chill.v4.UserService/DeleteBinge"
 )
 
 var (
@@ -418,6 +428,45 @@ var (
 			Procedure:  UserServiceGetUserProfileProcedure,
 		}
 	})
+	userServiceListBingesSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("ListBinges"),
+			Procedure:        UserServiceListBingesProcedure,
+			IdempotencyLevel: connect.IdempotencyNoSideEffects,
+		}
+	})
+	userServiceGetBingeSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("GetBinge"),
+			Procedure:        UserServiceGetBingeProcedure,
+			IdempotencyLevel: connect.IdempotencyNoSideEffects,
+		}
+	})
+	userServiceCreateBingeSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("CreateBinge"),
+			Procedure:  UserServiceCreateBingeProcedure,
+		}
+	})
+	userServiceUpdateBingeSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("UpdateBinge"),
+			Procedure:        UserServiceUpdateBingeProcedure,
+			IdempotencyLevel: connect.IdempotencyIdempotent,
+		}
+	})
+	userServiceDeleteBingeSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("DeleteBinge"),
+			Procedure:        UserServiceDeleteBingeProcedure,
+			IdempotencyLevel: connect.IdempotencyIdempotent,
+		}
+	})
 )
 
 // UserServiceClient is a client for the chill.v4.UserService service.
@@ -449,6 +498,16 @@ type UserServiceClient interface {
 	// Never moves, renames, deletes, or transfers files.
 	StartPlaybackConversion(context.Context, *v4.StartPlaybackConversionRequest) (*v4.StartPlaybackConversionResponse, error)
 	GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error)
+	// Binges are curated lists of movies and TV shows written by allowed
+	// put.io users. Every authenticated user can read them.
+	ListBinges(context.Context, *v4.ListBingesRequest) (*v4.ListBingesResponse, error)
+	GetBinge(context.Context, *v4.GetBingeRequest) (*v4.GetBingeResponse, error)
+	// Curator only: answers permission_denied for other users.
+	CreateBinge(context.Context, *v4.CreateBingeRequest) (*v4.CreateBingeResponse, error)
+	// Curator only: answers permission_denied for other users.
+	UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error)
+	// Curator only: answers permission_denied for other users.
+	DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error)
 }
 
 // NewUserServiceClient constructs a client for the chill.v4.UserService service. Multiple service
@@ -486,6 +545,16 @@ type UserServiceHandler interface {
 	// Never moves, renames, deletes, or transfers files.
 	StartPlaybackConversion(context.Context, *v4.StartPlaybackConversionRequest) (*v4.StartPlaybackConversionResponse, error)
 	GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error)
+	// Binges are curated lists of movies and TV shows written by allowed
+	// put.io users. Every authenticated user can read them.
+	ListBinges(context.Context, *v4.ListBingesRequest) (*v4.ListBingesResponse, error)
+	GetBinge(context.Context, *v4.GetBingeRequest) (*v4.GetBingeResponse, error)
+	// Curator only: answers permission_denied for other users.
+	CreateBinge(context.Context, *v4.CreateBingeRequest) (*v4.CreateBingeResponse, error)
+	// Curator only: answers permission_denied for other users.
+	UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error)
+	// Curator only: answers permission_denied for other users.
+	DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error)
 }
 
 // RegisterUserServiceHandler registers svc as the chill.v4.UserService implementation on server.
@@ -510,6 +579,11 @@ func RegisterUserServiceHandler(server *connect.Server, svc UserServiceHandler) 
 		connect.Method{Spec: userServiceResolvePlaybackSpec(), Handler: adapter.resolvePlayback},
 		connect.Method{Spec: userServiceStartPlaybackConversionSpec(), Handler: adapter.startPlaybackConversion},
 		connect.Method{Spec: userServiceGetUserProfileSpec(), Handler: adapter.getUserProfile},
+		connect.Method{Spec: userServiceListBingesSpec(), Handler: adapter.listBinges},
+		connect.Method{Spec: userServiceGetBingeSpec(), Handler: adapter.getBinge},
+		connect.Method{Spec: userServiceCreateBingeSpec(), Handler: adapter.createBinge},
+		connect.Method{Spec: userServiceUpdateBingeSpec(), Handler: adapter.updateBinge},
+		connect.Method{Spec: userServiceDeleteBingeSpec(), Handler: adapter.deleteBinge},
 	)
 }
 
@@ -586,6 +660,26 @@ func (UnimplementedUserServiceHandler) StartPlaybackConversion(context.Context, 
 
 func (UnimplementedUserServiceHandler) GetUserProfile(context.Context, *v4.GetUserProfileRequest) (*v4.UserProfile, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetUserProfile is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) ListBinges(context.Context, *v4.ListBingesRequest) (*v4.ListBingesResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.ListBinges is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) GetBinge(context.Context, *v4.GetBingeRequest) (*v4.GetBingeResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.GetBinge is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) CreateBinge(context.Context, *v4.CreateBingeRequest) (*v4.CreateBingeResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.CreateBinge is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.UpdateBinge is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.DeleteBinge is not implemented")
 }
 
 type userServiceClient struct {
@@ -731,6 +825,46 @@ func (c *userServiceClient) StartPlaybackConversion(ctx context.Context, req *v4
 func (c *userServiceClient) GetUserProfile(ctx context.Context, req *v4.GetUserProfileRequest) (*v4.UserProfile, error) {
 	var res v4.UserProfile
 	if err := c.client.CallUnary(ctx, userServiceGetUserProfileSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) ListBinges(ctx context.Context, req *v4.ListBingesRequest) (*v4.ListBingesResponse, error) {
+	var res v4.ListBingesResponse
+	if err := c.client.CallUnary(ctx, userServiceListBingesSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) GetBinge(ctx context.Context, req *v4.GetBingeRequest) (*v4.GetBingeResponse, error) {
+	var res v4.GetBingeResponse
+	if err := c.client.CallUnary(ctx, userServiceGetBingeSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) CreateBinge(ctx context.Context, req *v4.CreateBingeRequest) (*v4.CreateBingeResponse, error) {
+	var res v4.CreateBingeResponse
+	if err := c.client.CallUnary(ctx, userServiceCreateBingeSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) UpdateBinge(ctx context.Context, req *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error) {
+	var res v4.UpdateBingeResponse
+	if err := c.client.CallUnary(ctx, userServiceUpdateBingeSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) DeleteBinge(ctx context.Context, req *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error) {
+	var res v4.DeleteBingeResponse
+	if err := c.client.CallUnary(ctx, userServiceDeleteBingeSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -948,6 +1082,66 @@ func (h userServiceHandler) getUserProfile(ctx context.Context, _ connect.Spec, 
 		return err
 	}
 	res, err := h.svc.GetUserProfile(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) listBinges(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.ListBingesRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ListBinges(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) getBinge(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.GetBingeRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.GetBinge(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) createBinge(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.CreateBingeRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.CreateBinge(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) updateBinge(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.UpdateBingeRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.UpdateBinge(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) deleteBinge(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.DeleteBingeRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.DeleteBinge(ctx, &req)
 	if err != nil {
 		return err
 	}
