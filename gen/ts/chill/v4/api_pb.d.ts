@@ -2622,6 +2622,82 @@ export declare type SetBingeCuratorNameResponse = Message<"chill.v4.SetBingeCura
 export declare const SetBingeCuratorNameResponseSchema: GenMessage<SetBingeCuratorNameResponse>;
 
 /**
+ * @generated from message chill.v4.SearchBingeTitlesRequest
+ */
+export declare type SearchBingeTitlesRequest = Message<"chill.v4.SearchBingeTitlesRequest"> & {
+  /**
+   * Free-text title. Between 2 and 200 characters after trimming.
+   *
+   * @generated from field: string query = 1;
+   */
+  query: string;
+};
+
+/**
+ * Describes the message chill.v4.SearchBingeTitlesRequest.
+ * Use `create(SearchBingeTitlesRequestSchema)` to create a new message.
+ */
+export declare const SearchBingeTitlesRequestSchema: GenMessage<SearchBingeTitlesRequest>;
+
+/**
+ * One title a curator can add to a binge.
+ *
+ * @generated from message chill.v4.BingeTitleMatch
+ */
+export declare type BingeTitleMatch = Message<"chill.v4.BingeTitleMatch"> & {
+  /**
+   * @generated from field: string imdb_id = 1;
+   */
+  imdbId: string;
+
+  /**
+   * @generated from field: chill.v4.BingeMediaType media_type = 2;
+   */
+  mediaType: BingeMediaType;
+
+  /**
+   * @generated from field: string title = 3;
+   */
+  title: string;
+
+  /**
+   * Release or first-air year; 0 when unknown.
+   *
+   * @generated from field: int32 year = 4;
+   */
+  year: number;
+
+  /**
+   * @generated from field: string poster_url = 5;
+   */
+  posterUrl: string;
+};
+
+/**
+ * Describes the message chill.v4.BingeTitleMatch.
+ * Use `create(BingeTitleMatchSchema)` to create a new message.
+ */
+export declare const BingeTitleMatchSchema: GenMessage<BingeTitleMatch>;
+
+/**
+ * @generated from message chill.v4.SearchBingeTitlesResponse
+ */
+export declare type SearchBingeTitlesResponse = Message<"chill.v4.SearchBingeTitlesResponse"> & {
+  /**
+   * Best matches first, at most 10. Titles without an IMDb ID are omitted.
+   *
+   * @generated from field: repeated chill.v4.BingeTitleMatch matches = 1;
+   */
+  matches: BingeTitleMatch[];
+};
+
+/**
+ * Describes the message chill.v4.SearchBingeTitlesResponse.
+ * Use `create(SearchBingeTitlesResponseSchema)` to create a new message.
+ */
+export declare const SearchBingeTitlesResponseSchema: GenMessage<SearchBingeTitlesResponse>;
+
+/**
  * @generated from enum chill.v4.PlaybackDelivery
  */
 export enum PlaybackDelivery {
@@ -3488,6 +3564,18 @@ export declare const UserService: GenService<{
     methodKind: "unary";
     input: typeof SetBingeCuratorNameRequestSchema;
     output: typeof SetBingeCuratorNameResponseSchema;
+  },
+  /**
+   * Curator only: finds movies and TV shows by title so a binge entry can be
+   * picked instead of typed as an IMDb ID. Answers permission_denied for
+   * other users.
+   *
+   * @generated from rpc chill.v4.UserService.SearchBingeTitles
+   */
+  searchBingeTitles: {
+    methodKind: "unary";
+    input: typeof SearchBingeTitlesRequestSchema;
+    output: typeof SearchBingeTitlesResponseSchema;
   },
 }>;
 

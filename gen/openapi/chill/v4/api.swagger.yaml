@@ -725,6 +725,37 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/SearchBingeTitles:
+    post:
+      summary: |-
+        Curator only: finds movies and TV shows by title so a binge entry can be
+        picked instead of typed as an IMDb ID. Answers permission_denied for
+        other users.
+      operationId: UserService_SearchBingeTitles
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4SearchBingeTitlesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4SearchBingeTitlesRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
   /chill.v4.UserService/SetBingeCuratorName:
     post:
       summary: |-
@@ -948,6 +979,22 @@ definitions:
       curatorName:
         type: string
         description: The curator's chosen public name; empty when the curator never set one.
+  v4BingeTitleMatch:
+    type: object
+    properties:
+      imdbId:
+        type: string
+      mediaType:
+        $ref: '#/definitions/v4BingeMediaType'
+      title:
+        type: string
+      year:
+        type: integer
+        format: int32
+        description: Release or first-air year; 0 when unknown.
+      posterUrl:
+        type: string
+    description: One title a curator can add to a binge.
   v4CatalogOrigin:
     type: object
     properties:
@@ -1552,6 +1599,21 @@ definitions:
     properties:
       settings:
         $ref: '#/definitions/v4UserSettings'
+  v4SearchBingeTitlesRequest:
+    type: object
+    properties:
+      query:
+        type: string
+        description: Free-text title. Between 2 and 200 characters after trimming.
+  v4SearchBingeTitlesResponse:
+    type: object
+    properties:
+      matches:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v4BingeTitleMatch'
+        description: Best matches first, at most 10. Titles without an IMDb ID are omitted.
   v4SearchResponse:
     type: object
     properties:

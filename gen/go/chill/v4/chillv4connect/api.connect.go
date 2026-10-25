@@ -97,6 +97,9 @@ const (
 	// UserServiceSetBingeCuratorNameProcedure is the procedure name of the UserService's
 	// SetBingeCuratorName RPC.
 	UserServiceSetBingeCuratorNameProcedure = "/chill.v4.UserService/SetBingeCuratorName"
+	// UserServiceSearchBingeTitlesProcedure is the procedure name of the UserService's
+	// SearchBingeTitles RPC.
+	UserServiceSearchBingeTitlesProcedure = "/chill.v4.UserService/SearchBingeTitles"
 )
 
 var (
@@ -478,6 +481,14 @@ var (
 			IdempotencyLevel: connect.IdempotencyIdempotent,
 		}
 	})
+	userServiceSearchBingeTitlesSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("SearchBingeTitles"),
+			Procedure:        UserServiceSearchBingeTitlesProcedure,
+			IdempotencyLevel: connect.IdempotencyNoSideEffects,
+		}
+	})
 )
 
 // UserServiceClient is a client for the chill.v4.UserService service.
@@ -522,6 +533,10 @@ type UserServiceClient interface {
 	// Curator only: sets the public name shown on the caller's binges. The
 	// put.io username is never shown. Answers permission_denied for other users.
 	SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error)
+	// Curator only: finds movies and TV shows by title so a binge entry can be
+	// picked instead of typed as an IMDb ID. Answers permission_denied for
+	// other users.
+	SearchBingeTitles(context.Context, *v4.SearchBingeTitlesRequest) (*v4.SearchBingeTitlesResponse, error)
 }
 
 // NewUserServiceClient constructs a client for the chill.v4.UserService service. Multiple service
@@ -572,6 +587,10 @@ type UserServiceHandler interface {
 	// Curator only: sets the public name shown on the caller's binges. The
 	// put.io username is never shown. Answers permission_denied for other users.
 	SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error)
+	// Curator only: finds movies and TV shows by title so a binge entry can be
+	// picked instead of typed as an IMDb ID. Answers permission_denied for
+	// other users.
+	SearchBingeTitles(context.Context, *v4.SearchBingeTitlesRequest) (*v4.SearchBingeTitlesResponse, error)
 }
 
 // RegisterUserServiceHandler registers svc as the chill.v4.UserService implementation on server.
@@ -602,6 +621,7 @@ func RegisterUserServiceHandler(server *connect.Server, svc UserServiceHandler) 
 		connect.Method{Spec: userServiceUpdateBingeSpec(), Handler: adapter.updateBinge},
 		connect.Method{Spec: userServiceDeleteBingeSpec(), Handler: adapter.deleteBinge},
 		connect.Method{Spec: userServiceSetBingeCuratorNameSpec(), Handler: adapter.setBingeCuratorName},
+		connect.Method{Spec: userServiceSearchBingeTitlesSpec(), Handler: adapter.searchBingeTitles},
 	)
 }
 
@@ -702,6 +722,10 @@ func (UnimplementedUserServiceHandler) DeleteBinge(context.Context, *v4.DeleteBi
 
 func (UnimplementedUserServiceHandler) SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.SetBingeCuratorName is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) SearchBingeTitles(context.Context, *v4.SearchBingeTitlesRequest) (*v4.SearchBingeTitlesResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.SearchBingeTitles is not implemented")
 }
 
 type userServiceClient struct {
@@ -895,6 +919,14 @@ func (c *userServiceClient) DeleteBinge(ctx context.Context, req *v4.DeleteBinge
 func (c *userServiceClient) SetBingeCuratorName(ctx context.Context, req *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error) {
 	var res v4.SetBingeCuratorNameResponse
 	if err := c.client.CallUnary(ctx, userServiceSetBingeCuratorNameSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) SearchBingeTitles(ctx context.Context, req *v4.SearchBingeTitlesRequest) (*v4.SearchBingeTitlesResponse, error) {
+	var res v4.SearchBingeTitlesResponse
+	if err := c.client.CallUnary(ctx, userServiceSearchBingeTitlesSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -1184,6 +1216,18 @@ func (h userServiceHandler) setBingeCuratorName(ctx context.Context, _ connect.S
 		return err
 	}
 	res, err := h.svc.SetBingeCuratorName(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) searchBingeTitles(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.SearchBingeTitlesRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.SearchBingeTitles(ctx, &req)
 	if err != nil {
 		return err
 	}
