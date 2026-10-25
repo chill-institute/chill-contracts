@@ -5968,13 +5968,15 @@ func (x *BingeItem) GetGenres() []string {
 }
 
 type BingeSummary struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Blurb         string                 `protobuf:"bytes,3,opt,name=blurb,proto3" json:"blurb,omitempty"`
-	ItemCount     int32                  `protobuf:"varint,4,opt,name=item_count,json=itemCount,proto3" json:"item_count,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Id        string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title     string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Blurb     string                 `protobuf:"bytes,3,opt,name=blurb,proto3" json:"blurb,omitempty"`
+	ItemCount int32                  `protobuf:"varint,4,opt,name=item_count,json=itemCount,proto3" json:"item_count,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// The curator's chosen public name; empty when the curator never set one.
+	CuratorName   string `protobuf:"bytes,7,opt,name=curator_name,json=curatorName,proto3" json:"curator_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6051,6 +6053,13 @@ func (x *BingeSummary) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *BingeSummary) GetCuratorName() string {
+	if x != nil {
+		return x.CuratorName
+	}
+	return ""
+}
+
 type Binge struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Id    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -6059,9 +6068,11 @@ type Binge struct {
 	// At most 1000 characters; may be empty.
 	Blurb string `protobuf:"bytes,3,opt,name=blurb,proto3" json:"blurb,omitempty"`
 	// Between 1 and 50 entries in curator order.
-	Items         []*BingeItem           `protobuf:"bytes,4,rep,name=items,proto3" json:"items,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Items     []*BingeItem           `protobuf:"bytes,4,rep,name=items,proto3" json:"items,omitempty"`
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// The curator's chosen public name; empty when the curator never set one.
+	CuratorName   string `protobuf:"bytes,7,opt,name=curator_name,json=curatorName,proto3" json:"curator_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6138,6 +6149,13 @@ func (x *Binge) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Binge) GetCuratorName() string {
+	if x != nil {
+		return x.CuratorName
+	}
+	return ""
+}
+
 type ListBingesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -6181,7 +6199,9 @@ type ListBingesResponse struct {
 	// True when the authenticated user may create, update, and delete binges.
 	CanCurate bool `protobuf:"varint,2,opt,name=can_curate,json=canCurate,proto3" json:"can_curate,omitempty"`
 	// The newest binge with resolved items; absent when there are none.
-	Latest        *Binge `protobuf:"bytes,3,opt,name=latest,proto3" json:"latest,omitempty"`
+	Latest *Binge `protobuf:"bytes,3,opt,name=latest,proto3" json:"latest,omitempty"`
+	// The caller's own curator name; empty for non-curators or until set.
+	CuratorName   string `protobuf:"bytes,4,opt,name=curator_name,json=curatorName,proto3" json:"curator_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -6235,6 +6255,13 @@ func (x *ListBingesResponse) GetLatest() *Binge {
 		return x.Latest
 	}
 	return nil
+}
+
+func (x *ListBingesResponse) GetCuratorName() string {
+	if x != nil {
+		return x.CuratorName
+	}
+	return ""
 }
 
 type GetBingeRequest struct {
@@ -6619,6 +6646,95 @@ func (x *DeleteBingeResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use DeleteBingeResponse.ProtoReflect.Descriptor instead.
 func (*DeleteBingeResponse) Descriptor() ([]byte, []int) {
 	return file_chill_v4_api_proto_rawDescGZIP(), []int{81}
+}
+
+type SetBingeCuratorNameRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Between 2 and 40 characters after trimming, on one line.
+	DisplayName   string `protobuf:"bytes,1,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetBingeCuratorNameRequest) Reset() {
+	*x = SetBingeCuratorNameRequest{}
+	mi := &file_chill_v4_api_proto_msgTypes[82]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetBingeCuratorNameRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetBingeCuratorNameRequest) ProtoMessage() {}
+
+func (x *SetBingeCuratorNameRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[82]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetBingeCuratorNameRequest.ProtoReflect.Descriptor instead.
+func (*SetBingeCuratorNameRequest) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{82}
+}
+
+func (x *SetBingeCuratorNameRequest) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+type SetBingeCuratorNameResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DisplayName   string                 `protobuf:"bytes,1,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetBingeCuratorNameResponse) Reset() {
+	*x = SetBingeCuratorNameResponse{}
+	mi := &file_chill_v4_api_proto_msgTypes[83]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetBingeCuratorNameResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetBingeCuratorNameResponse) ProtoMessage() {}
+
+func (x *SetBingeCuratorNameResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_chill_v4_api_proto_msgTypes[83]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetBingeCuratorNameResponse.ProtoReflect.Descriptor instead.
+func (*SetBingeCuratorNameResponse) Descriptor() ([]byte, []int) {
+	return file_chill_v4_api_proto_rawDescGZIP(), []int{83}
+}
+
+func (x *SetBingeCuratorNameResponse) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
 }
 
 var File_chill_v4_api_proto protoreflect.FileDescriptor
@@ -7049,7 +7165,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\boverview\x18\t \x01(\tR\boverview\x12!\n" +
 	"\fexternal_url\x18\n" +
 	" \x01(\tR\vexternalUrl\x12\x16\n" +
-	"\x06genres\x18\v \x03(\tR\x06genres\"\xdf\x01\n" +
+	"\x06genres\x18\v \x03(\tR\x06genres\"\x82\x02\n" +
 	"\fBingeSummary\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x14\n" +
@@ -7059,7 +7175,8 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xe4\x01\n" +
+	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12!\n" +
+	"\fcurator_name\x18\a \x01(\tR\vcuratorName\"\x87\x02\n" +
 	"\x05Binge\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x14\n" +
@@ -7068,13 +7185,15 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x13\n" +
-	"\x11ListBingesRequest\"\x8c\x01\n" +
+	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12!\n" +
+	"\fcurator_name\x18\a \x01(\tR\vcuratorName\"\x13\n" +
+	"\x11ListBingesRequest\"\xaf\x01\n" +
 	"\x12ListBingesResponse\x12.\n" +
 	"\x06binges\x18\x01 \x03(\v2\x16.chill.v4.BingeSummaryR\x06binges\x12\x1d\n" +
 	"\n" +
 	"can_curate\x18\x02 \x01(\bR\tcanCurate\x12'\n" +
-	"\x06latest\x18\x03 \x01(\v2\x0f.chill.v4.BingeR\x06latest\"!\n" +
+	"\x06latest\x18\x03 \x01(\v2\x0f.chill.v4.BingeR\x06latest\x12!\n" +
+	"\fcurator_name\x18\x04 \x01(\tR\vcuratorName\"!\n" +
 	"\x0fGetBingeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"9\n" +
 	"\x10GetBingeResponse\x12%\n" +
@@ -7094,7 +7213,11 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\x05binge\x18\x01 \x01(\v2\x0f.chill.v4.BingeR\x05binge\"$\n" +
 	"\x12DeleteBingeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"\x15\n" +
-	"\x13DeleteBingeResponse*p\n" +
+	"\x13DeleteBingeResponse\"?\n" +
+	"\x1aSetBingeCuratorNameRequest\x12!\n" +
+	"\fdisplay_name\x18\x01 \x01(\tR\vdisplayName\"@\n" +
+	"\x1bSetBingeCuratorNameResponse\x12!\n" +
+	"\fdisplay_name\x18\x01 \x01(\tR\vdisplayName*p\n" +
 	"\x10PlaybackDelivery\x12!\n" +
 	"\x1dPLAYBACK_DELIVERY_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aPLAYBACK_DELIVERY_ORIGINAL\x10\x01\x12\x19\n" +
@@ -7227,7 +7350,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"ApiKeyAuth\x12\x00r\x1f\n" +
 	"\x1d\n" +
-	"\tX-API-Key\x12\fCore API key\x18\x01(\x012\x8a\x1f\n" +
+	"\tX-API-Key\x12\fCore API key\x18\x01(\x012\xca \n" +
 	"\vUserService\x12\xaa\x01\n" +
 	"\vGetIndexers\x12 .chill.v4.UserGetIndexersRequest\x1a!.chill.v4.UserGetIndexersResponse\"V\x92ASb\x10\n" +
 	"\x0e\n" +
@@ -7368,6 +7491,12 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"BearerAuth\x12\x00r?\n" +
 	"=\n" +
+	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x90\x02\x02\x12\xbd\x01\n" +
+	"\x13SetBingeCuratorName\x12$.chill.v4.SetBingeCuratorNameRequest\x1a%.chill.v4.SetBingeCuratorNameResponse\"Y\x92ASb\x10\n" +
+	"\x0e\n" +
+	"\n" +
+	"BearerAuth\x12\x00r?\n" +
+	"=\n" +
 	"\rAuthorization\x12(User auth token. Format: Bearer <token>.\x18\x01(\x01\x90\x02\x02B\x93\x03\x92A\xef\x01\x12\x15\n" +
 	"\x10Chill API v4 RPC2\x014\"\x03/v4Z\xd0\x01\n" +
 	"Z\n" +
@@ -7391,7 +7520,7 @@ func file_chill_v4_api_proto_rawDescGZIP() []byte {
 }
 
 var file_chill_v4_api_proto_enumTypes = make([]protoimpl.EnumInfo, 20)
-var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 82)
+var file_chill_v4_api_proto_msgTypes = make([]protoimpl.MessageInfo, 84)
 var file_chill_v4_api_proto_goTypes = []any{
 	(PlaybackDelivery)(0),                    // 0: chill.v4.PlaybackDelivery
 	(PendingReason)(0),                       // 1: chill.v4.PendingReason
@@ -7495,7 +7624,9 @@ var file_chill_v4_api_proto_goTypes = []any{
 	(*UpdateBingeResponse)(nil),              // 99: chill.v4.UpdateBingeResponse
 	(*DeleteBingeRequest)(nil),               // 100: chill.v4.DeleteBingeRequest
 	(*DeleteBingeResponse)(nil),              // 101: chill.v4.DeleteBingeResponse
-	(*timestamppb.Timestamp)(nil),            // 102: google.protobuf.Timestamp
+	(*SetBingeCuratorNameRequest)(nil),       // 102: chill.v4.SetBingeCuratorNameRequest
+	(*SetBingeCuratorNameResponse)(nil),      // 103: chill.v4.SetBingeCuratorNameResponse
+	(*timestamppb.Timestamp)(nil),            // 104: google.protobuf.Timestamp
 }
 var file_chill_v4_api_proto_depIdxs = []int32{
 	0,   // 0: chill.v4.ResolvePlaybackRequest.delivery:type_name -> chill.v4.PlaybackDelivery
@@ -7509,7 +7640,7 @@ var file_chill_v4_api_proto_depIdxs = []int32{
 	23,  // 8: chill.v4.StartPlaybackConversionResponse.pending:type_name -> chill.v4.PlaybackPending
 	26,  // 9: chill.v4.StartPlaybackConversionResponse.unavailable:type_name -> chill.v4.PlaybackUnavailable
 	2,   // 10: chill.v4.PlaybackUnavailable.reason:type_name -> chill.v4.UnavailableReason
-	102, // 11: chill.v4.PlaybackUrl.expires_at:type_name -> google.protobuf.Timestamp
+	104, // 11: chill.v4.PlaybackUrl.expires_at:type_name -> google.protobuf.Timestamp
 	3,   // 12: chill.v4.PlaybackFormat.container:type_name -> chill.v4.Container
 	4,   // 13: chill.v4.PlaybackFormat.video_codec:type_name -> chill.v4.VideoCodec
 	5,   // 14: chill.v4.PlaybackFormat.audio_codec:type_name -> chill.v4.AudioCodec
@@ -7572,11 +7703,11 @@ var file_chill_v4_api_proto_depIdxs = []int32{
 	82,  // 71: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
 	82,  // 72: chill.v4.FindOwnedVideosResponse.videos:type_name -> chill.v4.UserFile
 	19,  // 73: chill.v4.BingeItem.media_type:type_name -> chill.v4.BingeMediaType
-	102, // 74: chill.v4.BingeSummary.created_at:type_name -> google.protobuf.Timestamp
-	102, // 75: chill.v4.BingeSummary.updated_at:type_name -> google.protobuf.Timestamp
+	104, // 74: chill.v4.BingeSummary.created_at:type_name -> google.protobuf.Timestamp
+	104, // 75: chill.v4.BingeSummary.updated_at:type_name -> google.protobuf.Timestamp
 	89,  // 76: chill.v4.Binge.items:type_name -> chill.v4.BingeItem
-	102, // 77: chill.v4.Binge.created_at:type_name -> google.protobuf.Timestamp
-	102, // 78: chill.v4.Binge.updated_at:type_name -> google.protobuf.Timestamp
+	104, // 77: chill.v4.Binge.created_at:type_name -> google.protobuf.Timestamp
+	104, // 78: chill.v4.Binge.updated_at:type_name -> google.protobuf.Timestamp
 	90,  // 79: chill.v4.ListBingesResponse.binges:type_name -> chill.v4.BingeSummary
 	91,  // 80: chill.v4.ListBingesResponse.latest:type_name -> chill.v4.Binge
 	91,  // 81: chill.v4.GetBingeResponse.binge:type_name -> chill.v4.Binge
@@ -7612,36 +7743,38 @@ var file_chill_v4_api_proto_depIdxs = []int32{
 	96,  // 111: chill.v4.UserService.CreateBinge:input_type -> chill.v4.CreateBingeRequest
 	98,  // 112: chill.v4.UserService.UpdateBinge:input_type -> chill.v4.UpdateBingeRequest
 	100, // 113: chill.v4.UserService.DeleteBinge:input_type -> chill.v4.DeleteBingeRequest
-	31,  // 114: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
-	34,  // 115: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
-	41,  // 116: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
-	46,  // 117: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
-	51,  // 118: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
-	36,  // 119: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
-	41,  // 120: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
-	48,  // 121: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
-	53,  // 122: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
-	58,  // 123: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
-	60,  // 124: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
-	63,  // 125: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
-	65,  // 126: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
-	68,  // 127: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
-	68,  // 128: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
-	75,  // 129: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
-	77,  // 130: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
-	80,  // 131: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
-	83,  // 132: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
-	85,  // 133: chill.v4.UserService.FindOwnedVideos:output_type -> chill.v4.FindOwnedVideosResponse
-	21,  // 134: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
-	25,  // 135: chill.v4.UserService.StartPlaybackConversion:output_type -> chill.v4.StartPlaybackConversionResponse
-	87,  // 136: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
-	93,  // 137: chill.v4.UserService.ListBinges:output_type -> chill.v4.ListBingesResponse
-	95,  // 138: chill.v4.UserService.GetBinge:output_type -> chill.v4.GetBingeResponse
-	97,  // 139: chill.v4.UserService.CreateBinge:output_type -> chill.v4.CreateBingeResponse
-	99,  // 140: chill.v4.UserService.UpdateBinge:output_type -> chill.v4.UpdateBingeResponse
-	101, // 141: chill.v4.UserService.DeleteBinge:output_type -> chill.v4.DeleteBingeResponse
-	114, // [114:142] is the sub-list for method output_type
-	86,  // [86:114] is the sub-list for method input_type
+	102, // 114: chill.v4.UserService.SetBingeCuratorName:input_type -> chill.v4.SetBingeCuratorNameRequest
+	31,  // 115: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
+	34,  // 116: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
+	41,  // 117: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
+	46,  // 118: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
+	51,  // 119: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
+	36,  // 120: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
+	41,  // 121: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
+	48,  // 122: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
+	53,  // 123: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
+	58,  // 124: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
+	60,  // 125: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
+	63,  // 126: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
+	65,  // 127: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
+	68,  // 128: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
+	68,  // 129: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
+	75,  // 130: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
+	77,  // 131: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
+	80,  // 132: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
+	83,  // 133: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
+	85,  // 134: chill.v4.UserService.FindOwnedVideos:output_type -> chill.v4.FindOwnedVideosResponse
+	21,  // 135: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
+	25,  // 136: chill.v4.UserService.StartPlaybackConversion:output_type -> chill.v4.StartPlaybackConversionResponse
+	87,  // 137: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
+	93,  // 138: chill.v4.UserService.ListBinges:output_type -> chill.v4.ListBingesResponse
+	95,  // 139: chill.v4.UserService.GetBinge:output_type -> chill.v4.GetBingeResponse
+	97,  // 140: chill.v4.UserService.CreateBinge:output_type -> chill.v4.CreateBingeResponse
+	99,  // 141: chill.v4.UserService.UpdateBinge:output_type -> chill.v4.UpdateBingeResponse
+	101, // 142: chill.v4.UserService.DeleteBinge:output_type -> chill.v4.DeleteBingeResponse
+	103, // 143: chill.v4.UserService.SetBingeCuratorName:output_type -> chill.v4.SetBingeCuratorNameResponse
+	115, // [115:144] is the sub-list for method output_type
+	86,  // [86:115] is the sub-list for method input_type
 	86,  // [86:86] is the sub-list for extension type_name
 	86,  // [86:86] is the sub-list for extension extendee
 	0,   // [0:86] is the sub-list for field type_name
@@ -7690,7 +7823,7 @@ func file_chill_v4_api_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chill_v4_api_proto_rawDesc), len(file_chill_v4_api_proto_rawDesc)),
 			NumEnums:      20,
-			NumMessages:   82,
+			NumMessages:   84,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

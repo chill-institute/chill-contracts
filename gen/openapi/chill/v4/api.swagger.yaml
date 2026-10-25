@@ -725,6 +725,36 @@ paths:
         - UserService
       security:
         - BearerAuth: []
+  /chill.v4.UserService/SetBingeCuratorName:
+    post:
+      summary: |-
+        Curator only: sets the public name shown on the caller's binges. The
+        put.io username is never shown. Answers permission_denied for other users.
+      operationId: UserService_SetBingeCuratorName
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v4SetBingeCuratorNameResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v4SetBingeCuratorNameRequest'
+        - name: Authorization
+          description: 'User auth token. Format: Bearer <token>.'
+          in: header
+          required: true
+          type: string
+      tags:
+        - UserService
+      security:
+        - BearerAuth: []
   /chill.v4.UserService/StartPlaybackConversion:
     post:
       summary: |-
@@ -846,6 +876,9 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+      curatorName:
+        type: string
+        description: The curator's chosen public name; empty when the curator never set one.
   v4BingeItem:
     type: object
     properties:
@@ -912,6 +945,9 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+      curatorName:
+        type: string
+        description: The curator's chosen public name; empty when the curator never set one.
   v4CatalogOrigin:
     type: object
     properties:
@@ -1282,6 +1318,9 @@ definitions:
       latest:
         $ref: '#/definitions/v4Binge'
         description: The newest binge with resolved items; absent when there are none.
+      curatorName:
+        type: string
+        description: The caller's own curator name; empty for non-curators or until set.
   v4Movie:
     type: object
     properties:
@@ -1615,6 +1654,17 @@ definitions:
           only releases of exactly that season and episode; multi-episode releases
           and season packs are dropped. Omission on save preserves the stored
           preference; missing stored values default to false.
+  v4SetBingeCuratorNameRequest:
+    type: object
+    properties:
+      displayName:
+        type: string
+        description: Between 2 and 40 characters after trimming, on one line.
+  v4SetBingeCuratorNameResponse:
+    type: object
+    properties:
+      displayName:
+        type: string
   v4SortBy:
     type: string
     enum:

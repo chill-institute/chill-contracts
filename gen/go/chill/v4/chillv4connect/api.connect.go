@@ -94,6 +94,9 @@ const (
 	UserServiceUpdateBingeProcedure = "/chill.v4.UserService/UpdateBinge"
 	// UserServiceDeleteBingeProcedure is the procedure name of the UserService's DeleteBinge RPC.
 	UserServiceDeleteBingeProcedure = "/chill.v4.UserService/DeleteBinge"
+	// UserServiceSetBingeCuratorNameProcedure is the procedure name of the UserService's
+	// SetBingeCuratorName RPC.
+	UserServiceSetBingeCuratorNameProcedure = "/chill.v4.UserService/SetBingeCuratorName"
 )
 
 var (
@@ -467,6 +470,14 @@ var (
 			IdempotencyLevel: connect.IdempotencyIdempotent,
 		}
 	})
+	userServiceSetBingeCuratorNameSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType:       connect.StreamTypeUnary,
+			Schema:           v4.File_chill_v4_api_proto.Services().ByName("UserService").Methods().ByName("SetBingeCuratorName"),
+			Procedure:        UserServiceSetBingeCuratorNameProcedure,
+			IdempotencyLevel: connect.IdempotencyIdempotent,
+		}
+	})
 )
 
 // UserServiceClient is a client for the chill.v4.UserService service.
@@ -508,6 +519,9 @@ type UserServiceClient interface {
 	UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error)
 	// Curator only: answers permission_denied for other users.
 	DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error)
+	// Curator only: sets the public name shown on the caller's binges. The
+	// put.io username is never shown. Answers permission_denied for other users.
+	SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error)
 }
 
 // NewUserServiceClient constructs a client for the chill.v4.UserService service. Multiple service
@@ -555,6 +569,9 @@ type UserServiceHandler interface {
 	UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error)
 	// Curator only: answers permission_denied for other users.
 	DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error)
+	// Curator only: sets the public name shown on the caller's binges. The
+	// put.io username is never shown. Answers permission_denied for other users.
+	SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error)
 }
 
 // RegisterUserServiceHandler registers svc as the chill.v4.UserService implementation on server.
@@ -584,6 +601,7 @@ func RegisterUserServiceHandler(server *connect.Server, svc UserServiceHandler) 
 		connect.Method{Spec: userServiceCreateBingeSpec(), Handler: adapter.createBinge},
 		connect.Method{Spec: userServiceUpdateBingeSpec(), Handler: adapter.updateBinge},
 		connect.Method{Spec: userServiceDeleteBingeSpec(), Handler: adapter.deleteBinge},
+		connect.Method{Spec: userServiceSetBingeCuratorNameSpec(), Handler: adapter.setBingeCuratorName},
 	)
 }
 
@@ -680,6 +698,10 @@ func (UnimplementedUserServiceHandler) UpdateBinge(context.Context, *v4.UpdateBi
 
 func (UnimplementedUserServiceHandler) DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.DeleteBinge is not implemented")
+}
+
+func (UnimplementedUserServiceHandler) SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "chill.v4.UserService.SetBingeCuratorName is not implemented")
 }
 
 type userServiceClient struct {
@@ -865,6 +887,14 @@ func (c *userServiceClient) UpdateBinge(ctx context.Context, req *v4.UpdateBinge
 func (c *userServiceClient) DeleteBinge(ctx context.Context, req *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error) {
 	var res v4.DeleteBingeResponse
 	if err := c.client.CallUnary(ctx, userServiceDeleteBingeSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *userServiceClient) SetBingeCuratorName(ctx context.Context, req *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error) {
+	var res v4.SetBingeCuratorNameResponse
+	if err := c.client.CallUnary(ctx, userServiceSetBingeCuratorNameSpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -1142,6 +1172,18 @@ func (h userServiceHandler) deleteBinge(ctx context.Context, _ connect.Spec, str
 		return err
 	}
 	res, err := h.svc.DeleteBinge(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h userServiceHandler) setBingeCuratorName(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v4.SetBingeCuratorNameRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.SetBingeCuratorName(ctx, &req)
 	if err != nil {
 		return err
 	}

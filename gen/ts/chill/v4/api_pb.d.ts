@@ -2318,6 +2318,13 @@ export declare type BingeSummary = Message<"chill.v4.BingeSummary"> & {
    * @generated from field: google.protobuf.Timestamp updated_at = 6;
    */
   updatedAt?: Timestamp | undefined;
+
+  /**
+   * The curator's chosen public name; empty when the curator never set one.
+   *
+   * @generated from field: string curator_name = 7;
+   */
+  curatorName: string;
 };
 
 /**
@@ -2365,6 +2372,13 @@ export declare type Binge = Message<"chill.v4.Binge"> & {
    * @generated from field: google.protobuf.Timestamp updated_at = 6;
    */
   updatedAt?: Timestamp | undefined;
+
+  /**
+   * The curator's chosen public name; empty when the curator never set one.
+   *
+   * @generated from field: string curator_name = 7;
+   */
+  curatorName: string;
 };
 
 /**
@@ -2409,6 +2423,13 @@ export declare type ListBingesResponse = Message<"chill.v4.ListBingesResponse"> 
    * @generated from field: chill.v4.Binge latest = 3;
    */
   latest?: Binge | undefined;
+
+  /**
+   * The caller's own curator name; empty for non-curators or until set.
+   *
+   * @generated from field: string curator_name = 4;
+   */
+  curatorName: string;
 };
 
 /**
@@ -2565,6 +2586,40 @@ export declare type DeleteBingeResponse = Message<"chill.v4.DeleteBingeResponse"
  * Use `create(DeleteBingeResponseSchema)` to create a new message.
  */
 export declare const DeleteBingeResponseSchema: GenMessage<DeleteBingeResponse>;
+
+/**
+ * @generated from message chill.v4.SetBingeCuratorNameRequest
+ */
+export declare type SetBingeCuratorNameRequest = Message<"chill.v4.SetBingeCuratorNameRequest"> & {
+  /**
+   * Between 2 and 40 characters after trimming, on one line.
+   *
+   * @generated from field: string display_name = 1;
+   */
+  displayName: string;
+};
+
+/**
+ * Describes the message chill.v4.SetBingeCuratorNameRequest.
+ * Use `create(SetBingeCuratorNameRequestSchema)` to create a new message.
+ */
+export declare const SetBingeCuratorNameRequestSchema: GenMessage<SetBingeCuratorNameRequest>;
+
+/**
+ * @generated from message chill.v4.SetBingeCuratorNameResponse
+ */
+export declare type SetBingeCuratorNameResponse = Message<"chill.v4.SetBingeCuratorNameResponse"> & {
+  /**
+   * @generated from field: string display_name = 1;
+   */
+  displayName: string;
+};
+
+/**
+ * Describes the message chill.v4.SetBingeCuratorNameResponse.
+ * Use `create(SetBingeCuratorNameResponseSchema)` to create a new message.
+ */
+export declare const SetBingeCuratorNameResponseSchema: GenMessage<SetBingeCuratorNameResponse>;
 
 /**
  * @generated from enum chill.v4.PlaybackDelivery
@@ -3422,6 +3477,17 @@ export declare const UserService: GenService<{
     methodKind: "unary";
     input: typeof DeleteBingeRequestSchema;
     output: typeof DeleteBingeResponseSchema;
+  },
+  /**
+   * Curator only: sets the public name shown on the caller's binges. The
+   * put.io username is never shown. Answers permission_denied for other users.
+   *
+   * @generated from rpc chill.v4.UserService.SetBingeCuratorName
+   */
+  setBingeCuratorName: {
+    methodKind: "unary";
+    input: typeof SetBingeCuratorNameRequestSchema;
+    output: typeof SetBingeCuratorNameResponseSchema;
   },
 }>;
 
