@@ -3,7 +3,7 @@ module github.com/chill-institute/chill-contracts/v3
 go 1.26.6
 
 require (
-	connectrpc.com/connect/v2 v2.0.1
+	connectrpc.com/connect/v2 v2.0.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.32.0
 	go.yaml.in/yaml/v3 v3.0.5
 	google.golang.org/protobuf v1.36.12
