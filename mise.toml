@@ -11,6 +11,9 @@ GOWORK = "off"
 
 [tasks.generate]
 description = "Generate Go, TypeScript, and OpenAPI artifacts from protobuf sources"
+# Skips when these sources hash the same as the last local run; CI runs it fresh.
+sources = ["proto/**/*.proto", "buf.yaml", "buf.lock", "buf.gen.yaml", "go.mod", "go.sum"]
+outputs = ["gen/**/*"]
 run = [
   "rm -rf gen",
   "buf generate",
@@ -21,54 +24,57 @@ run = [
 description = "Check protobuf source formatting without changing files"
 run = "buf format --diff --exit-code"
 
+[tasks.lint]
+description = "Lint protobuf sources"
+run = "buf lint"
+
 [tasks."compatibility:check"]
 description = "Check compatibility against CONTRACTS_BASE_REF or the preceding stable release"
 run = 'go run ./tools/check-compatibility --against "${CONTRACTS_BASE_REF:-release}"'
 
-[tasks.smoke]
-description = "Run a fast protobuf compile smoke check"
-run = "buf build"
+[tasks."generated:check"]
+description = "Fail when generated artifacts or other files differ from the commit"
+run = "git status --porcelain --untracked-files=all | (! grep .)"
+
+[tasks.test]
+description = "Run Go tests against freshly generated artifacts"
+depends = ["generate"]
+run = "go test ./..."
 
 [tasks.verify-consumers-go]
 description = "Compile generated Go artifacts from a downstream module"
-run = "cd testdata/consumers/go && go test ./..."
+depends = ["generate"]
+dir = "testdata/consumers/go"
+run = "go test ./..."
 
 [tasks.verify-consumers-ts]
 description = "Import the published TypeScript surface from a downstream package"
+depends = ["generate"]
+dir = "testdata/consumers/ts"
 run = [
-  "test \"pnpm@$(mise current pnpm)\" = \"$(node -p 'require(\"./package.json\").packageManager')\" || { echo 'mise pnpm differs from package.json packageManager' >&2; exit 1; }",
-  "test \"$(node -p 'require(\"./package.json\").packageManager')\" = \"$(node -p 'require(\"./testdata/consumers/ts/package.json\").packageManager')\" || { echo 'TypeScript consumer packageManager differs from package.json' >&2; exit 1; }",
-  "cd testdata/consumers/ts && pnpm install --ignore-workspace --force --lockfile=false --lockfile-dir .",
-  "cd testdata/consumers/ts && node ./smoke.mjs"
+  "node ./package-manager.mjs \"$(mise current pnpm)\"",
+  "pnpm install --ignore-workspace --force --lockfile=false --lockfile-dir .",
+  "node ./smoke.mjs"
 ]
 
 [tasks.verify-consumers]
 description = "Run downstream Go and TypeScript consumer checks"
-run = [
-  "mise run verify-consumers-go",
-  "mise run verify-consumers-ts"
-]
+depends = ["verify-consumers-go", "verify-consumers-ts"]
 
 [tasks.actions]
 description = "Validate and audit GitHub Actions"
-shell = "bash -c"
-run = '''
-set -euo pipefail
-actionlint
-zizmor .github/workflows
-'''
+run = ["actionlint", "zizmor .github/workflows"]
+
+[tasks."release:smoke"]
+description = "Check the shared release rules with a dry semantic-release run"
+run = [
+  "npm ci --prefix .github/release --ignore-scripts --no-audit --no-fund",
+  "node .github/release/smoke.mjs"
+]
 
 [tasks.verify]
 description = "Verify protobuf contracts and generated artifacts"
-run = [
-  "mise run fmt:check",
-  "mise run smoke",
-  "buf lint",
-  "mise run generate",
-  "go test ./...",
-  "mise run verify-consumers",
-  "mise run actions"
-]
+depends = ["fmt:check", "lint", "test", "verify-consumers", "actions"]
 
 [tasks."hooks:pre-commit"]
 description = "Hook entrypoint for fast protobuf checks on commit"
@@ -77,7 +83,6 @@ run = "buf lint"
 [tasks."hooks:pre-push"]
 description = "Hook entrypoint for read-only repo verification before push"
 run = [
-  "mise run smoke",
   "buf lint",
   "go test ./...",
 ]
@@ -93,6 +98,7 @@ printf 'git hooks configured: %s/.githooks\n' "$repo_root"
 
 [settings]
 experimental = true
+task.source_freshness_hash_contents = true
 
 [hooks]
 postinstall = "mise run hooks"

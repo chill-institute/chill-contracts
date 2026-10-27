@@ -21,13 +21,13 @@ mise run verify
 
 ## Proof map
 
-| Change | Check | Runs |
-| --- | --- | --- |
-| Protobuf, `buf*.yaml` | `mise run verify`, then `CONTRACTS_BASE_REF=<git-ref> mise run compatibility:check` | local; [PR](./.github/workflows/verify.yml) vs base, [main](./.github/workflows/main.yml) vs preceding release; CI fails on uncommitted `gen/` |
-| Package metadata, generated surface | `mise run verify-consumers` (in `verify`) | local, CI |
-| Workflows | `mise run actions`, `go test ./internal/workflowpolicy` (in `verify`) | local, CI |
-| Release rules | `npm ci --prefix .github/release --ignore-scripts && node .github/release/smoke.mjs` | local, PR |
-| Release | [main](./.github/workflows/main.yml) `release` job | CI only: npm package, tag, GitHub release |
+| Change | Check |
+| --- | --- |
+| Protobuf, `buf*.yaml` | `mise run verify`, then `CONTRACTS_BASE_REF=<git-ref> mise run compatibility:check` |
+| Package metadata, generated surface | `mise run verify-consumers` (in `verify`) |
+| Workflows | `mise run actions`, `go test ./internal/workflowpolicy` (in `verify`) |
+| Release rules | `mise run release:smoke` |
 
-Gaps: the TypeScript consumer fixture is not type-checked; docs have no link
-check.
+CI also runs `mise run generated:check`, which fails when `gen/` differs from the
+commit. Gaps: the TypeScript consumer fixture is not type-checked; docs have no
+link check.

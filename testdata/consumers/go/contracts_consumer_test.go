@@ -1,7 +1,6 @@
 package consumer_test
 
 import (
-	"google.golang.org/protobuf/encoding/protojson"
 	"math"
 	"net/http"
 	"testing"
@@ -10,6 +9,7 @@ import (
 	"connectrpc.com/connect/v2/connecthttp"
 	chillv4 "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4"
 	chillv4connect "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4/chillv4connect"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 )
 
