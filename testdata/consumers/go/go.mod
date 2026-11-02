@@ -8,6 +8,6 @@ require (
 	google.golang.org/protobuf v1.36.12
 )
 
-require github.com/grpc-ecosystem/grpc-gateway/v2 v2.32.0 // indirect
+require github.com/grpc-ecosystem/grpc-gateway/v2 v2.33.0 // indirect
 
 replace github.com/chill-institute/chill-contracts/v3 => ../../..
