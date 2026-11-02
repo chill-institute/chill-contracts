@@ -13,9 +13,6 @@ mise run verify
 
 - Every schema change is a consumer-facing API change; keep wire compatibility.
 - Edit `proto/`, never `gen/`; commit schema and regenerated `gen/` together.
-- Source breaks need a Conventional Commit breaking marker; release types come
-  from `releaseRules` in [`.releaserc.json`](./.releaserc.json), shared by every
-  chill.institute package repo and checked by [`smoke.mjs`](./.github/release/smoke.mjs).
 - Field-level semantics live in proto comments; cross-cutting API rules in
   [docs/api.md](./docs/api.md).
 

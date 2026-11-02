@@ -7,10 +7,8 @@ deprecations, are comments in [`api.proto`](../proto/chill/v4/api.proto);
 generated details are in
 [`gen/openapi`](../gen/openapi/chill/v4/api.swagger.yaml).
 
-| Service | Auth header |
-| --- | --- |
-| `CoreService` | `X-API-Key: <service key>` |
-| `UserService` | `Authorization: Bearer <user token>` |
+Authentication schemes are defined in the generated
+[OpenAPI security definitions](../gen/openapi/chill/v4/api.swagger.yaml).
 
 Rules the schema cannot enforce:
 
