@@ -1346,6 +1346,9 @@ message BingeSummary {
   google.protobuf.Timestamp updated_at = 6;
   // The curator's chosen public name; empty when the curator never set one.
   string curator_name = 7;
+  // Posters of the binge's first titles in curator order, at most three.
+  // Titles without a poster or that do not resolve are left out.
+  repeated string poster_urls = 8;
 }
 
 message Binge {

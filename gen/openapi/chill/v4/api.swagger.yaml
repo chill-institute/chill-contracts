@@ -979,6 +979,13 @@ definitions:
       curatorName:
         type: string
         description: The curator's chosen public name; empty when the curator never set one.
+      posterUrls:
+        type: array
+        items:
+          type: string
+        description: |-
+          Posters of the binge's first titles in curator order, at most three.
+          Titles without a poster or that do not resolve are left out.
   v4BingeTitleMatch:
     type: object
     properties:

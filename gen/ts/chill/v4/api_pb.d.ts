@@ -2325,6 +2325,14 @@ export declare type BingeSummary = Message<"chill.v4.BingeSummary"> & {
    * @generated from field: string curator_name = 7;
    */
   curatorName: string;
+
+  /**
+   * Posters of the binge's first titles in curator order, at most three.
+   * Titles without a poster or that do not resolve are left out.
+   *
+   * @generated from field: repeated string poster_urls = 8;
+   */
+  posterUrls: string[];
 };
 
 /**
