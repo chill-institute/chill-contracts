@@ -2195,14 +2195,16 @@ export declare const UserProfileSchema: GenMessage<UserProfile>;
  */
 export declare type BingeItemInput = Message<"chill.v4.BingeItemInput"> & {
   /**
-   * IMDb title ID such as tt0903747. Must resolve to a movie or TV show.
+   * IMDb title ID such as tt0903747. Trimmed and lowercased before storage;
+   * must be unique within the binge and resolve to a movie or TV show.
    *
    * @generated from field: string imdb_id = 1;
    */
   imdbId: string;
 
   /**
-   * Optional curator note shown with the title; at most 500 characters.
+   * Optional curator note shown with the title; at most 500 Unicode code
+   * points after trimming.
    *
    * @generated from field: string comment = 2;
    */
@@ -2244,6 +2246,8 @@ export declare type BingeItem = Message<"chill.v4.BingeItem"> & {
   title: string;
 
   /**
+   * 0 when unknown.
+   *
    * @generated from field: int32 year = 5;
    */
   year: number;
@@ -2259,6 +2263,8 @@ export declare type BingeItem = Message<"chill.v4.BingeItem"> & {
   backdropUrl: string;
 
   /**
+   * 0 when unknown.
+   *
    * @generated from field: double rating = 8;
    */
   rating: number;
@@ -2310,11 +2316,15 @@ export declare type BingeSummary = Message<"chill.v4.BingeSummary"> & {
   itemCount: number;
 
   /**
+   * Absent when unknown.
+   *
    * @generated from field: google.protobuf.Timestamp created_at = 5;
    */
   createdAt?: Timestamp | undefined;
 
   /**
+   * Absent when unknown.
+   *
    * @generated from field: google.protobuf.Timestamp updated_at = 6;
    */
   updatedAt?: Timestamp | undefined;
@@ -2351,14 +2361,14 @@ export declare type Binge = Message<"chill.v4.Binge"> & {
   id: string;
 
   /**
-   * At most 120 characters.
+   * At most 120 Unicode code points.
    *
    * @generated from field: string title = 2;
    */
   title: string;
 
   /**
-   * At most 1000 characters; may be empty.
+   * At most 1000 Unicode code points; may be empty.
    *
    * @generated from field: string blurb = 3;
    */
@@ -2372,11 +2382,15 @@ export declare type Binge = Message<"chill.v4.Binge"> & {
   items: BingeItem[];
 
   /**
+   * Absent when unknown.
+   *
    * @generated from field: google.protobuf.Timestamp created_at = 5;
    */
   createdAt?: Timestamp | undefined;
 
   /**
+   * Absent when unknown. Send it back as UpdateBingeRequest.expected_updated_at.
+   *
    * @generated from field: google.protobuf.Timestamp updated_at = 6;
    */
   updatedAt?: Timestamp | undefined;
@@ -2483,16 +2497,22 @@ export declare const GetBingeResponseSchema: GenMessage<GetBingeResponse>;
  */
 export declare type CreateBingeRequest = Message<"chill.v4.CreateBingeRequest"> & {
   /**
+   * Required; at most 120 Unicode code points after trimming.
+   *
    * @generated from field: string title = 1;
    */
   title: string;
 
   /**
+   * At most 1000 Unicode code points after trimming; may be empty.
+   *
    * @generated from field: string blurb = 2;
    */
   blurb: string;
 
   /**
+   * Between 1 and 50 entries in curator order.
+   *
    * @generated from field: repeated chill.v4.BingeItemInput items = 3;
    */
   items: BingeItemInput[];
@@ -2530,19 +2550,33 @@ export declare type UpdateBingeRequest = Message<"chill.v4.UpdateBingeRequest"> 
   id: string;
 
   /**
+   * Required; at most 120 Unicode code points after trimming.
+   *
    * @generated from field: string title = 2;
    */
   title: string;
 
   /**
+   * At most 1000 Unicode code points after trimming; may be empty.
+   *
    * @generated from field: string blurb = 3;
    */
   blurb: string;
 
   /**
+   * Between 1 and 50 entries in curator order.
+   *
    * @generated from field: repeated chill.v4.BingeItemInput items = 4;
    */
   items: BingeItemInput[];
+
+  /**
+   * Optional. When set and not equal to the stored binge's updated_at, the
+   * call answers failed_precondition and changes nothing.
+   *
+   * @generated from field: google.protobuf.Timestamp expected_updated_at = 5;
+   */
+  expectedUpdatedAt?: Timestamp | undefined;
 };
 
 /**
@@ -2596,11 +2630,33 @@ export declare type DeleteBingeResponse = Message<"chill.v4.DeleteBingeResponse"
 export declare const DeleteBingeResponseSchema: GenMessage<DeleteBingeResponse>;
 
 /**
+ * Error detail on invalid_argument from CreateBinge and UpdateBinge when
+ * titles do not resolve to a movie or TV show.
+ *
+ * @generated from message chill.v4.BingeItemsUnresolved
+ */
+export declare type BingeItemsUnresolved = Message<"chill.v4.BingeItemsUnresolved"> & {
+  /**
+   * Normalized IMDb IDs in request order.
+   *
+   * @generated from field: repeated string imdb_ids = 1;
+   */
+  imdbIds: string[];
+};
+
+/**
+ * Describes the message chill.v4.BingeItemsUnresolved.
+ * Use `create(BingeItemsUnresolvedSchema)` to create a new message.
+ */
+export declare const BingeItemsUnresolvedSchema: GenMessage<BingeItemsUnresolved>;
+
+/**
  * @generated from message chill.v4.SetBingeCuratorNameRequest
  */
 export declare type SetBingeCuratorNameRequest = Message<"chill.v4.SetBingeCuratorNameRequest"> & {
   /**
-   * Between 2 and 40 characters after trimming, on one line.
+   * Between 2 and 40 Unicode code points after collapsing whitespace, on one
+   * line. Cannot be cleared once set.
    *
    * @generated from field: string display_name = 1;
    */
@@ -3533,7 +3589,11 @@ export declare const UserService: GenService<{
     output: typeof GetBingeResponseSchema;
   },
   /**
-   * Curator only: answers permission_denied for other users.
+   * Curator only: answers permission_denied for other users. Not idempotent:
+   * every successful call creates a new binge, so after an unknown outcome
+   * list binges before retrying. Answers invalid_argument for input that
+   * breaks a field constraint, carrying BingeItemsUnresolved in the error
+   * details when titles do not resolve.
    *
    * @generated from rpc chill.v4.UserService.CreateBinge
    */
@@ -3543,7 +3603,9 @@ export declare const UserService: GenService<{
     output: typeof CreateBingeResponseSchema;
   },
   /**
-   * Curator only: answers permission_denied for other users.
+   * Curator only: answers permission_denied for other users. Replaces the
+   * whole binge. Answers invalid_argument like CreateBinge, and
+   * failed_precondition when expected_updated_at is set and stale.
    *
    * @generated from rpc chill.v4.UserService.UpdateBinge
    */
@@ -3553,7 +3615,8 @@ export declare const UserService: GenService<{
     output: typeof UpdateBingeResponseSchema;
   },
   /**
-   * Curator only: answers permission_denied for other users.
+   * Curator only: answers permission_denied for other users. A repeated call
+   * answers not_found; treat not_found as already deleted.
    *
    * @generated from rpc chill.v4.UserService.DeleteBinge
    */
@@ -3565,6 +3628,8 @@ export declare const UserService: GenService<{
   /**
    * Curator only: sets the public name shown on the caller's binges. The
    * put.io username is never shown. Answers permission_denied for other users.
+   * A name can be changed but never cleared once set. Names are unique
+   * ignoring case; answers already_exists when another curator holds it.
    *
    * @generated from rpc chill.v4.UserService.SetBingeCuratorName
    */

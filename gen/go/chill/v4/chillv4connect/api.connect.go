@@ -524,14 +524,23 @@ type UserServiceClient interface {
 	// put.io users. Every authenticated user can read them.
 	ListBinges(context.Context, *v4.ListBingesRequest) (*v4.ListBingesResponse, error)
 	GetBinge(context.Context, *v4.GetBingeRequest) (*v4.GetBingeResponse, error)
-	// Curator only: answers permission_denied for other users.
+	// Curator only: answers permission_denied for other users. Not idempotent:
+	// every successful call creates a new binge, so after an unknown outcome
+	// list binges before retrying. Answers invalid_argument for input that
+	// breaks a field constraint, carrying BingeItemsUnresolved in the error
+	// details when titles do not resolve.
 	CreateBinge(context.Context, *v4.CreateBingeRequest) (*v4.CreateBingeResponse, error)
-	// Curator only: answers permission_denied for other users.
+	// Curator only: answers permission_denied for other users. Replaces the
+	// whole binge. Answers invalid_argument like CreateBinge, and
+	// failed_precondition when expected_updated_at is set and stale.
 	UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error)
-	// Curator only: answers permission_denied for other users.
+	// Curator only: answers permission_denied for other users. A repeated call
+	// answers not_found; treat not_found as already deleted.
 	DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error)
 	// Curator only: sets the public name shown on the caller's binges. The
 	// put.io username is never shown. Answers permission_denied for other users.
+	// A name can be changed but never cleared once set. Names are unique
+	// ignoring case; answers already_exists when another curator holds it.
 	SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error)
 	// Curator only: finds movies and TV shows by title so a binge entry can be
 	// picked instead of typed as an IMDb ID. Answers permission_denied for
@@ -578,14 +587,23 @@ type UserServiceHandler interface {
 	// put.io users. Every authenticated user can read them.
 	ListBinges(context.Context, *v4.ListBingesRequest) (*v4.ListBingesResponse, error)
 	GetBinge(context.Context, *v4.GetBingeRequest) (*v4.GetBingeResponse, error)
-	// Curator only: answers permission_denied for other users.
+	// Curator only: answers permission_denied for other users. Not idempotent:
+	// every successful call creates a new binge, so after an unknown outcome
+	// list binges before retrying. Answers invalid_argument for input that
+	// breaks a field constraint, carrying BingeItemsUnresolved in the error
+	// details when titles do not resolve.
 	CreateBinge(context.Context, *v4.CreateBingeRequest) (*v4.CreateBingeResponse, error)
-	// Curator only: answers permission_denied for other users.
+	// Curator only: answers permission_denied for other users. Replaces the
+	// whole binge. Answers invalid_argument like CreateBinge, and
+	// failed_precondition when expected_updated_at is set and stale.
 	UpdateBinge(context.Context, *v4.UpdateBingeRequest) (*v4.UpdateBingeResponse, error)
-	// Curator only: answers permission_denied for other users.
+	// Curator only: answers permission_denied for other users. A repeated call
+	// answers not_found; treat not_found as already deleted.
 	DeleteBinge(context.Context, *v4.DeleteBingeRequest) (*v4.DeleteBingeResponse, error)
 	// Curator only: sets the public name shown on the caller's binges. The
 	// put.io username is never shown. Answers permission_denied for other users.
+	// A name can be changed but never cleared once set. Names are unique
+	// ignoring case; answers already_exists when another curator holds it.
 	SetBingeCuratorName(context.Context, *v4.SetBingeCuratorNameRequest) (*v4.SetBingeCuratorNameResponse, error)
 	// Curator only: finds movies and TV shows by title so a binge entry can be
 	// picked instead of typed as an IMDb ID. Answers permission_denied for

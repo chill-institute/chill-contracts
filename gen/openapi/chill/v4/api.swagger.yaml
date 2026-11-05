@@ -175,7 +175,12 @@ paths:
         - BearerAuth: []
   /chill.v4.UserService/CreateBinge:
     post:
-      summary: 'Curator only: answers permission_denied for other users.'
+      summary: |-
+        Curator only: answers permission_denied for other users. Not idempotent:
+        every successful call creates a new binge, so after an unknown outcome
+        list binges before retrying. Answers invalid_argument for input that
+        breaks a field constraint, carrying BingeItemsUnresolved in the error
+        details when titles do not resolve.
       operationId: UserService_CreateBinge
       responses:
         "200":
@@ -203,7 +208,9 @@ paths:
         - BearerAuth: []
   /chill.v4.UserService/DeleteBinge:
     post:
-      summary: 'Curator only: answers permission_denied for other users.'
+      summary: |-
+        Curator only: answers permission_denied for other users. A repeated call
+        answers not_found; treat not_found as already deleted.
       operationId: UserService_DeleteBinge
       responses:
         "200":
@@ -761,6 +768,8 @@ paths:
       summary: |-
         Curator only: sets the public name shown on the caller's binges. The
         put.io username is never shown. Answers permission_denied for other users.
+        A name can be changed but never cleared once set. Names are unique
+        ignoring case; answers already_exists when another curator holds it.
       operationId: UserService_SetBingeCuratorName
       responses:
         "200":
@@ -820,7 +829,10 @@ paths:
         - BearerAuth: []
   /chill.v4.UserService/UpdateBinge:
     post:
-      summary: 'Curator only: answers permission_denied for other users.'
+      summary: |-
+        Curator only: answers permission_denied for other users. Replaces the
+        whole binge. Answers invalid_argument like CreateBinge, and
+        failed_precondition when expected_updated_at is set and stale.
       operationId: UserService_UpdateBinge
       responses:
         "200":
@@ -891,10 +903,10 @@ definitions:
         type: string
       title:
         type: string
-        description: At most 120 characters.
+        description: At most 120 Unicode code points.
       blurb:
         type: string
-        description: At most 1000 characters; may be empty.
+        description: At most 1000 Unicode code points; may be empty.
       items:
         type: array
         items:
@@ -904,9 +916,11 @@ definitions:
       createdAt:
         type: string
         format: date-time
+        description: Absent when unknown.
       updatedAt:
         type: string
         format: date-time
+        description: Absent when unknown. Send it back as UpdateBingeRequest.expected_updated_at.
       curatorName:
         type: string
         description: The curator's chosen public name; empty when the curator never set one.
@@ -924,6 +938,7 @@ definitions:
       year:
         type: integer
         format: int32
+        description: 0 when unknown.
       posterUrl:
         type: string
       backdropUrl:
@@ -931,6 +946,7 @@ definitions:
       rating:
         type: number
         format: double
+        description: 0 when unknown.
       overview:
         type: string
       externalUrl:
@@ -948,10 +964,14 @@ definitions:
     properties:
       imdbId:
         type: string
-        description: IMDb title ID such as tt0903747. Must resolve to a movie or TV show.
+        description: |-
+          IMDb title ID such as tt0903747. Trimmed and lowercased before storage;
+          must be unique within the binge and resolve to a movie or TV show.
       comment:
         type: string
-        description: Optional curator note shown with the title; at most 500 characters.
+        description: |-
+          Optional curator note shown with the title; at most 500 Unicode code
+          points after trimming.
     description: A curator's input for one binge entry.
   v4BingeMediaType:
     type: string
@@ -973,9 +993,11 @@ definitions:
       createdAt:
         type: string
         format: date-time
+        description: Absent when unknown.
       updatedAt:
         type: string
         format: date-time
+        description: Absent when unknown.
       curatorName:
         type: string
         description: The curator's chosen public name; empty when the curator never set one.
@@ -1066,13 +1088,16 @@ definitions:
     properties:
       title:
         type: string
+        description: Required; at most 120 Unicode code points after trimming.
       blurb:
         type: string
+        description: At most 1000 Unicode code points after trimming; may be empty.
       items:
         type: array
         items:
           type: object
           $ref: '#/definitions/v4BingeItemInput'
+        description: Between 1 and 50 entries in curator order.
   v4CreateBingeResponse:
     type: object
     properties:
@@ -1728,7 +1753,9 @@ definitions:
     properties:
       displayName:
         type: string
-        description: Between 2 and 40 characters after trimming, on one line.
+        description: |-
+          Between 2 and 40 Unicode code points after collapsing whitespace, on one
+          line. Cannot be cleared once set.
   v4SetBingeCuratorNameResponse:
     type: object
     properties:
@@ -2031,13 +2058,22 @@ definitions:
         type: string
       title:
         type: string
+        description: Required; at most 120 Unicode code points after trimming.
       blurb:
         type: string
+        description: At most 1000 Unicode code points after trimming; may be empty.
       items:
         type: array
         items:
           type: object
           $ref: '#/definitions/v4BingeItemInput'
+        description: Between 1 and 50 entries in curator order.
+      expectedUpdatedAt:
+        type: string
+        format: date-time
+        description: |-
+          Optional. When set and not equal to the stored binge's updated_at, the
+          call answers failed_precondition and changes nothing.
   v4UpdateBingeResponse:
     type: object
     properties:
