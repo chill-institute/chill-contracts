@@ -502,7 +502,11 @@ service UserService {
       }
     };
   }
-  // Curator only: answers permission_denied for other users.
+  // Curator only: answers permission_denied for other users. Not idempotent:
+  // every successful call creates a new binge, so after an unknown outcome
+  // list binges before retrying. Answers invalid_argument for input that
+  // breaks a field constraint, carrying BingeItemsUnresolved in the error
+  // details when titles do not resolve.
   rpc CreateBinge(CreateBingeRequest) returns (CreateBingeResponse) {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       security: {
@@ -521,7 +525,9 @@ service UserService {
       }
     };
   }
-  // Curator only: answers permission_denied for other users.
+  // Curator only: answers permission_denied for other users. Replaces the
+  // whole binge. Answers invalid_argument like CreateBinge, and
+  // failed_precondition when expected_updated_at is set and stale.
   rpc UpdateBinge(UpdateBingeRequest) returns (UpdateBingeResponse) {
     option idempotency_level = IDEMPOTENT;
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -541,7 +547,8 @@ service UserService {
       }
     };
   }
-  // Curator only: answers permission_denied for other users.
+  // Curator only: answers permission_denied for other users. A repeated call
+  // answers not_found; treat not_found as already deleted.
   rpc DeleteBinge(DeleteBingeRequest) returns (DeleteBingeResponse) {
     option idempotency_level = IDEMPOTENT;
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -563,6 +570,8 @@ service UserService {
   }
   // Curator only: sets the public name shown on the caller's binges. The
   // put.io username is never shown. Answers permission_denied for other users.
+  // A name can be changed but never cleared once set. Names are unique
+  // ignoring case; answers already_exists when another curator holds it.
   rpc SetBingeCuratorName(SetBingeCuratorNameRequest) returns (SetBingeCuratorNameResponse) {
     option idempotency_level = IDEMPOTENT;
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -1314,9 +1323,11 @@ enum BingeMediaType {
 
 // A curator's input for one binge entry.
 message BingeItemInput {
-  // IMDb title ID such as tt0903747. Must resolve to a movie or TV show.
+  // IMDb title ID such as tt0903747. Trimmed and lowercased before storage;
+  // must be unique within the binge and resolve to a movie or TV show.
   string imdb_id = 1;
-  // Optional curator note shown with the title; at most 500 characters.
+  // Optional curator note shown with the title; at most 500 Unicode code
+  // points after trimming.
   string comment = 2;
 }
 
@@ -1328,9 +1339,11 @@ message BingeItem {
   string comment = 2;
   BingeMediaType media_type = 3;
   string title = 4;
+  // 0 when unknown.
   int32 year = 5;
   string poster_url = 6;
   string backdrop_url = 7;
+  // 0 when unknown.
   double rating = 8;
   string overview = 9;
   string external_url = 10;
@@ -1342,7 +1355,9 @@ message BingeSummary {
   string title = 2;
   string blurb = 3;
   int32 item_count = 4;
+  // Absent when unknown.
   google.protobuf.Timestamp created_at = 5;
+  // Absent when unknown.
   google.protobuf.Timestamp updated_at = 6;
   // The curator's chosen public name; empty when the curator never set one.
   string curator_name = 7;
@@ -1353,13 +1368,15 @@ message BingeSummary {
 
 message Binge {
   string id = 1;
-  // At most 120 characters.
+  // At most 120 Unicode code points.
   string title = 2;
-  // At most 1000 characters; may be empty.
+  // At most 1000 Unicode code points; may be empty.
   string blurb = 3;
   // Between 1 and 50 entries in curator order.
   repeated BingeItem items = 4;
+  // Absent when unknown.
   google.protobuf.Timestamp created_at = 5;
+  // Absent when unknown. Send it back as UpdateBingeRequest.expected_updated_at.
   google.protobuf.Timestamp updated_at = 6;
   // The curator's chosen public name; empty when the curator never set one.
   string curator_name = 7;
@@ -1387,8 +1404,11 @@ message GetBingeResponse {
 }
 
 message CreateBingeRequest {
+  // Required; at most 120 Unicode code points after trimming.
   string title = 1;
+  // At most 1000 Unicode code points after trimming; may be empty.
   string blurb = 2;
+  // Between 1 and 50 entries in curator order.
   repeated BingeItemInput items = 3;
 }
 
@@ -1398,9 +1418,15 @@ message CreateBingeResponse {
 
 message UpdateBingeRequest {
   string id = 1;
+  // Required; at most 120 Unicode code points after trimming.
   string title = 2;
+  // At most 1000 Unicode code points after trimming; may be empty.
   string blurb = 3;
+  // Between 1 and 50 entries in curator order.
   repeated BingeItemInput items = 4;
+  // Optional. When set and not equal to the stored binge's updated_at, the
+  // call answers failed_precondition and changes nothing.
+  google.protobuf.Timestamp expected_updated_at = 5;
 }
 
 message UpdateBingeResponse {
@@ -1413,8 +1439,16 @@ message DeleteBingeRequest {
 
 message DeleteBingeResponse {}
 
+// Error detail on invalid_argument from CreateBinge and UpdateBinge when
+// titles do not resolve to a movie or TV show.
+message BingeItemsUnresolved {
+  // Normalized IMDb IDs in request order.
+  repeated string imdb_ids = 1;
+}
+
 message SetBingeCuratorNameRequest {
-  // Between 2 and 40 characters after trimming, on one line.
+  // Between 2 and 40 Unicode code points after collapsing whitespace, on one
+  // line. Cannot be cleared once set.
   string display_name = 1;
 }
 

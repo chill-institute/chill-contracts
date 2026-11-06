@@ -1,12 +1,17 @@
 package consumer_test
 
 import (
+	"context"
+	"errors"
 	"math"
 	"net/http"
+	"net/http/httptest"
+	"slices"
 	"testing"
 
 	"connectrpc.com/connect/v2"
 	"connectrpc.com/connect/v2/connecthttp"
+	"connectrpc.com/connect/v2/connectproto"
 	chillv4 "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4"
 	chillv4connect "github.com/chill-institute/chill-contracts/v3/gen/go/chill/v4/chillv4connect"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -99,5 +104,47 @@ func TestPlaybackContractsPreserveIDsAndStates(t *testing.T) {
 		if ready := response.GetReady(); ready != nil && ready.GetMedia().GetExpiry() == nil {
 			t.Fatal("missing media expiry state")
 		}
+	}
+}
+
+type unresolvedBingeTitles struct {
+	chillv4connect.UnimplementedUserServiceHandler
+}
+
+func (unresolvedBingeTitles) CreateBinge(context.Context, *chillv4.CreateBingeRequest) (*chillv4.CreateBingeResponse, error) {
+	detail, err := connectproto.NewErrorDetail(&chillv4.BingeItemsUnresolved{ImdbIds: []string{"tt0000001", "tt0000002"}})
+	if err != nil {
+		return nil, err
+	}
+	return nil, connect.NewError(connect.CodeInvalidArgument, "binge items could not be resolved").WithDetail(detail)
+}
+
+func TestUnresolvedBingeTitlesReachClientAsErrorDetail(t *testing.T) {
+	server := connect.NewServer()
+	chillv4connect.RegisterUserServiceHandler(server, unresolvedBingeTitles{})
+	mux := http.NewServeMux()
+	connecthttp.Mount(mux, server)
+	httpServer := httptest.NewServer(mux)
+	t.Cleanup(httpServer.Close)
+	client := chillv4connect.NewUserServiceClient(connect.NewClient(connecthttp.NewTransport(httpServer.Client(), httpServer.URL)))
+
+	_, err := client.CreateBinge(t.Context(), &chillv4.CreateBingeRequest{Title: "Heists"})
+
+	var connectErr *connect.Error
+	if !errors.As(err, &connectErr) || connectErr.Code() != connect.CodeInvalidArgument {
+		t.Fatalf("expected invalid_argument, got %v", err)
+	}
+	var unresolved []string
+	for _, detail := range connectErr.Details() {
+		message, err := connectproto.UnmarshalErrorDetail(detail)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if items, ok := message.(*chillv4.BingeItemsUnresolved); ok {
+			unresolved = items.GetImdbIds()
+		}
+	}
+	if !slices.Equal(unresolved, []string{"tt0000001", "tt0000002"}) {
+		t.Fatalf("unresolved IMDb IDs = %v", unresolved)
 	}
 }
