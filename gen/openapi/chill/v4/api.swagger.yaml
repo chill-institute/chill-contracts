@@ -1031,6 +1031,11 @@ definitions:
         $ref: '#/definitions/v4MoviesSource'
       tvShowsSource:
         $ref: '#/definitions/v4TVShowsSource'
+      bingeMediaType:
+        $ref: '#/definitions/v4BingeMediaType'
+        description: |-
+          Set when the item was sent from a binge; carries the item's media type
+          and never identifies the binge or the title.
   v4CatalogSettings:
     type: object
     properties:

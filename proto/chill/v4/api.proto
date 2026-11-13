@@ -1214,6 +1214,9 @@ message CatalogOrigin {
   oneof catalog {
     MoviesSource movies_source = 1;
     TVShowsSource tv_shows_source = 2;
+    // Set when the item was sent from a binge; carries the item's media type
+    // and never identifies the binge or the title.
+    BingeMediaType binge_media_type = 3;
   }
 }
 

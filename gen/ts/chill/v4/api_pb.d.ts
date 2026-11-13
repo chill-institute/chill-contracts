@@ -1767,6 +1767,15 @@ export declare type CatalogOrigin = Message<"chill.v4.CatalogOrigin"> & {
      */
     value: TVShowsSource;
     case: "tvShowsSource";
+  } | {
+    /**
+     * Set when the item was sent from a binge; carries the item's media type
+     * and never identifies the binge or the title.
+     *
+     * @generated from field: chill.v4.BingeMediaType binge_media_type = 3;
+     */
+    value: BingeMediaType;
+    case: "bingeMediaType";
   } | { case: undefined; value?: undefined };
 };
 
