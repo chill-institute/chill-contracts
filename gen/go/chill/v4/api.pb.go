@@ -4811,6 +4811,7 @@ type CatalogOrigin struct {
 	//
 	//	*CatalogOrigin_MoviesSource
 	//	*CatalogOrigin_TvShowsSource
+	//	*CatalogOrigin_BingeMediaType
 	Catalog       isCatalogOrigin_Catalog `protobuf_oneof:"catalog"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -4871,6 +4872,15 @@ func (x *CatalogOrigin) GetTvShowsSource() TVShowsSource {
 	return TVShowsSource_TV_SHOWS_SOURCE_UNSPECIFIED
 }
 
+func (x *CatalogOrigin) GetBingeMediaType() BingeMediaType {
+	if x != nil {
+		if x, ok := x.Catalog.(*CatalogOrigin_BingeMediaType); ok {
+			return x.BingeMediaType
+		}
+	}
+	return BingeMediaType_BINGE_MEDIA_TYPE_UNSPECIFIED
+}
+
 type isCatalogOrigin_Catalog interface {
 	isCatalogOrigin_Catalog()
 }
@@ -4883,9 +4893,17 @@ type CatalogOrigin_TvShowsSource struct {
 	TvShowsSource TVShowsSource `protobuf:"varint,2,opt,name=tv_shows_source,json=tvShowsSource,proto3,enum=chill.v4.TVShowsSource,oneof"`
 }
 
+type CatalogOrigin_BingeMediaType struct {
+	// Set when the item was sent from a binge; carries the item's media type
+	// and never identifies the binge or the title.
+	BingeMediaType BingeMediaType `protobuf:"varint,3,opt,name=binge_media_type,json=bingeMediaType,proto3,enum=chill.v4.BingeMediaType,oneof"`
+}
+
 func (*CatalogOrigin_MoviesSource) isCatalogOrigin_Catalog() {}
 
 func (*CatalogOrigin_TvShowsSource) isCatalogOrigin_Catalog() {}
+
+func (*CatalogOrigin_BingeMediaType) isCatalogOrigin_Catalog() {}
 
 type AddTransferRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -7313,10 +7331,11 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\n" +
 	"_folder_id\"M\n" +
 	"\x17SaveUserSettingsRequest\x122\n" +
-	"\bsettings\x18\x01 \x01(\v2\x16.chill.v4.UserSettingsR\bsettings\"\x9c\x01\n" +
+	"\bsettings\x18\x01 \x01(\v2\x16.chill.v4.UserSettingsR\bsettings\"\xe2\x01\n" +
 	"\rCatalogOrigin\x12=\n" +
 	"\rmovies_source\x18\x01 \x01(\x0e2\x16.chill.v4.MoviesSourceH\x00R\fmoviesSource\x12A\n" +
-	"\x0ftv_shows_source\x18\x02 \x01(\x0e2\x17.chill.v4.TVShowsSourceH\x00R\rtvShowsSourceB\t\n" +
+	"\x0ftv_shows_source\x18\x02 \x01(\x0e2\x17.chill.v4.TVShowsSourceH\x00R\rtvShowsSource\x12D\n" +
+	"\x10binge_media_type\x18\x03 \x01(\x0e2\x18.chill.v4.BingeMediaTypeH\x00R\x0ebingeMediaTypeB\t\n" +
 	"\acatalog\"f\n" +
 	"\x12AddTransferRequest\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x12>\n" +
@@ -7971,95 +7990,96 @@ var file_chill_v4_api_proto_depIdxs = []int32{
 	68,  // 62: chill.v4.SaveUserSettingsRequest.settings:type_name -> chill.v4.UserSettings
 	8,   // 63: chill.v4.CatalogOrigin.movies_source:type_name -> chill.v4.MoviesSource
 	9,   // 64: chill.v4.CatalogOrigin.tv_shows_source:type_name -> chill.v4.TVShowsSource
-	73,  // 65: chill.v4.AddTransferRequest.catalog_origin:type_name -> chill.v4.CatalogOrigin
-	78,  // 66: chill.v4.AddTransferResponse.transfer:type_name -> chill.v4.Transfer
-	78,  // 67: chill.v4.GetTransferResponse.transfer:type_name -> chill.v4.Transfer
-	82,  // 68: chill.v4.GetDownloadFolderResponse.folder:type_name -> chill.v4.UserFile
-	39,  // 69: chill.v4.UserFile.release_info:type_name -> chill.v4.ReleaseInfo
-	82,  // 70: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
-	82,  // 71: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
-	82,  // 72: chill.v4.FindOwnedVideosResponse.videos:type_name -> chill.v4.UserFile
-	19,  // 73: chill.v4.BingeItem.media_type:type_name -> chill.v4.BingeMediaType
-	108, // 74: chill.v4.BingeSummary.created_at:type_name -> google.protobuf.Timestamp
-	108, // 75: chill.v4.BingeSummary.updated_at:type_name -> google.protobuf.Timestamp
-	89,  // 76: chill.v4.Binge.items:type_name -> chill.v4.BingeItem
-	108, // 77: chill.v4.Binge.created_at:type_name -> google.protobuf.Timestamp
-	108, // 78: chill.v4.Binge.updated_at:type_name -> google.protobuf.Timestamp
-	90,  // 79: chill.v4.ListBingesResponse.binges:type_name -> chill.v4.BingeSummary
-	91,  // 80: chill.v4.ListBingesResponse.latest:type_name -> chill.v4.Binge
-	91,  // 81: chill.v4.GetBingeResponse.binge:type_name -> chill.v4.Binge
-	88,  // 82: chill.v4.CreateBingeRequest.items:type_name -> chill.v4.BingeItemInput
-	91,  // 83: chill.v4.CreateBingeResponse.binge:type_name -> chill.v4.Binge
-	88,  // 84: chill.v4.UpdateBingeRequest.items:type_name -> chill.v4.BingeItemInput
-	108, // 85: chill.v4.UpdateBingeRequest.expected_updated_at:type_name -> google.protobuf.Timestamp
-	91,  // 86: chill.v4.UpdateBingeResponse.binge:type_name -> chill.v4.Binge
-	19,  // 87: chill.v4.BingeTitleMatch.media_type:type_name -> chill.v4.BingeMediaType
-	106, // 88: chill.v4.SearchBingeTitlesResponse.matches:type_name -> chill.v4.BingeTitleMatch
-	30,  // 89: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
-	32,  // 90: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
-	38,  // 91: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
-	44,  // 92: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
-	50,  // 93: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
-	35,  // 94: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
-	43,  // 95: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
-	47,  // 96: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
-	52,  // 97: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
-	57,  // 98: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
-	59,  // 99: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
-	62,  // 100: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
-	64,  // 101: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
-	67,  // 102: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
-	72,  // 103: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
-	74,  // 104: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
-	76,  // 105: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
-	79,  // 106: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
-	81,  // 107: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
-	84,  // 108: chill.v4.UserService.FindOwnedVideos:input_type -> chill.v4.FindOwnedVideosRequest
-	20,  // 109: chill.v4.UserService.ResolvePlayback:input_type -> chill.v4.ResolvePlaybackRequest
-	24,  // 110: chill.v4.UserService.StartPlaybackConversion:input_type -> chill.v4.StartPlaybackConversionRequest
-	86,  // 111: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
-	92,  // 112: chill.v4.UserService.ListBinges:input_type -> chill.v4.ListBingesRequest
-	94,  // 113: chill.v4.UserService.GetBinge:input_type -> chill.v4.GetBingeRequest
-	96,  // 114: chill.v4.UserService.CreateBinge:input_type -> chill.v4.CreateBingeRequest
-	98,  // 115: chill.v4.UserService.UpdateBinge:input_type -> chill.v4.UpdateBingeRequest
-	100, // 116: chill.v4.UserService.DeleteBinge:input_type -> chill.v4.DeleteBingeRequest
-	103, // 117: chill.v4.UserService.SetBingeCuratorName:input_type -> chill.v4.SetBingeCuratorNameRequest
-	105, // 118: chill.v4.UserService.SearchBingeTitles:input_type -> chill.v4.SearchBingeTitlesRequest
-	31,  // 119: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
-	34,  // 120: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
-	41,  // 121: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
-	46,  // 122: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
-	51,  // 123: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
-	36,  // 124: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
-	41,  // 125: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
-	48,  // 126: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
-	53,  // 127: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
-	58,  // 128: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
-	60,  // 129: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
-	63,  // 130: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
-	65,  // 131: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
-	68,  // 132: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
-	68,  // 133: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
-	75,  // 134: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
-	77,  // 135: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
-	80,  // 136: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
-	83,  // 137: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
-	85,  // 138: chill.v4.UserService.FindOwnedVideos:output_type -> chill.v4.FindOwnedVideosResponse
-	21,  // 139: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
-	25,  // 140: chill.v4.UserService.StartPlaybackConversion:output_type -> chill.v4.StartPlaybackConversionResponse
-	87,  // 141: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
-	93,  // 142: chill.v4.UserService.ListBinges:output_type -> chill.v4.ListBingesResponse
-	95,  // 143: chill.v4.UserService.GetBinge:output_type -> chill.v4.GetBingeResponse
-	97,  // 144: chill.v4.UserService.CreateBinge:output_type -> chill.v4.CreateBingeResponse
-	99,  // 145: chill.v4.UserService.UpdateBinge:output_type -> chill.v4.UpdateBingeResponse
-	101, // 146: chill.v4.UserService.DeleteBinge:output_type -> chill.v4.DeleteBingeResponse
-	104, // 147: chill.v4.UserService.SetBingeCuratorName:output_type -> chill.v4.SetBingeCuratorNameResponse
-	107, // 148: chill.v4.UserService.SearchBingeTitles:output_type -> chill.v4.SearchBingeTitlesResponse
-	119, // [119:149] is the sub-list for method output_type
-	89,  // [89:119] is the sub-list for method input_type
-	89,  // [89:89] is the sub-list for extension type_name
-	89,  // [89:89] is the sub-list for extension extendee
-	0,   // [0:89] is the sub-list for field type_name
+	19,  // 65: chill.v4.CatalogOrigin.binge_media_type:type_name -> chill.v4.BingeMediaType
+	73,  // 66: chill.v4.AddTransferRequest.catalog_origin:type_name -> chill.v4.CatalogOrigin
+	78,  // 67: chill.v4.AddTransferResponse.transfer:type_name -> chill.v4.Transfer
+	78,  // 68: chill.v4.GetTransferResponse.transfer:type_name -> chill.v4.Transfer
+	82,  // 69: chill.v4.GetDownloadFolderResponse.folder:type_name -> chill.v4.UserFile
+	39,  // 70: chill.v4.UserFile.release_info:type_name -> chill.v4.ReleaseInfo
+	82,  // 71: chill.v4.GetFolderResponse.parent:type_name -> chill.v4.UserFile
+	82,  // 72: chill.v4.GetFolderResponse.files:type_name -> chill.v4.UserFile
+	82,  // 73: chill.v4.FindOwnedVideosResponse.videos:type_name -> chill.v4.UserFile
+	19,  // 74: chill.v4.BingeItem.media_type:type_name -> chill.v4.BingeMediaType
+	108, // 75: chill.v4.BingeSummary.created_at:type_name -> google.protobuf.Timestamp
+	108, // 76: chill.v4.BingeSummary.updated_at:type_name -> google.protobuf.Timestamp
+	89,  // 77: chill.v4.Binge.items:type_name -> chill.v4.BingeItem
+	108, // 78: chill.v4.Binge.created_at:type_name -> google.protobuf.Timestamp
+	108, // 79: chill.v4.Binge.updated_at:type_name -> google.protobuf.Timestamp
+	90,  // 80: chill.v4.ListBingesResponse.binges:type_name -> chill.v4.BingeSummary
+	91,  // 81: chill.v4.ListBingesResponse.latest:type_name -> chill.v4.Binge
+	91,  // 82: chill.v4.GetBingeResponse.binge:type_name -> chill.v4.Binge
+	88,  // 83: chill.v4.CreateBingeRequest.items:type_name -> chill.v4.BingeItemInput
+	91,  // 84: chill.v4.CreateBingeResponse.binge:type_name -> chill.v4.Binge
+	88,  // 85: chill.v4.UpdateBingeRequest.items:type_name -> chill.v4.BingeItemInput
+	108, // 86: chill.v4.UpdateBingeRequest.expected_updated_at:type_name -> google.protobuf.Timestamp
+	91,  // 87: chill.v4.UpdateBingeResponse.binge:type_name -> chill.v4.Binge
+	19,  // 88: chill.v4.BingeTitleMatch.media_type:type_name -> chill.v4.BingeMediaType
+	106, // 89: chill.v4.SearchBingeTitlesResponse.matches:type_name -> chill.v4.BingeTitleMatch
+	30,  // 90: chill.v4.CoreService.HealthCheck:input_type -> chill.v4.HealthCheckRequest
+	32,  // 91: chill.v4.CoreService.GetIndexers:input_type -> chill.v4.CoreGetIndexersRequest
+	38,  // 92: chill.v4.CoreService.Search:input_type -> chill.v4.CoreSearchRequest
+	44,  // 93: chill.v4.CoreService.GetMoviesBySource:input_type -> chill.v4.GetMoviesBySourceRequest
+	50,  // 94: chill.v4.CoreService.GetTVShowsBySource:input_type -> chill.v4.GetTVShowsBySourceRequest
+	35,  // 95: chill.v4.UserService.GetIndexers:input_type -> chill.v4.UserGetIndexersRequest
+	43,  // 96: chill.v4.UserService.Search:input_type -> chill.v4.UserSearchRequest
+	47,  // 97: chill.v4.UserService.GetMovies:input_type -> chill.v4.GetMoviesRequest
+	52,  // 98: chill.v4.UserService.GetTVShows:input_type -> chill.v4.GetTVShowsRequest
+	57,  // 99: chill.v4.UserService.GetTVShowDetail:input_type -> chill.v4.GetTVShowDetailRequest
+	59,  // 100: chill.v4.UserService.GetTVShowSeason:input_type -> chill.v4.GetTVShowSeasonRequest
+	62,  // 101: chill.v4.UserService.GetTVShowEpisodeDownload:input_type -> chill.v4.GetTVShowEpisodeDownloadRequest
+	64,  // 102: chill.v4.UserService.GetTVShowSeasonDownloads:input_type -> chill.v4.GetTVShowSeasonDownloadsRequest
+	67,  // 103: chill.v4.UserService.GetUserSettings:input_type -> chill.v4.GetUserSettingsRequest
+	72,  // 104: chill.v4.UserService.SaveUserSettings:input_type -> chill.v4.SaveUserSettingsRequest
+	74,  // 105: chill.v4.UserService.AddTransfer:input_type -> chill.v4.AddTransferRequest
+	76,  // 106: chill.v4.UserService.GetTransfer:input_type -> chill.v4.GetTransferRequest
+	79,  // 107: chill.v4.UserService.GetDownloadFolder:input_type -> chill.v4.GetDownloadFolderRequest
+	81,  // 108: chill.v4.UserService.GetFolder:input_type -> chill.v4.GetFolderRequest
+	84,  // 109: chill.v4.UserService.FindOwnedVideos:input_type -> chill.v4.FindOwnedVideosRequest
+	20,  // 110: chill.v4.UserService.ResolvePlayback:input_type -> chill.v4.ResolvePlaybackRequest
+	24,  // 111: chill.v4.UserService.StartPlaybackConversion:input_type -> chill.v4.StartPlaybackConversionRequest
+	86,  // 112: chill.v4.UserService.GetUserProfile:input_type -> chill.v4.GetUserProfileRequest
+	92,  // 113: chill.v4.UserService.ListBinges:input_type -> chill.v4.ListBingesRequest
+	94,  // 114: chill.v4.UserService.GetBinge:input_type -> chill.v4.GetBingeRequest
+	96,  // 115: chill.v4.UserService.CreateBinge:input_type -> chill.v4.CreateBingeRequest
+	98,  // 116: chill.v4.UserService.UpdateBinge:input_type -> chill.v4.UpdateBingeRequest
+	100, // 117: chill.v4.UserService.DeleteBinge:input_type -> chill.v4.DeleteBingeRequest
+	103, // 118: chill.v4.UserService.SetBingeCuratorName:input_type -> chill.v4.SetBingeCuratorNameRequest
+	105, // 119: chill.v4.UserService.SearchBingeTitles:input_type -> chill.v4.SearchBingeTitlesRequest
+	31,  // 120: chill.v4.CoreService.HealthCheck:output_type -> chill.v4.HealthResponse
+	34,  // 121: chill.v4.CoreService.GetIndexers:output_type -> chill.v4.CoreGetIndexersResponse
+	41,  // 122: chill.v4.CoreService.Search:output_type -> chill.v4.SearchResponse
+	46,  // 123: chill.v4.CoreService.GetMoviesBySource:output_type -> chill.v4.GetMoviesBySourceResponse
+	51,  // 124: chill.v4.CoreService.GetTVShowsBySource:output_type -> chill.v4.GetTVShowsBySourceResponse
+	36,  // 125: chill.v4.UserService.GetIndexers:output_type -> chill.v4.UserGetIndexersResponse
+	41,  // 126: chill.v4.UserService.Search:output_type -> chill.v4.SearchResponse
+	48,  // 127: chill.v4.UserService.GetMovies:output_type -> chill.v4.GetMoviesResponse
+	53,  // 128: chill.v4.UserService.GetTVShows:output_type -> chill.v4.GetTVShowsResponse
+	58,  // 129: chill.v4.UserService.GetTVShowDetail:output_type -> chill.v4.GetTVShowDetailResponse
+	60,  // 130: chill.v4.UserService.GetTVShowSeason:output_type -> chill.v4.GetTVShowSeasonResponse
+	63,  // 131: chill.v4.UserService.GetTVShowEpisodeDownload:output_type -> chill.v4.GetTVShowEpisodeDownloadResponse
+	65,  // 132: chill.v4.UserService.GetTVShowSeasonDownloads:output_type -> chill.v4.GetTVShowSeasonDownloadsResponse
+	68,  // 133: chill.v4.UserService.GetUserSettings:output_type -> chill.v4.UserSettings
+	68,  // 134: chill.v4.UserService.SaveUserSettings:output_type -> chill.v4.UserSettings
+	75,  // 135: chill.v4.UserService.AddTransfer:output_type -> chill.v4.AddTransferResponse
+	77,  // 136: chill.v4.UserService.GetTransfer:output_type -> chill.v4.GetTransferResponse
+	80,  // 137: chill.v4.UserService.GetDownloadFolder:output_type -> chill.v4.GetDownloadFolderResponse
+	83,  // 138: chill.v4.UserService.GetFolder:output_type -> chill.v4.GetFolderResponse
+	85,  // 139: chill.v4.UserService.FindOwnedVideos:output_type -> chill.v4.FindOwnedVideosResponse
+	21,  // 140: chill.v4.UserService.ResolvePlayback:output_type -> chill.v4.ResolvePlaybackResponse
+	25,  // 141: chill.v4.UserService.StartPlaybackConversion:output_type -> chill.v4.StartPlaybackConversionResponse
+	87,  // 142: chill.v4.UserService.GetUserProfile:output_type -> chill.v4.UserProfile
+	93,  // 143: chill.v4.UserService.ListBinges:output_type -> chill.v4.ListBingesResponse
+	95,  // 144: chill.v4.UserService.GetBinge:output_type -> chill.v4.GetBingeResponse
+	97,  // 145: chill.v4.UserService.CreateBinge:output_type -> chill.v4.CreateBingeResponse
+	99,  // 146: chill.v4.UserService.UpdateBinge:output_type -> chill.v4.UpdateBingeResponse
+	101, // 147: chill.v4.UserService.DeleteBinge:output_type -> chill.v4.DeleteBingeResponse
+	104, // 148: chill.v4.UserService.SetBingeCuratorName:output_type -> chill.v4.SetBingeCuratorNameResponse
+	107, // 149: chill.v4.UserService.SearchBingeTitles:output_type -> chill.v4.SearchBingeTitlesResponse
+	120, // [120:150] is the sub-list for method output_type
+	90,  // [90:120] is the sub-list for method input_type
+	90,  // [90:90] is the sub-list for extension type_name
+	90,  // [90:90] is the sub-list for extension extendee
+	0,   // [0:90] is the sub-list for field type_name
 }
 
 func init() { file_chill_v4_api_proto_init() }
@@ -8095,6 +8115,7 @@ func file_chill_v4_api_proto_init() {
 	file_chill_v4_api_proto_msgTypes[53].OneofWrappers = []any{
 		(*CatalogOrigin_MoviesSource)(nil),
 		(*CatalogOrigin_TvShowsSource)(nil),
+		(*CatalogOrigin_BingeMediaType)(nil),
 	}
 	file_chill_v4_api_proto_msgTypes[58].OneofWrappers = []any{}
 	file_chill_v4_api_proto_msgTypes[62].OneofWrappers = []any{}

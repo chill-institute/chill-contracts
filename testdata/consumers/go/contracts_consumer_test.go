@@ -75,6 +75,32 @@ func TestCatalogSortPresenceSurvivesWireRoundTrip(t *testing.T) {
 	}
 }
 
+func TestBingeCatalogOriginKeepsMediaTypeOnTheWire(t *testing.T) {
+	for _, mediaType := range []chillv4.BingeMediaType{
+		chillv4.BingeMediaType_BINGE_MEDIA_TYPE_UNSPECIFIED,
+		chillv4.BingeMediaType_BINGE_MEDIA_TYPE_MOVIE,
+		chillv4.BingeMediaType_BINGE_MEDIA_TYPE_TV_SHOW,
+	} {
+		payload := `{"url":"magnet:?xt=urn:btih:example","catalogOrigin":{"bingeMediaType":"` + mediaType.String() + `"}}`
+		var fromJSON chillv4.AddTransferRequest
+		if err := protojson.Unmarshal([]byte(payload), &fromJSON); err != nil {
+			t.Fatal(err)
+		}
+		encoded, err := proto.Marshal(&fromJSON)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var decoded chillv4.AddTransferRequest
+		if err := proto.Unmarshal(encoded, &decoded); err != nil {
+			t.Fatal(err)
+		}
+		origin, ok := decoded.GetCatalogOrigin().GetCatalog().(*chillv4.CatalogOrigin_BingeMediaType)
+		if !ok || origin.BingeMediaType != mediaType {
+			t.Fatalf("binge origin lost: want %v, got %v", mediaType, decoded.GetCatalogOrigin())
+		}
+	}
+}
+
 func TestPlaybackContractsPreserveIDsAndStates(t *testing.T) {
 	request := &chillv4.ResolvePlaybackRequest{FileId: math.MaxInt64}
 	encoded, err := protojson.Marshal(request)
