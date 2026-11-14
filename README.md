@@ -1,6 +1,6 @@
 # chill-contracts
 
-![chill.institute contracts](https://chill.institute/banner.png)
+![chill.institute contracts](https://raw.githubusercontent.com/chill-institute/.github/main/assets/banner.png)
 
 Schemas and generated clients for the public [chill.institute](https://chill.institute) API.
 
