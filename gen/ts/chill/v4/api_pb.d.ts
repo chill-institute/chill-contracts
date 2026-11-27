@@ -1662,6 +1662,18 @@ export declare type SearchSettings = Message<"chill.v4.SearchSettings"> & {
    * @generated from field: optional bool exact_search = 12;
    */
   exactSearch?: boolean | undefined;
+
+  /**
+   * Beta. When true, free-text searches without quoted or + operators are
+   * rewritten into the forms release names use before indexers see them.
+   * Today that covers season and episode spellings: "s1", "Season01",
+   * "season 1" and "S01 title" become "title S01", and "s5e14", "5x14" and
+   * "season 5 episode 14" become "title S05E14". Omission on save preserves
+   * the stored preference; missing stored values default to false.
+   *
+   * @generated from field: optional bool smart_search = 13;
+   */
+  smartSearch?: boolean | undefined;
 };
 
 /**

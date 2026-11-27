@@ -4511,7 +4511,14 @@ type SearchSettings struct {
 	// only releases of exactly that season and episode; multi-episode releases
 	// and season packs are dropped. Omission on save preserves the stored
 	// preference; missing stored values default to false.
-	ExactSearch   *bool `protobuf:"varint,12,opt,name=exact_search,json=exactSearch,proto3,oneof" json:"exact_search,omitempty"`
+	ExactSearch *bool `protobuf:"varint,12,opt,name=exact_search,json=exactSearch,proto3,oneof" json:"exact_search,omitempty"`
+	// Beta. When true, free-text searches without quoted or + operators are
+	// rewritten into the forms release names use before indexers see them.
+	// Today that covers season and episode spellings: "s1", "Season01",
+	// "season 1" and "S01 title" become "title S01", and "s5e14", "5x14" and
+	// "season 5 episode 14" become "title S05E14". Omission on save preserves
+	// the stored preference; missing stored values default to false.
+	SmartSearch   *bool `protobuf:"varint,13,opt,name=smart_search,json=smartSearch,proto3,oneof" json:"smart_search,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4626,6 +4633,13 @@ func (x *SearchSettings) GetSortDirection() SortDirection {
 func (x *SearchSettings) GetExactSearch() bool {
 	if x != nil && x.ExactSearch != nil {
 		return *x.ExactSearch
+	}
+	return false
+}
+
+func (x *SearchSettings) GetSmartSearch() bool {
+	if x != nil && x.SmartSearch != nil {
+		return *x.SmartSearch
 	}
 	return false
 }
@@ -7300,7 +7314,7 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\x06search\x18\x13 \x01(\v2\x18.chill.v4.SearchSettingsR\x06search\x123\n" +
 	"\acatalog\x18\x14 \x01(\v2\x19.chill.v4.CatalogSettingsR\acatalog\x126\n" +
 	"\bdownload\x18\x15 \x01(\v2\x1a.chill.v4.DownloadSettingsR\bdownload:#\x92A \n" +
-	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadJ\x04\b\x01\x10\x13R\rcodec_filtersR\x14disabled_indexer_idsR\x12download_folder_idR\x14filter_nasty_resultsR\x1efilter_results_with_no_seedersR\rother_filtersR\x16remember_quick_filtersR\x12resolution_filtersR\x1esearch_result_display_behaviorR\x1csearch_result_title_behaviorR\vshow_moviesR\asort_byR\x0esort_directionR\x11card_display_typeR\rmovies_sourceR\rshow_tv_showsR\x0ftv_shows_source\"\xa7\x06\n" +
+	"\x1e\xd2\x01\x06search\xd2\x01\acatalog\xd2\x01\bdownloadJ\x04\b\x01\x10\x13R\rcodec_filtersR\x14disabled_indexer_idsR\x12download_folder_idR\x14filter_nasty_resultsR\x1efilter_results_with_no_seedersR\rother_filtersR\x16remember_quick_filtersR\x12resolution_filtersR\x1esearch_result_display_behaviorR\x1csearch_result_title_behaviorR\vshow_moviesR\asort_byR\x0esort_directionR\x11card_display_typeR\rmovies_sourceR\rshow_tv_showsR\x0ftv_shows_source\"\xe0\x06\n" +
 	"\x0eSearchSettings\x12:\n" +
 	"\rcodec_filters\x18\x01 \x03(\x0e2\x15.chill.v4.CodecFilterR\fcodecFilters\x120\n" +
 	"\x14disabled_indexer_ids\x18\x02 \x03(\tR\x12disabledIndexerIds\x120\n" +
@@ -7314,8 +7328,10 @@ const file_chill_v4_api_proto_rawDesc = "" +
 	"\asort_by\x18\n" +
 	" \x01(\x0e2\x10.chill.v4.SortByR\x06sortBy\x12>\n" +
 	"\x0esort_direction\x18\v \x01(\x0e2\x17.chill.v4.SortDirectionR\rsortDirection\x12&\n" +
-	"\fexact_search\x18\f \x01(\bH\x00R\vexactSearch\x88\x01\x01B\x0f\n" +
-	"\r_exact_search\"\xef\x02\n" +
+	"\fexact_search\x18\f \x01(\bH\x00R\vexactSearch\x88\x01\x01\x12&\n" +
+	"\fsmart_search\x18\r \x01(\bH\x01R\vsmartSearch\x88\x01\x01B\x0f\n" +
+	"\r_exact_searchB\x0f\n" +
+	"\r_smart_search\"\xef\x02\n" +
 	"\x0fCatalogSettings\x12;\n" +
 	"\rmovies_source\x18\x01 \x01(\x0e2\x16.chill.v4.MoviesSourceR\fmoviesSource\x12?\n" +
 	"\x0ftv_shows_source\x18\x02 \x01(\x0e2\x17.chill.v4.TVShowsSourceR\rtvShowsSource\x12?\n" +
